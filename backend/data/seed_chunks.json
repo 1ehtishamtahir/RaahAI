@@ -1,0 +1,56 @@
+[
+  {
+    "id": "passport_new_1",
+    "text": "Passport new application requires: Original CNIC or Smart CNIC, B-Form if under 18, passport-size photographs with white background, previous passport if any, and fee payment receipt. Process: 1) Fill online form at DGIP, 2) Pay fee at National Bank, 3) Book appointment, 4) Visit passport office for biometrics, 5) Verification and delivery.",
+    "source": "DGIP Official Website",
+    "service": "passport"
+  },
+  {
+    "id": "passport_renewal_1",
+    "text": "Passport renewal requires: Original CNIC, previous passport, recent photographs, fee challan. Fee: Normal 36 pages PKR 3000 (10 years), Urgent PKR 5000. Delivery: Normal 10 days, Urgent 4 days. Visit DGIP passport office with appointment token.",
+    "source": "DGIP Official Website",
+    "service": "passport"
+  },
+  {
+    "id": "passport_fee_1",
+    "text": "Passport fee structure: 36-page normal PKR 3000, urgent PKR 5000, fast-track PKR 7500. 72-page normal PKR 5500, urgent PKR 8000. 100-page normal PKR 6000. Payment via National Bank or online via DGIP portal.",
+    "source": "DGIP Official Website",
+    "service": "passport"
+  },
+  {
+    "id": "cnic_new_1",
+    "text": "New CNIC (18+) requires: B-Form/CRC, parent/guardian CNIC copy, photographs, NADRA fee. Process: Visit NADRA Registration Center, biometric verification, form submission, token tracking. Fee: Normal PKR 1000 (30 days), Urgent PKR 2000 (7 days), Executive PKR 2500 (3 days).",
+    "source": "NADRA.gov.pk",
+    "service": "cnic"
+  },
+  {
+    "id": "cnic_renewal_1",
+    "text": "CNIC renewal requires: Old CNIC, photographs, NADRA fee. If data change needed (name, address, marital status), bring supporting document like marriage certificate or domicile. Biometrics required.",
+    "source": "NADRA.gov.pk",
+    "service": "cnic"
+  },
+  {
+    "id": "cnic_modification_1",
+    "text": "CNIC modification (name correction, address update) requires: Old CNIC, supporting document (marriage certificate, domicile, affidavit), fee. Address change needs utility bill or rent agreement as address proof.",
+    "source": "NADRA.gov.pk",
+    "service": "cnic"
+  },
+  {
+    "id": "business_new_1",
+    "text": "SECP Business Registration for Private Limited requires: CNIC of directors, company name availability check via SECP eServices, Memorandum & Articles of Association, registered address proof, SECP fee challan. Process: Name reservation → Incorporation filing → Certificate of Incorporation.",
+    "source": "SECP Official",
+    "service": "business_registration"
+  },
+  {
+    "id": "business_fee_1",
+    "text": "SECP fee: Name reservation PKR 200, Incorporation fee depends on authorized capital (e.g. PKR 100k capital ~ PKR 1800). Additional filing fees apply. Payment via SECP eServices challan at MCB/UBL.",
+    "source": "SECP Official",
+    "service": "business_registration"
+  },
+  {
+    "id": "general_privacy_1",
+    "text": "RaahAI privacy: CNIC numbers are masked as XXXXX-XXXXXXX-X, not persisted beyond session. Uploaded documents are deleted after session. Always verify critical info via official DGIP, NADRA, SECP websites.",
+    "source": "RaahAI Privacy Policy",
+    "service": "general"
+  }
+]

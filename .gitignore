@@ -1,0 +1,55 @@
+# deps
+node_modules/
+.pnp/
+.pnp.js
+
+# next
+frontend/.next/
+frontend/out/
+frontend/dist/
+frontend/.vercel
+frontend/.turbo
+
+# python
+backend/__pycache__/
+backend/**/__pycache__/
+*.py[cod]
+*$py.class
+*.so
+backend/.venv/
+backend/venv/
+backend/env/
+.env
+.env.local
+.venv
+
+# chroma
+backend/chroma_db/
+chroma.sqlite3
+
+# db
+*.db
+*.sqlite
+
+# ocr temp
+backend/uploads/
+backend/temp/
+
+# os
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log*
+
+# ide
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# deployment
+.vercel
+.render
+
+# knowledge base cache
+*.embeddings.cache
