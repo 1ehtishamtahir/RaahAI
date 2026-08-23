@@ -5,14 +5,24 @@ import { LayoutDashboard, Shield, Car, AlertTriangle, CreditCard, FileText, Grad
 import { cn } from "@/lib/utils";
 import { useLang } from "@/lib/LangContext";
 
-const DOMAIN_CONFIG: Record<string, { title_en: string; title_ur: string; icon: any; items: { href: string; label: string; icon: any }[] }> = {
+const DOMAIN_CONFIG: Record<string, { title_en: string; title_ur: string; icon: any; items: { href: string; label: string; icon: any; children?: { href: string; label: string }[] }[] }> = {
   identity: {
     title_en: "Identity",
     title_ur: "شناخت",
     icon: Shield,
     items: [
-      { href: "/identity?svc=cnic", label: "CNIC", icon: Shield },
-      { href: "/identity?svc=passport", label: "Passport", icon: Shield },
+      { href: "/identity", label: "Overview", icon: LayoutDashboard },
+      { href: "/identity?svc=cnic", label: "CNIC", icon: Shield, children: [
+        { href: "/identity?svc=cnic&sub=new", label: "New CNIC" },
+        { href: "/identity?svc=cnic&sub=renewal", label: "CNIC Renewal" },
+        { href: "/identity?svc=cnic&sub=modification", label: "CNIC Modification" },
+        { href: "/identity?svc=cnic&sub=status", label: "Track Status" },
+      ]},
+      { href: "/identity?svc=passport", label: "Passport", icon: Shield, children: [
+        { href: "/identity?svc=passport&sub=new", label: "New Passport" },
+        { href: "/identity?svc=passport&sub=renewal", label: "Passport Renewal" },
+        { href: "/identity?svc=passport&sub=status", label: "Track Status" },
+      ]},
       { href: "/identity?svc=frc", label: "FRC", icon: FileText },
       { href: "/identity?svc=birth_registration", label: "Birth Registration", icon: Baby },
       { href: "/identity?svc=marriage_registration", label: "Marriage Registration", icon: Heart },
@@ -131,12 +141,15 @@ export default function DomainSidebar({ domain }: { domain: string }) {
       <nav className="flex-1 space-y-1 mt-2 overflow-y-auto">
         {cfg.items.map((item) => {
           const svc = searchParams.get("svc");
+          const sub = searchParams.get("sub");
           const cat = searchParams.get("cat");
           const status = searchParams.get("status");
           let active = false;
-          if (item.href.includes("svc=")) {
-            const svcVal = item.href.split("svc=")[1];
-            active = (svc || "cnic") === svcVal;
+          const svcVal = item.href.includes("svc=") ? item.href.split("svc=")[1].split("&")[0] : null;
+          if (item.href === "/identity") {
+            active = pathname === "/identity" && !svc;
+          } else if (svcVal) {
+            active = svc === svcVal;
           } else if (item.href.includes("cat=")) {
             active = cat === item.href.split("cat=")[1];
           } else if (item.href.includes("status=")) {
@@ -144,7 +157,6 @@ export default function DomainSidebar({ domain }: { domain: string }) {
           } else if (item.href.includes("#")) {
             active = false;
           } else {
-            // For plain href like /challans, active when no query param and pathname matches
             const base = item.href.split("?")[0].split("#")[0];
             if (item.href === "/challans" || item.href === "/updates" || item.href === "/payments") {
               active = pathname === base && !cat && !status && !svc;
@@ -153,18 +165,39 @@ export default function DomainSidebar({ domain }: { domain: string }) {
             }
           }
           return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                "flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-medium transition",
-                active ? "bg-raah-mint text-raah-deep border border-raah-green/20" : "text-text-secondary hover:bg-raah-soft hover:text-text-primary"
+            <div key={item.href}>
+              <Link
+                href={item.href}
+                className={cn(
+                  "flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-medium transition",
+                  active ? "bg-raah-mint text-raah-deep border border-raah-green/20" : "text-text-secondary hover:bg-raah-soft hover:text-text-primary"
+                )}
+              >
+                <item.icon size={16} className={cn(active ? "text-raah-green" : "text-text-muted")} />
+                <span className="flex-1">{item.label}</span>
+                {active && <span className="text-raah-green">›</span>}
+              </Link>
+              {active && (item as any).children && (
+                <div className="ml-6 mt-1 space-y-1 border-l border-border pl-3">
+                  {(item as any).children.map((child: any) => {
+                    const childSub = child.href.split("sub=")[1];
+                    const childActive = sub === childSub;
+                    return (
+                      <Link
+                        key={child.href}
+                        href={child.href}
+                        className={cn(
+                          "block px-3 py-1.5 rounded-lg text-xs transition",
+                          childActive ? "bg-raah-green text-white font-medium" : "text-text-secondary hover:bg-raah-soft hover:text-text-primary"
+                        )}
+                      >
+                        {child.label}
+                      </Link>
+                    );
+                  })}
+                </div>
               )}
-            >
-              <item.icon size={16} className={cn(active ? "text-raah-green" : "text-text-muted")} />
-              <span className="flex-1">{item.label}</span>
-              {active && <span className="text-raah-green">›</span>}
-            </Link>
+            </div>
           );
         })}
       </nav>
