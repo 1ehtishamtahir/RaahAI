@@ -101,7 +101,7 @@ export default function AIMessage({ text, time, citations, grounded = true, mess
       <div className="w-8 h-8 rounded-full bg-raah-green text-white flex items-center justify-center text-xs font-bold shrink-0">R</div>
       <div className="flex-1 bg-white border border-border rounded-2xl rounded-bl-md p-4 shadow-sm">
         <div className="flex items-center justify-between text-xs text-text-muted mb-2">
-          <span className="font-semibold text-raah-deep flex items-center gap-1">RaahAI <span className="text-raah-success">\u2713</span></span>
+          <span className="font-semibold text-raah-deep flex items-center gap-1">RaahAI <span className="text-raah-success">✓</span></span>
           <span>{time}</span>
         </div>
         <Markdown text={text} />
@@ -121,21 +121,21 @@ export default function AIMessage({ text, time, citations, grounded = true, mess
             className={`text-sm transition ${feedback === "up" ? "text-raah-green font-bold" : "text-text-muted hover:text-raah-green"}`}
             title="Helpful"
           >
-            {feedback === "up" ? "\u2764" : "\u2661"}
+            {feedback === "up" ? "👍" : "👍"}
           </button>
           <button
             onClick={() => handleFeedback("down")}
             className={`text-sm transition ${feedback === "down" ? "text-red-500 font-bold" : "text-text-muted hover:text-red-500"}`}
             title="Not helpful"
           >
-            {feedback === "down" ? "\ud83d\udc4e" : "\ud83d\udc4e"}
+            {feedback === "down" ? "👎" : "👎"}
           </button>
           <button
             onClick={handleCopy}
             className="text-sm text-text-muted hover:text-raah-green transition"
             title="Copy"
           >
-            {copied ? "\u2713" : "\u29c9"}
+            {copied ? "✓" : "⧉"}
           </button>
         </div>
       </div>

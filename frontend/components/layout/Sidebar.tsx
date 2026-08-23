@@ -23,20 +23,20 @@ const nav = [
 ];
 
 const URDU: Record<string, string> = {
-  "Chat Assistant": "\u0686\u06cc\u0679 \u0627\u0633\u0633\u062a\u0627\u0646\u0679",
-  "OCR Scanner": "\u0627\u0648 \u0688\u06cc \u0627\u0688\u0631 \u0627\u0633\u0686\u0646\u0631",
-  "Voice Assistant": "\u0627\u0648\u0627\u0632\u06cc \u0627\u0633\u0633\u062a\u0627\u0646\u0679",
-  "My Checklist": "\u0645\u06cc\u0631\u06cc \u0641\u0647\u0631\u0633\u062a",
-  "Fee Calculator": "\u0641\u06cc\u0633 \u06a9\u0648\u0644\u0648\u0644\u0627",
-  "Eligibility Check": "\u0627\u0647\u0644\u06cc\u062a \u062a\u0634\u0642\u06cc\u0642",
-  "Find Offices": "\u062f\u0641\u062a\u0631 \u062a\u0644\u0627\u0634",
-  "Expiry Alerts": "\u062e\u062a\u0645\u0627\u0646\u06cc\u062a \u0627\u0644\u0631\u062a",
-  "Documents": "\u062f\u0633\u062a\u0627\u0648\u06cc\u0632\u0627\u062a",
-  "History": "\u062a\u0627\u0631\u06cc\u062e",
-  "Saved": "\u0645\u062d\u0641\u0648\u0638 \u0634\u062f\u06c1",
-  "Notifications": "\u0627\u0637\u0644\u0627\u0639\u0627\u062a",
-  "Settings": "\u062a\u0631\u062a\u06cc\u0628\u0627\u062a",
-  "Help & Support": "\u0645\u062f\u062f \u0648 \u0645\u0639\u0627\u0648\u0646\u062a",
+  "Chat Assistant": "چیٹ اسسٹنٹ",
+  "OCR Scanner": "او ڈی آر اسکینر",
+  "Voice Assistant": "وازی اسسٹنٹ",
+  "My Checklist": "میری فہرست",
+  "Fee Calculator": "فیس کولول",
+  "Eligibility Check": "اہلیت تشقیق",
+  "Find Offices": "دفتر تلاش",
+  "Expiry Alerts": "ختمیت الرت",
+  "Documents": "دستاویزات",
+  "History": "تاریخ",
+  "Saved": "محفوظ شدہ",
+  "Notifications": "اطلاعات",
+  "Settings": "ترتیبات",
+  "Help & Support": "مدد و معاونت",
 };
 
 export default function Sidebar() {
@@ -49,7 +49,7 @@ export default function Sidebar() {
         <img src="/logo.png" alt="RaahAI" className="w-9 h-9 rounded-xl bg-raah-green object-cover" onError={(e) => (e.currentTarget.style.display="none")} />
         <div>
           <div className="font-bold text-raah-deep leading-none">RaahAI</div>
-          <div className="text-[11px] text-text-secondary leading-none">{lang === "ur" ? "\u0633\u0631\u06a9\u0627\u0631\u06cc \u062e\u062f\u0645\u062a\u0648\u06a9 \u0627\u0633\u062a\u0639\u0645\u0627\u0644 \u06a9\u0627 \u062d\u0648\u0633\u0646\u0631" : "Your Smart Guide to Government Services"}</div>
+          <div className="text-[11px] text-text-secondary leading-none">{lang === "ur" ? "سرکاری خدمات کا استعمال کا حسنر" : "Your Smart Guide to Government Services"}</div>
         </div>
       </div>
 
@@ -69,7 +69,7 @@ export default function Sidebar() {
             >
               <item.icon size={18} className={cn(active ? "text-raah-green" : "text-text-muted")} />
               <span className="flex-1">{label}</span>
-              {active && <span className="text-raah-green">\u203a</span>}
+              {active && <span className="text-raah-green">›</span>}
             </Link>
           );
         })}
@@ -85,7 +85,7 @@ export default function Sidebar() {
             onClick={() => setLang("ur")}
             className={cn("flex-1 py-1.5 rounded-full text-sm font-medium", lang === "ur" ? "bg-raah-mint text-raah-deep border border-raah-green/20" : "text-text-secondary")}
           >
-            \u0627\u0631\u062f\u0648
+            اردو
           </button>
           <button
             onClick={() => setLang("en")}
@@ -103,7 +103,7 @@ export default function Sidebar() {
           <div className="text-sm font-semibold truncate">Ehtisham Tahir</div>
           <div className="text-xs text-text-muted">Free Plan</div>
         </div>
-        <span className="text-text-muted">\u2562</span>
+        <span className="text-text-muted">⌄</span>
       </div>
     </div>
   );
