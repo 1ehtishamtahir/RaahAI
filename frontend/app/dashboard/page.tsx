@@ -4,7 +4,7 @@ import AppShell from "@/components/layout/AppShell";
 import { useLang } from "@/lib/LangContext";
 import { citizenDashboardApi } from "@/lib/api";
 import Link from "next/link";
-import { Shield, Car, AlertTriangle, CreditCard, FileText, GraduationCap, Users, Bell, ArrowRight, CheckCircle, Clock } from "lucide-react";
+import { Shield, Car, AlertTriangle, CreditCard, FileText, GraduationCap, Users, Bell, ArrowRight, CheckCircle, Clock, Building2, ClipboardCheck } from "lucide-react";
 
 const MENU = [
   { key: "identity", href: "/identity", icon: Shield, color: "bg-emerald-600", label_en: "Identity", label_ur: "شناخت", desc_en: "CNIC, Passport, FRC, Birth & more", desc_ur: "شناختی کارڈ، پاسپورٹ، ایف آر سی" },
@@ -15,6 +15,7 @@ const MENU = [
   { key: "opportunities", href: "/opportunities", icon: GraduationCap, color: "bg-indigo-600", label_en: "Opportunities", label_ur: "مواقع", desc_en: "Scholarships & Youth Programs", desc_ur: "اسکالرشپ اور یوتھ پروگرام" },
   { key: "family", href: "/family", icon: Users, color: "bg-rose-600", label_en: "Family Programs", label_ur: "فیملی پروگرام", desc_en: "Household & Program Matching", desc_ur: "گھرانہ اور پروگرام میچنگ" },
   { key: "updates", href: "/updates", icon: Bell, color: "bg-orange-600", label_en: "Gov Updates", label_ur: "سرکاری اپ ڈیٹس", desc_en: "Radar & Policy Categories", desc_ur: "ریڈار اور پالیسی زمرہ جات" },
+  { key: "offices", href: "/offices", icon: Building2, color: "bg-slate-600", label_en: "Office Locator", label_ur: "دفتر تلاش", desc_en: "Find NADRA, DGIP & SECP Offices", desc_ur: "نادرا، ڈی جی آئی پی اور ایس ای سی پی دفتر" },
 ];
 
 export default function DashboardPage() {

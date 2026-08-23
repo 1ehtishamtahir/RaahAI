@@ -27,6 +27,7 @@ const DOMAIN_CONFIG: Record<string, { title_en: string; title_ur: string; icon: 
       { href: "/identity?svc=birth_registration", label: "Birth Registration", icon: Baby },
       { href: "/identity?svc=marriage_registration", label: "Marriage Registration", icon: Heart },
       { href: "/identity?svc=death_registration", label: "Death Registration", icon: Skull },
+      { href: "/eligibility", label: "Eligibility Check", icon: ClipboardCheck },
     ],
   },
   vehicle: {

@@ -5,7 +5,7 @@ import AppShell from "@/components/layout/AppShell";
 import { useLang } from "@/lib/LangContext";
 import { identityListApi, identityFlowApi, identityStatusApi } from "@/lib/api";
 import Link from "next/link";
-import { Shield, FileText, Baby, Heart, Skull, ArrowRight, Clock, CheckCircle, CreditCard, Smartphone, Building2, ExternalLink, X } from "lucide-react";
+import { Shield, FileText, Baby, Heart, Skull, ArrowRight, Clock, CheckCircle, CreditCard, Smartphone, Building2, ExternalLink, X, ClipboardCheck } from "lucide-react";
 
 const ICONS: Record<string, any> = { cnic: Shield, passport: Shield, frc: FileText, birth_registration: Baby, marriage_registration: Heart, death_registration: Skull };
 
@@ -65,6 +65,16 @@ function IdentityInner() {
           })}
         </div>
         <div className="text-xs text-text-muted text-center">Select a service from the left menu or above to view its Mission Flow</div>
+        <Link href="/eligibility" className="block p-4 rounded-2xl border border-raah-green/20 bg-raah-mint hover:bg-raah-green hover:text-white transition group">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-raah-green text-white flex items-center justify-center group-hover:bg-white group-hover:text-raah-green transition"><ClipboardCheck size={18}/></div>
+            <div className="flex-1">
+              <div className="font-semibold text-sm text-raah-deep group-hover:text-white">Check Eligibility</div>
+              <div className="text-xs text-text-muted group-hover:text-white/80">Find out which Identity services you qualify for — age, CNIC & citizenship check</div>
+            </div>
+            <ArrowRight size={16} className="text-raah-green group-hover:text-white"/>
+          </div>
+        </Link>
       </div>
     );
   }
