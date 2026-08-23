@@ -4,6 +4,20 @@ import uuid
 from datetime import datetime
 from app.core.database import Base
 
+class User(Base):
+    __tablename__ = "users"
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    name = Column(String, nullable=False)
+    email = Column(String, unique=True, nullable=False)
+    phone = Column(String, nullable=True)
+    cnic = Column(String, nullable=True)
+    password_hash = Column(String, nullable=False)
+    province = Column(String, nullable=True)
+    city = Column(String, nullable=True)
+    education = Column(String, nullable=True)
+    date_of_birth = Column(String, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
 class Session(Base):
     __tablename__ = "sessions"
     id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))

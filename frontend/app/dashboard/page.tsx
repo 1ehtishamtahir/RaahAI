@@ -5,6 +5,7 @@ import { useLang } from "@/lib/LangContext";
 import { citizenDashboardApi } from "@/lib/api";
 import Link from "next/link";
 import { Shield, Car, AlertTriangle, CreditCard, FileText, GraduationCap, Users, Bell, ArrowRight, CheckCircle, Clock, Building2, ClipboardCheck } from "lucide-react";
+import { useAuth } from "@/lib/AuthContext";
 
 const MENU = [
   { key: "identity", href: "/identity", icon: Shield, color: "bg-emerald-600", label_en: "Identity", label_ur: "شناخت", desc_en: "CNIC, Passport, FRC, Birth & more", desc_ur: "شناختی کارڈ، پاسپورٹ، ایف آر سی" },
@@ -20,6 +21,7 @@ const MENU = [
 
 export default function DashboardPage() {
   const { lang } = useLang();
+  const { user } = useAuth();
   const [data, setData] = useState<any>(null);
   useEffect(() => { citizenDashboardApi().then(setData).catch(() => {}); }, []);
 
@@ -29,8 +31,8 @@ export default function DashboardPage() {
         {/* Header */}
         <div className="bg-gradient-to-r from-raah-green to-emerald-700 rounded-2xl p-6 text-white">
           <div className="text-sm opacity-80">Citizen Command Center</div>
-          <div className="text-2xl font-bold mt-1">Welcome, {data?.citizen?.name || "Ehtisham Tahir"} 👋</div>
-          <div className="text-sm opacity-80 mt-1">{data?.citizen?.cnic || "42101-1234567-1"} • {data?.citizen?.city || "Karachi"}</div>
+          <div className="text-2xl font-bold mt-1">Welcome, {user?.name || data?.citizen?.name || "Citizen"} 👋</div>
+          <div className="text-sm opacity-80 mt-1">{user?.cnic || data?.citizen?.cnic || ""} • {user?.city || data?.citizen?.city || ""}</div>
           <div className="mt-3 flex gap-2 text-xs">
             <span className="px-3 py-1 rounded-full bg-white/20">Your Government. Your Data. Your AI Copilot.</span>
           </div>

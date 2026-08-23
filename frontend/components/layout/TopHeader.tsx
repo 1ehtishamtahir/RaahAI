@@ -1,10 +1,12 @@
 "use client";
-import { Mic, Bell, Sun, Menu } from "lucide-react";
+import { Mic, Bell, Sun, Menu, LogOut } from "lucide-react";
 import Link from "next/link";
 import { useLang } from "@/lib/LangContext";
+import { useAuth } from "@/lib/AuthContext";
 
 export default function TopHeader({ onMenu }: { onMenu?: () => void }) {
   const { t } = useLang();
+  const { user, logout } = useAuth();
   return (
     <header className="h-[72px] bg-white border-b border-border flex items-center justify-between px-4 lg:px-6 sticky top-0 z-10">
       <div className="flex items-center gap-3">
@@ -37,7 +39,10 @@ export default function TopHeader({ onMenu }: { onMenu?: () => void }) {
           <Bell size={16} />
           <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full" />
         </Link>
-        <img src="https://i.pravatar.cc/100?img=12" alt="avatar" className="w-9 h-9 rounded-full hidden sm:block" />
+        <div className="w-9 h-9 rounded-full bg-raah-mint text-raah-green flex items-center justify-center text-sm font-bold">{user?.name?.charAt(0) || "C"}</div>
+        <button onClick={logout} className="w-9 h-9 rounded-full border border-border flex items-center justify-center hover:bg-red-50 text-text-muted hover:text-red-500 transition" title="Logout">
+          <LogOut size={14}/>
+        </button>
       </div>
     </header>
   );

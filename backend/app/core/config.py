@@ -19,7 +19,9 @@ class Settings(BaseSettings):
     max_upload_mb: int = 10
     ocr_engine: str = "paddle"
     whisper_model: str = "base"
-    secret_key: str = "change-me"
+    secret_key: str = "raahai-hackathon-secret-key-2026"
+    algorithm: str = "HS256"
+    access_token_expire_minutes: int = 1440  # 24 hours
 
     class Config:
         env_file = ".env"

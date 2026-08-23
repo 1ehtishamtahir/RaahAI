@@ -1,9 +1,10 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { MessageCircle, FileText, ScanLine, Mic, ListChecks, History, Bookmark, Bell, Settings, HelpCircle, Globe, Calculator, ClipboardCheck, Building2, AlertTriangle, LayoutDashboard, Shield, Car, CreditCard, GraduationCap, Users, Radar } from "lucide-react";
+import { MessageCircle, FileText, ScanLine, Mic, ListChecks, History, Bookmark, Bell, Settings, HelpCircle, Globe, Calculator, ClipboardCheck, Building2, AlertTriangle, LayoutDashboard, Shield, Car, CreditCard, GraduationCap, Users, Radar, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLang } from "@/lib/LangContext";
+import { useAuth } from "@/lib/AuthContext";
 
 const mainNav = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -92,6 +93,7 @@ function NavSection({ items, lang, pathname, title }: { items: typeof mainNav; l
 
 export default function Sidebar() {
   const { lang, setLang } = useLang();
+  const { user, logout } = useAuth();
   const pathname = usePathname();
   return (
     <div className="h-screen sticky top-0 flex flex-col bg-white border-r border-border p-4">
@@ -135,12 +137,14 @@ export default function Sidebar() {
 
       {/* Profile */}
       <div className="mt-3 flex items-center gap-3 p-3 rounded-xl border border-border">
-        <img src="https://i.pravatar.cc/100?img=12" alt="avatar" className="w-8 h-8 rounded-full" />
+        <div className="w-8 h-8 rounded-full bg-raah-mint text-raah-green flex items-center justify-center text-sm font-bold">{user?.name?.charAt(0) || "C"}</div>
         <div className="flex-1 min-w-0">
-          <div className="text-sm font-semibold truncate">Ehtisham Tahir</div>
-          <div className="text-xs text-text-muted">Citizen • Free Plan</div>
+          <div className="text-sm font-semibold truncate">{user?.name || "Citizen"}</div>
+          <div className="text-xs text-text-muted">{user?.email || "citizen@raahai.pk"}</div>
         </div>
-        <span className="text-text-muted">⌄</span>
+        <button onClick={logout} className="p-1.5 rounded-lg hover:bg-red-50 text-text-muted hover:text-red-500 transition" title="Logout">
+          <LogOut size={14}/>
+        </button>
       </div>
     </div>
   );

@@ -1,5 +1,31 @@
 const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
+function authHeaders(): Record<string, string> {
+  if (typeof window === "undefined") return {};
+  const token = localStorage.getItem("raahai-token");
+  return token ? { Authorization: `Bearer ${token}` } : {};
+}
+
+export async function authLoginApi(email: string, password: string) {
+  const res = await fetch(`${API}/api/citizen/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+  });
+  if (!res.ok) throw new Error((await res.json().catch(()=>({}))).detail || "Login failed");
+  return res.json();
+}
+
+export async function authRegisterApi(data: any) {
+  const res = await fetch(`${API}/api/citizen/register`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error((await res.json().catch(()=>({}))).detail || "Registration failed");
+  return res.json();
+}
+
 export async function chatApi(query: string, lang: string, session_id?: string) {
   const res = await fetch(`${API}/chat`, {
     method: "POST",
@@ -114,12 +140,12 @@ export async function updateAlertApi(alertId: string, data: { document_type?: st
 
 // --- Citizen Command Center ---
 export async function citizenDashboardApi() {
-  const res = await fetch(`${API}/api/citizen/dashboard`);
+  const res = await fetch(`${API}/api/citizen/dashboard`, { headers: authHeaders() });
   if (!res.ok) throw new Error(await res.text());
   return res.json();
 }
 export async function citizenProfileApi() {
-  const res = await fetch(`${API}/api/citizen/profile`);
+  const res = await fetch(`${API}/api/citizen/profile`, { headers: authHeaders() });
   if (!res.ok) throw new Error(await res.text());
   return res.json();
 }

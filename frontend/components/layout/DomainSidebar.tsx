@@ -1,9 +1,10 @@
 "use client";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { LayoutDashboard, Shield, Car, AlertTriangle, CreditCard, FileText, GraduationCap, Users, Radar, ScanLine, Wallet, Building2, Calculator, ClipboardCheck, ArrowLeft, Globe, Baby, Heart, Skull, Award } from "lucide-react";
+import { LayoutDashboard, Shield, Car, AlertTriangle, CreditCard, FileText, GraduationCap, Users, Radar, ScanLine, Wallet, Building2, Calculator, ClipboardCheck, ArrowLeft, Globe, Baby, Heart, Skull, Award, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLang } from "@/lib/LangContext";
+import { useAuth } from "@/lib/AuthContext";
 
 const DOMAIN_CONFIG: Record<string, { title_en: string; title_ur: string; icon: any; items: { href: string; label: string; icon: any; children?: { href: string; label: string }[] }[] }> = {
   identity: {
@@ -113,6 +114,7 @@ const DOMAIN_CONFIG: Record<string, { title_en: string; title_ur: string; icon: 
 
 export default function DomainSidebar({ domain }: { domain: string }) {
   const { lang, setLang } = useLang();
+  const { user, logout } = useAuth();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const cfg = DOMAIN_CONFIG[domain];
@@ -233,12 +235,14 @@ export default function DomainSidebar({ domain }: { domain: string }) {
 
       {/* Profile */}
       <div className="mt-3 flex items-center gap-3 p-3 rounded-xl border border-border">
-        <img src="https://i.pravatar.cc/100?img=12" alt="avatar" className="w-8 h-8 rounded-full" />
+        <div className="w-8 h-8 rounded-full bg-raah-mint text-raah-green flex items-center justify-center text-sm font-bold">{user?.name?.charAt(0) || "C"}</div>
         <div className="flex-1 min-w-0">
-          <div className="text-sm font-semibold truncate">Ehtisham Tahir</div>
-          <div className="text-xs text-text-muted">Citizen • Free Plan</div>
+          <div className="text-sm font-semibold truncate">{user?.name || "Citizen"}</div>
+          <div className="text-xs text-text-muted">{user?.email || "citizen@raahai.pk"}</div>
         </div>
-        <span className="text-text-muted">⌄</span>
+        <button onClick={logout} className="p-1.5 rounded-lg hover:bg-red-50 text-text-muted hover:text-red-500 transition" title="Logout">
+          <LogOut size={14}/>
+        </button>
       </div>
     </div>
   );

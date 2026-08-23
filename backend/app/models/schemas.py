@@ -95,3 +95,34 @@ class AddAlertRequest(BaseModel):
     cnic: str
     issue_date: str
     expiry_date: str
+
+# ---- Auth ----
+class UserRegister(BaseModel):
+    name: str = Field(..., min_length=2, max_length=100)
+    email: str = Field(..., min_length=5)
+    password: str = Field(..., min_length=6)
+    phone: Optional[str] = None
+    cnic: Optional[str] = None
+    province: Optional[str] = None
+    city: Optional[str] = None
+    education: Optional[str] = None
+    date_of_birth: Optional[str] = None
+
+class UserLogin(BaseModel):
+    email: str
+    password: str
+
+class TokenResponse(BaseModel):
+    token: str
+    user: dict
+
+class UserResponse(BaseModel):
+    id: str
+    name: str
+    email: str
+    phone: Optional[str] = None
+    cnic: Optional[str] = None
+    province: Optional[str] = None
+    city: Optional[str] = None
+    education: Optional[str] = None
+    date_of_birth: Optional[str] = None
