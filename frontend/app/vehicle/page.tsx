@@ -4,7 +4,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import AppShell from "@/components/layout/AppShell";
 import { useLang } from "@/lib/LangContext";
 import { vehiclesApi, vehicleFlowApi } from "@/lib/api";
-import { Car, ArrowRightLeft, Receipt, Clock, ShieldCheck } from "lucide-react";
+import { Car, ArrowRightLeft, Receipt, Clock, ShieldCheck, CreditCard, Smartphone, Building2, ExternalLink, X } from "lucide-react";
 import Link from "next/link";
 
 function VehicleInner() {
@@ -14,6 +14,7 @@ function VehicleInner() {
   const svc = searchParams.get("svc");
   const [vehicles, setVehicles] = useState<any>(null);
   const [flow, setFlow] = useState<any>(null);
+  const [showPay, setShowPay] = useState(false);
 
   useEffect(()=>{vehiclesApi().then(setVehicles).catch(()=>{});},[]);
   useEffect(()=>{
@@ -95,6 +96,7 @@ function VehicleInner() {
               <div className="font-semibold text-xs text-text-muted">Eligibility</div>
               <ul className="mt-2 space-y-1 text-text-secondary text-xs list-disc pl-4">{flow.eligibility.map((d:string)=><li key={d}>{d}</li>)}</ul>
               <div className="mt-3 text-xs"><span className="text-text-muted">Fee:</span> {flow.fee_normal} | {flow.fee_urgent}</div>
+              <button onClick={()=>setShowPay(true)} className="mt-3 w-full py-1.5 rounded-full bg-raah-green text-white text-xs font-medium hover:bg-raah-deep flex items-center justify-center gap-1"><CreditCard size={12}/> Pay Fee Now</button>
             </div>
             <div className="p-3 rounded-xl bg-white border border-border">
               <div className="font-semibold text-xs text-text-muted">Application Method</div>
@@ -102,9 +104,58 @@ function VehicleInner() {
               <a href={flow.tracking_url} target="_blank" className="text-xs text-raah-green mt-2 inline-block flex items-center gap-1"><ShieldCheck size={12}/> Track → {flow.tracking_url}</a>
             </div>
           </div>
+
+          <div className="mt-4 p-4 rounded-xl bg-white border border-border">
+            <div className="font-semibold text-xs flex items-center gap-2"><CreditCard size={12} className="text-raah-green"/> How to Pay Fee</div>
+            <div className="grid md:grid-cols-3 gap-2 mt-3">
+              <div className="p-2 rounded-lg bg-raah-soft border border-border text-center">
+                <Smartphone size={14} className="mx-auto text-raah-green"/>
+                <div className="text-xs font-medium mt-1">ePay Punjab / Sindh</div>
+                <div className="text-[11px] text-text-muted mt-1">epay.punjab.gov.pk → Vehicle → Enter no → Pay</div>
+              </div>
+              <div className="p-2 rounded-lg bg-blue-50 border border-blue-200 text-center">
+                <CreditCard size={14} className="mx-auto text-blue-600"/>
+                <div className="text-xs font-medium mt-1">Card / Wallet</div>
+                <div className="text-[11px] text-text-muted mt-1">JazzCash, EasyPaisa, Visa/Mastercard</div>
+              </div>
+              <div className="p-2 rounded-lg bg-amber-50 border border-amber-200 text-center">
+                <Building2 size={14} className="mx-auto text-amber-600"/>
+                <div className="text-xs font-medium mt-1">Excise Office</div>
+                <div className="text-[11px] text-text-muted mt-1">Visit Excise counter → Show docs → Pay → Receipt</div>
+              </div>
+            </div>
+            <div className="text-[11px] text-text-muted mt-2">Keep receipt — required for verification. Source: {flow.official_source} • Verified {flow.last_verified}</div>
+          </div>
         </div>
       ) : (
         <div className="bg-white border border-border rounded-xl p-6 text-sm text-text-muted animate-pulse">Loading {svc}...</div>
+      )}
+
+      {showPay && flow && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40" onClick={()=>setShowPay(false)}>
+          <div className="bg-white rounded-2xl max-w-md w-full p-6" onClick={e=>e.stopPropagation()}>
+            <div className="flex items-center justify-between">
+              <div className="font-bold text-raah-deep">Pay Fee — {flow.name_en}</div>
+              <button onClick={()=>setShowPay(false)} className="p-1 rounded-full hover:bg-raah-soft"><X size={16}/></button>
+            </div>
+            <div className="text-sm text-text-secondary mt-1">Fee: {flow.fee_normal} • {flow.fee_urgent}</div>
+            <div className="mt-4 space-y-2">
+              <a href="https://epay.punjab.gov.pk" target="_blank" className="flex items-center justify-between p-3 rounded-xl border border-raah-green bg-raah-mint hover:bg-raah-green hover:text-white transition">
+                <span className="text-sm font-medium flex items-center gap-2"><ExternalLink size={14}/> Pay via ePay / Excise</span>
+                <ExternalLink size={14}/>
+              </a>
+              <div className="p-3 rounded-xl border border-border bg-white text-xs text-text-secondary">
+                <div className="font-semibold">Steps:</div>
+                <ol className="list-decimal pl-4 mt-1 space-y-1">
+                  <li>Generate challan from Excise portal</li>
+                  <li>Pay via ePay app, card, or bank counter</li>
+                  <li>Keep receipt for record update</li>
+                </ol>
+              </div>
+            </div>
+            <button onClick={()=>setShowPay(false)} className="mt-4 w-full py-2 rounded-xl bg-raah-green text-white text-sm font-medium">Close</button>
+          </div>
+        </div>
       )}
     </div>
   );
