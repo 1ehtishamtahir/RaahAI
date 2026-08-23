@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { LayoutDashboard, Shield, Car, AlertTriangle, CreditCard, FileText, GraduationCap, Users, Radar, ScanLine, ListChecks, Wallet, Building2, Calculator, ClipboardCheck, ArrowLeft, Globe, Baby, Heart, Skull } from "lucide-react";
+import { LayoutDashboard, Shield, Car, AlertTriangle, CreditCard, FileText, GraduationCap, Users, Radar, ScanLine, Wallet, Building2, Calculator, ClipboardCheck, ArrowLeft, Globe, Baby, Heart, Skull, Award } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLang } from "@/lib/LangContext";
 
@@ -72,9 +72,12 @@ const DOMAIN_CONFIG: Record<string, { title_en: string; title_ur: string; icon: 
     title_ur: "مواقع",
     icon: GraduationCap,
     items: [
+      { href: "/opportunities", label: "Overview", icon: LayoutDashboard },
       { href: "/opportunities?cat=Scholarships", label: "Scholarships", icon: GraduationCap },
       { href: "/opportunities?cat=Student Programs", label: "Student Programs", icon: GraduationCap },
       { href: "/opportunities?cat=Youth Programs", label: "Youth Programs", icon: GraduationCap },
+      { href: "/opportunities?cat=Family", label: "Family", icon: Users },
+      { href: "/opportunities?cat=Welfare", label: "Welfare", icon: Heart },
     ],
   },
   family: {
@@ -82,8 +85,9 @@ const DOMAIN_CONFIG: Record<string, { title_en: string; title_ur: string; icon: 
     title_ur: "فیملی پروگرام",
     icon: Users,
     items: [
-      { href: "/family#profile", label: "Household Profile", icon: Users },
-      { href: "/family#programs", label: "Program Matching", icon: Users },
+      { href: "/family", label: "Overview", icon: LayoutDashboard },
+      { href: "/family?view=profile", label: "Household Profile", icon: Users },
+      { href: "/family?view=programs", label: "Program Matching", icon: Award },
       { href: "/eligibility", label: "Eligibility Check", icon: ClipboardCheck },
     ],
   },

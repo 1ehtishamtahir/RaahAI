@@ -1,15 +1,20 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import AppShell from "@/components/layout/AppShell";
 import { useLang } from "@/lib/LangContext";
 import { familyProfileApi } from "@/lib/api";
-import { Users, User, Award, Home, Shield, Plus, X, Calendar, MapPin } from "lucide-react";
+import { Users, User, Award, Home, Shield, Plus, X, Calendar, MapPin, Search } from "lucide-react";
 
-export default function FamilyPage(){
+function FamilyInner(){
   const {lang}=useLang();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const view = searchParams.get("view") || "all";
   const [data,setData]=useState<any>(null);
   const [stats,setStats]=useState<any>(null);
   const [showAdd,setShowAdd]=useState(false);
+  const [q,setQ]=useState("");
   const [newMember,setNewMember]=useState({name:"", relation:"Sibling", age:18, cnic:"", education:"Matric"});
   const [selectedProgram,setSelectedProgram]=useState<any>(null);
 
@@ -31,15 +36,29 @@ export default function FamilyPage(){
     load();
   }
 
+  const filteredPrograms = data?.programs?.filter((p:any)=>{
+    if(view==="profile") return false;
+    if(view==="programs") return true;
+    if(q) return p.program.toLowerCase().includes(q.toLowerCase()) || p.member.toLowerCase().includes(q.toLowerCase());
+    return true;
+  }) || [];
+
   return (
-    <AppShell>
+    <>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-xl font-bold text-raah-deep flex items-center gap-2"><Users size={20}/> Family Programs</h1>
             <p className="text-sm text-text-secondary mt-1">Household Profile • Program Matching per family member • Masked CNIC for privacy</p>
           </div>
-          <button onClick={()=>setShowAdd(!showAdd)} className="px-4 py-2 bg-raah-green text-white rounded-xl text-sm flex items-center gap-2 hover:bg-raah-deep"><Plus size={14}/> Add Member</button>
+          <div className="flex gap-2">
+            <div className="hidden md:flex items-center gap-2 bg-white border border-border rounded-full px-3 py-1.5">
+              <Search size={12} className="text-text-muted"/>
+              <input value={q} onChange={e=>setQ(e.target.value)} placeholder="Search programs..." className="bg-transparent outline-none text-xs w-32"/>
+              {q && <button onClick={()=>setQ("")} className="text-xs">✕</button>}
+            </div>
+            <button onClick={()=>setShowAdd(!showAdd)} className="px-4 py-2 bg-raah-green text-white rounded-xl text-sm flex items-center gap-2 hover:bg-raah-deep"><Plus size={14}/> Add Member</button>
+          </div>
         </div>
 
         {stats && (
@@ -50,6 +69,12 @@ export default function FamilyPage(){
             <div className="bg-white border border-border rounded-xl p-3 text-center"><div className="text-xl font-bold">{stats.total_programs}</div><div className="text-xs text-text-muted">Programs</div></div>
           </div>
         )}
+
+        <div className="flex gap-2">
+          <button onClick={()=>router.push("/family")} className={`px-3 py-1.5 rounded-full text-xs border ${view==="all"?"bg-raah-green text-white border-raah-green":"bg-white border-border"}`}>All</button>
+          <button onClick={()=>router.push("/family?view=profile")} className={`px-3 py-1.5 rounded-full text-xs border ${view==="profile"?"bg-raah-green text-white border-raah-green":"bg-white border-border"}`}>Household Profile</button>
+          <button onClick={()=>router.push("/family?view=programs")} className={`px-3 py-1.5 rounded-full text-xs border ${view==="programs"?"bg-raah-green text-white border-raah-green":"bg-white border-border"}`}>Program Matching</button>
+        </div>
 
         {showAdd && (
           <div className="bg-white border-2 border-raah-green/30 rounded-2xl p-5">
@@ -72,8 +97,7 @@ export default function FamilyPage(){
           </div>
         )}
 
-        {data && (
-          <>
+        {data && (view==="all" || view==="profile") && (
             <div className="bg-white border border-border rounded-2xl p-6">
               <div className="font-semibold text-sm flex items-center gap-2"><Home size={14}/> Household: {data.id}</div>
               <div className="text-xs text-text-muted mt-1 flex items-center gap-2"><MapPin size={12}/>{data.head.city}, {data.head.province} • Head: {data.head.name} • {data.head.cnic_masked} • {data.head.education}</div>
@@ -92,12 +116,14 @@ export default function FamilyPage(){
                 ))}
               </div>
             </div>
+        )}
 
+        {data && (view==="all" || view==="programs") && (
             <div className="bg-white border border-border rounded-2xl p-6">
               <div className="font-semibold text-sm flex items-center gap-2"><Award size={14}/> Program Matching — Per Member</div>
-              <div className="text-xs text-text-muted mt-1">Click a program to see details, eligibility, and next steps</div>
+              <div className="text-xs text-text-muted mt-1">Click a program to see details, eligibility, and next steps • {filteredPrograms.length} programs {q&&`for "${q}"`}</div>
               <div className="space-y-2 mt-3">
-                {data.programs.map((p:any,i:number)=>(
+                {filteredPrograms.map((p:any,i:number)=>(
                   <div key={i} onClick={()=>setSelectedProgram(p)} className="border border-border rounded-xl p-3 flex items-center justify-between hover:border-raah-green/30 hover:bg-raah-soft/30 cursor-pointer transition">
                     <div>
                       <div className="font-medium text-sm">{p.program} <span className="text-xs text-text-muted">({p.program_ur})</span></div>
@@ -107,9 +133,9 @@ export default function FamilyPage(){
                     <span className={`text-xs px-2 py-1 rounded-full shrink-0 ${p.status==="Enrolled"?"bg-raah-mint text-raah-green":"bg-amber-100 text-amber-700"}`}>{p.status}</span>
                   </div>
                 ))}
+                {filteredPrograms.length===0 && <div className="text-center text-sm text-text-muted py-6">No programs match search</div>}
               </div>
             </div>
-          </>
         )}
       </div>
 
@@ -135,6 +161,16 @@ export default function FamilyPage(){
           </div>
         </div>
       )}
+    </>
+  );
+}
+
+export default function FamilyPage(){
+  return (
+    <AppShell>
+      <Suspense fallback={<div className="p-6 text-sm text-text-muted animate-pulse">Loading Family...</div>}>
+        <FamilyInner />
+      </Suspense>
     </AppShell>
   );
 }

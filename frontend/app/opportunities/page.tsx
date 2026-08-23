@@ -1,17 +1,25 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import AppShell from "@/components/layout/AppShell";
 import { useLang } from "@/lib/LangContext";
-import { opportunitiesApi, opportunitiesRecommendedApi } from "@/lib/api";
-import { GraduationCap, Users, Banknote, Calendar, Award, Search, Filter, Clock, ShieldCheck, ExternalLink, X } from "lucide-react";
+import { opportunitiesRecommendedApi } from "@/lib/api";
+import { GraduationCap, Search, Filter, Calendar, Award, ShieldCheck, ExternalLink, X } from "lucide-react";
 
-export default function OpportunitiesPage(){
+function OpportunitiesInner(){
   const {lang}=useLang();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const urlCat = searchParams.get("cat");
+  const urlQ = searchParams.get("q") || "";
   const [all,setAll]=useState<any>(null);
   const [rec,setRec]=useState<any>(null);
-  const [q,setQ]=useState("");
-  const [cat,setCat]=useState<string|undefined>(undefined);
+  const [q,setQ]=useState(urlQ);
+  const [cat,setCat]=useState<string|undefined>(urlCat || undefined);
   const [selected,setSelected]=useState<any>(null);
+
+  useEffect(()=>{ setQ(urlQ); },[urlQ]);
+  useEffect(()=>{ setCat(urlCat || undefined); },[urlCat]);
 
   useEffect(()=>{
     const params = new URLSearchParams();
@@ -25,10 +33,24 @@ export default function OpportunitiesPage(){
     opportunitiesRecommendedApi().then(setRec).catch(()=>{});
   },[]);
 
+  function setCatAndUrl(c?: string){
+    setCat(c);
+    const p = new URLSearchParams();
+    if(c) p.append("cat", c);
+    if(q) p.append("q", q);
+    router.push(`/opportunities${p.toString()?`?${p}`:""}`);
+  }
+  function setQAndUrl(v: string){
+    setQ(v);
+    const p = new URLSearchParams();
+    if(cat) p.append("category", cat);
+    if(v) p.append("q", v);
+    router.push(`/opportunities${p.toString()?`?${p}`:""}`);
+  }
+
   const categories = ["All","Scholarships","Student Programs","Youth Programs","Family","Welfare"];
 
   return (
-    <AppShell>
       <div className="space-y-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
           <div>
@@ -37,14 +59,14 @@ export default function OpportunitiesPage(){
           </div>
           <div className="flex items-center gap-2 bg-white border border-border rounded-full px-3 py-2">
             <Search size={14} className="text-text-muted"/>
-            <input value={q} onChange={e=>setQ(e.target.value)} placeholder="Search scholarships, youth..." className="bg-transparent outline-none text-sm w-48"/>
-            {q && <button onClick={()=>setQ("")} className="text-xs">✕</button>}
+            <input value={q} onChange={e=>setQAndUrl(e.target.value)} placeholder="Search scholarships, youth..." className="bg-transparent outline-none text-sm w-48"/>
+            {q && <button onClick={()=>setQAndUrl("")} className="text-xs">✕</button>}
           </div>
         </div>
 
         <div className="flex gap-2 overflow-x-auto pb-2">
           {categories.map(c=>(
-            <button key={c} onClick={()=>setCat(c==="All"?undefined:c)} className={`px-3 py-1.5 rounded-full text-xs border whitespace-nowrap ${cat===c||(c==="All"&&!cat)?"bg-raah-green text-white border-raah-green":"bg-white border-border hover:border-raah-green/30"}`}>{c}</button>
+            <button key={c} onClick={()=>setCatAndUrl(c==="All"?undefined:c)} className={`px-3 py-1.5 rounded-full text-xs border whitespace-nowrap ${cat===c||(c==="All"&&!cat)?"bg-raah-green text-white border-raah-green":"bg-white border-border hover:border-raah-green/30"}`}>{c}</button>
           ))}
         </div>
 
@@ -93,7 +115,6 @@ export default function OpportunitiesPage(){
             {all && all.schemes.length===0 && <div className="col-span-2 text-center text-sm text-text-muted py-8">No schemes found — try different search or category</div>}
           </div>
         </div>
-      </div>
 
       {selected && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40" onClick={()=>setSelected(null)}>
@@ -115,6 +136,16 @@ export default function OpportunitiesPage(){
           </div>
         </div>
       )}
+      </div>
+  );
+}
+
+export default function OpportunitiesPage(){
+  return (
+    <AppShell>
+      <Suspense fallback={<div className="p-6 text-sm text-text-muted animate-pulse">Loading Opportunities...</div>}>
+        <OpportunitiesInner />
+      </Suspense>
     </AppShell>
   );
 }

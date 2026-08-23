@@ -1,16 +1,31 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import AppShell from "@/components/layout/AppShell";
 import { useLang } from "@/lib/LangContext";
 import { Bell, Radar, Tag, Calendar, ShieldCheck, Search, ExternalLink, X } from "lucide-react";
 
-export default function UpdatesPage(){
+function UpdatesInner(){
   const {lang}=useLang();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const urlCat = searchParams.get("cat") || "All";
+  const urlQ = searchParams.get("q") || "";
   const [latest,setLatest]=useState<any>(null);
   const [rec,setRec]=useState<any>(null);
-  const [cat,setCat]=useState("All");
-  const [q,setQ]=useState("");
+  const [cat,setCat]=useState(urlCat);
+  const [q,setQ]=useState(urlQ);
   const [selected,setSelected]=useState<any>(null);
+
+  useEffect(()=>{ setCat(urlCat); },[urlCat]);
+  useEffect(()=>{ setQ(urlQ); },[urlQ]);
+
+  function push(catVal: string, qVal: string){
+    const p = new URLSearchParams();
+    if(catVal && catVal!=="All") p.append("cat", catVal);
+    if(qVal) p.append("q", qVal);
+    router.push(`/updates${p.toString()?`?${p}`:""}`);
+  }
 
   function fetchLatest(){
     const params = new URLSearchParams();
@@ -27,7 +42,7 @@ export default function UpdatesPage(){
   const filtered = latest?.updates || [];
 
   return (
-    <AppShell>
+    <>
       <div className="space-y-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
           <div>
@@ -36,8 +51,8 @@ export default function UpdatesPage(){
           </div>
           <div className="flex items-center gap-2 bg-white border border-border rounded-full px-3 py-2">
             <Search size={14} className="text-text-muted"/>
-            <input value={q} onChange={e=>setQ(e.target.value)} placeholder="Search policies..." className="bg-transparent outline-none text-sm w-48"/>
-            {q && <button onClick={()=>setQ("")} className="text-xs">✕</button>}
+            <input value={q} onChange={e=>{ setQ(e.target.value); push(cat, e.target.value); }} placeholder="Search policies..." className="bg-transparent outline-none text-sm w-48"/>
+            {q && <button onClick={()=>{ setQ(""); push(cat, ""); }} className="text-xs">✕</button>}
           </div>
         </div>
 
@@ -58,7 +73,7 @@ export default function UpdatesPage(){
 
         <div className="flex gap-2 overflow-x-auto pb-2">
           {categories.map(c=>(
-            <button key={c} onClick={()=>setCat(c)} className={`px-3 py-1.5 rounded-full text-xs border whitespace-nowrap ${cat===c?"bg-raah-green text-white border-raah-green":"bg-white border-border hover:border-raah-green/30"}`}>{c}</button>
+            <button key={c} onClick={()=>{ setCat(c); push(c, q); }} className={`px-3 py-1.5 rounded-full text-xs border whitespace-nowrap ${cat===c?"bg-raah-green text-white border-raah-green":"bg-white border-border hover:border-raah-green/30"}`}>{c}</button>
           ))}
         </div>
 
@@ -105,6 +120,16 @@ export default function UpdatesPage(){
           </div>
         </div>
       )}
+    </>
+  );
+}
+
+export default function UpdatesPage(){
+  return (
+    <AppShell>
+      <Suspense fallback={<div className="p-6 text-sm text-text-muted animate-pulse">Loading Updates...</div>}>
+        <UpdatesInner />
+      </Suspense>
     </AppShell>
   );
 }
