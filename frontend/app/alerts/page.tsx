@@ -2,8 +2,8 @@
 import { useState, useEffect } from "react";
 import AppShell from "@/components/layout/AppShell";
 import { useLang } from "@/lib/LangContext";
-import { alertsApi, deleteAlertApi } from "@/lib/api";
-import { Bell, AlertTriangle, CheckCircle, XCircle, Plus, Trash2, ExternalLink, Eye, Download, Upload, FileImage, Calendar, ShieldCheck, Check } from "lucide-react";
+import { alertsApi, deleteAlertApi, updateAlertApi } from "@/lib/api";
+import { Bell, AlertTriangle, CheckCircle, XCircle, Plus, Trash2, ExternalLink, Eye, Download, Upload, FileImage, Calendar, ShieldCheck, Check, Pencil } from "lucide-react";
 
 const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
@@ -21,11 +21,12 @@ export default function AlertsPage() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const [form, setForm] = useState({ document_type: "passport", holder_name: "", cnic: "", issue_date: "", expiry_date: "" });
+  const [form, setForm] = useState({ document_type: "passport", custom_type_name: "", holder_name: "", cnic: "", issue_date: "", expiry_date: "" });
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [viewImage, setViewImage] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
+  const [editId, setEditId] = useState<string | null>(null);
 
   function load() {
     setLoading(true);
@@ -72,6 +73,7 @@ export default function AlertsPage() {
     if (!form.issue_date) return "Issue date is required";
     if (!form.expiry_date) return "Expiry date is required";
     if (new Date(form.expiry_date) <= new Date(form.issue_date)) return "Expiry must be after issue date";
+    if (form.document_type === "other" && !form.custom_type_name.trim()) return "Please enter a document name";
     return null;
   }
 
@@ -81,9 +83,11 @@ export default function AlertsPage() {
     setSaving(true);
     setError(null);
     try {
+      const payload = { ...form, holder_name: form.holder_name.trim(), cnic: form.cnic.trim() };
       if (file) {
         const fd = new FormData();
         fd.append("document_type", form.document_type);
+        if (form.document_type === "other") fd.append("custom_type_name", form.custom_type_name.trim());
         fd.append("holder_name", form.holder_name.trim());
         fd.append("cnic", form.cnic.trim());
         fd.append("issue_date", form.issue_date);
@@ -95,14 +99,11 @@ export default function AlertsPage() {
         const res = await fetch(`${API}/alerts`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ ...form, holder_name: form.holder_name.trim(), cnic: form.cnic.trim() }),
+          body: JSON.stringify(payload),
         });
         if (!res.ok) throw new Error(await res.text());
       }
-      setForm({ document_type: "passport", holder_name: "", cnic: "", issue_date: "", expiry_date: "" });
-      setFile(null);
-      setPreview(null);
-      setShowForm(false);
+      resetForm();
       setSuccess("Document added successfully!");
       setTimeout(()=>setSuccess(null), 3000);
       load();
@@ -111,6 +112,57 @@ export default function AlertsPage() {
     } finally {
       setSaving(false);
     }
+  }
+
+  async function updateAlert() {
+    const v = validate();
+    if (v) { setError(v); return; }
+    if (!editId) return;
+    setSaving(true);
+    setError(null);
+    try {
+      await updateAlertApi(editId, {
+        document_type: form.document_type,
+        custom_type_name: form.document_type === "other" ? form.custom_type_name.trim() : undefined,
+        holder_name: form.holder_name.trim(),
+        cnic: form.cnic.trim(),
+        issue_date: form.issue_date,
+        expiry_date: form.expiry_date,
+      });
+      resetForm();
+      setSuccess("Document updated successfully!");
+      setTimeout(()=>setSuccess(null), 3000);
+      load();
+    } catch (e: any) {
+      setError(e.message || "Failed to update document");
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  function startEdit(alert: any) {
+    setEditId(alert.id);
+    setForm({
+      document_type: alert.document_type,
+      custom_type_name: alert.document_type === "other" ? alert.document_name_en : "",
+      holder_name: alert.holder_name,
+      cnic: alert.cnic,
+      issue_date: alert.issue_date,
+      expiry_date: alert.expiry_date,
+    });
+    setFile(null);
+    setPreview(null);
+    setShowForm(true);
+    setError(null);
+  }
+
+  function resetForm() {
+    setForm({ document_type: "passport", custom_type_name: "", holder_name: "", cnic: "", issue_date: "", expiry_date: "" });
+    setFile(null);
+    setPreview(null);
+    setShowForm(false);
+    setEditId(null);
+    setError(null);
   }
 
   async function remove(id: string) {
@@ -136,7 +188,7 @@ export default function AlertsPage() {
             </p>
           </div>
           <button
-            onClick={() => { setShowForm(!showForm); setError(null); }}
+            onClick={() => { resetForm(); setShowForm(true); }}
             className="flex items-center gap-2 px-4 py-2 bg-raah-green text-white rounded-xl text-sm font-medium hover:bg-raah-deep transition"
           >
             <Plus size={16} /> {lang === "ur" ? "نئی دستاویز" : "Add Document"}
@@ -163,21 +215,33 @@ export default function AlertsPage() {
 
         {showForm && (
           <div className="mt-4 p-5 rounded-xl border-2 border-raah-green/30 bg-raah-soft">
-            <div className="font-semibold text-sm mb-3 flex items-center gap-2"><FileImage size={14}/> Add New Document</div>
+            <div className="font-semibold text-sm mb-3 flex items-center gap-2">{editId ? <><Pencil size={14}/> Edit Document</> : <><FileImage size={14}/> Add New Document</>}</div>
             {error && <div className="mb-3 p-2 rounded-lg bg-red-50 border border-red-200 text-xs text-red-700">{error}</div>}
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="text-xs font-medium text-text-secondary">Document Type *</label>
                 <select
                   value={form.document_type}
-                  onChange={(e) => setForm({ ...form, document_type: e.target.value })}
+                  onChange={(e) => setForm({ ...form, document_type: e.target.value, custom_type_name: e.target.value !== "other" ? "" : form.custom_type_name })}
                   className="w-full mt-1 px-3 py-2.5 rounded-xl border border-border text-sm bg-white focus:outline-none focus:ring-2 focus:ring-raah-green/20"
                 >
                   <option value="passport">Passport</option>
                   <option value="cnic">CNIC</option>
                   <option value="business">Business Registration</option>
+                  <option value="other">Others</option>
                 </select>
               </div>
+              {form.document_type === "other" && (
+                <div>
+                  <label className="text-xs font-medium text-text-secondary">Document Name *</label>
+                  <input
+                    value={form.custom_type_name}
+                    onChange={(e) => setForm({ ...form, custom_type_name: e.target.value })}
+                    className="w-full mt-1 px-3 py-2.5 rounded-xl border border-border text-sm focus:outline-none focus:ring-2 focus:ring-raah-green/20"
+                    placeholder="e.g. Driving License, Property papers..."
+                  />
+                </div>
+              )}
               <div>
                 <label className="text-xs font-medium text-text-secondary">Holder Name *</label>
                 <input
@@ -239,10 +303,10 @@ export default function AlertsPage() {
               </div>
             </div>
             <div className="mt-4 flex gap-2">
-              <button onClick={addAlert} disabled={saving} className="px-6 py-2.5 bg-raah-green text-white rounded-xl text-sm font-medium hover:bg-raah-deep disabled:opacity-50 flex items-center gap-2">
-                {saving ? "Saving..." : <><Check size={14}/> Save Document</>}
+              <button onClick={editId ? updateAlert : addAlert} disabled={saving} className="px-6 py-2.5 bg-raah-green text-white rounded-xl text-sm font-medium hover:bg-raah-deep disabled:opacity-50 flex items-center gap-2">
+                {saving ? "Saving..." : editId ? <><Check size={14}/> Update Document</> : <><Check size={14}/> Save Document</>}
               </button>
-              <button onClick={() => { setShowForm(false); setFile(null); setPreview(null); setError(null); }} className="px-4 py-2.5 border border-border rounded-xl text-sm text-text-secondary hover:bg-gray-50">
+              <button onClick={resetForm} className="px-4 py-2.5 border border-border rounded-xl text-sm text-text-secondary hover:bg-gray-50">
                 Cancel
               </button>
             </div>
@@ -315,13 +379,22 @@ export default function AlertsPage() {
                       </div>
                     </div>
                   </div>
-                  <button
-                    onClick={() => remove(alert.id)}
-                    className="text-text-muted hover:text-red-500 transition p-1 shrink-0 hover:bg-red-50 rounded-full"
-                    title="Delete"
-                  >
-                    <Trash2 size={16} />
-                  </button>
+                  <div className="flex items-center gap-1 shrink-0">
+                    <button
+                      onClick={() => startEdit(alert)}
+                      className="text-text-muted hover:text-raah-green transition p-1 hover:bg-raah-mint rounded-full"
+                      title="Edit"
+                    >
+                      <Pencil size={16} />
+                    </button>
+                    <button
+                      onClick={() => remove(alert.id)}
+                      className="text-text-muted hover:text-red-500 transition p-1 hover:bg-red-50 rounded-full"
+                      title="Delete"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
                 </div>
               );
             })

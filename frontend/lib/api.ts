@@ -102,6 +102,16 @@ export async function deleteAlertApi(alertId: string) {
   return res.json();
 }
 
+export async function updateAlertApi(alertId: string, data: { document_type?: string; holder_name?: string; cnic?: string; issue_date?: string; expiry_date?: string; custom_type_name?: string }) {
+  const res = await fetch(`${API}/alerts/${alertId}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
 // --- Citizen Command Center ---
 export async function citizenDashboardApi() {
   const res = await fetch(`${API}/api/citizen/dashboard`);
