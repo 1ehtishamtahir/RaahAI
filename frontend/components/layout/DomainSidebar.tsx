@@ -45,8 +45,6 @@ const DOMAIN_CONFIG: Record<string, { title_en: string; title_ur: string; icon: 
     title_ur: "چالان",
     icon: AlertTriangle,
     items: [
-      { href: "/challans?status=Pending", label: "Pending Challans", icon: AlertTriangle },
-      { href: "/challans?status=Paid", label: "Paid Challans", icon: AlertTriangle },
       { href: "/challans", label: "Challan Details", icon: FileText },
     ],
   },
@@ -157,7 +155,13 @@ export default function DomainSidebar({ domain }: { domain: string }) {
             active = false;
           } else {
             const base = item.href.split("?")[0].split("#")[0];
-            active = pathname === base && !svc && !cat && !status;
+            if (domain === "challans" && base === "/challans") {
+              active = pathname === base;
+            } else if (base === "/identity" || base === "/vehicle") {
+              active = pathname === base && !svc;
+            } else {
+              active = pathname === base && !svc && !cat && !status;
+            }
           }
           return (
             <div key={item.href}>
