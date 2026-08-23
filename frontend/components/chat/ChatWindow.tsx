@@ -22,8 +22,13 @@ export default function ChatWindow() {
   const [loading, setLoading] = useState(false);
   const { lang, t } = useLang();
   const bottomRef = useRef<HTMLDivElement>(null);
+  const initialLoad = useRef(true);
 
   useEffect(() => {
+    if (initialLoad.current) {
+      initialLoad.current = false;
+      return;
+    }
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, loading]);
 
