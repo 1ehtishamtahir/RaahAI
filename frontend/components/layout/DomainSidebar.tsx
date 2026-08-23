@@ -176,7 +176,7 @@ export default function DomainSidebar({ domain }: { domain: string }) {
               >
                 <item.icon size={16} className={cn(active ? "text-raah-green" : "text-text-muted")} />
                 <span className="flex-1">{item.label}</span>
-                {active && <span className="text-raah-green">›</span>}
+                {active && item.children && <span className="text-raah-green">›</span>}
               </Link>
               {active && (item as any).children && (
                 <div className="ml-6 mt-1 space-y-1 border-l border-border pl-3">
