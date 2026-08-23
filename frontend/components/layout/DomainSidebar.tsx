@@ -53,8 +53,6 @@ const DOMAIN_CONFIG: Record<string, { title_en: string; title_ur: string; icon: 
     title_ur: "سرکاری ادائیگیاں",
     icon: CreditCard,
     items: [
-      { href: "/payments?type=Fee", label: "Fees", icon: CreditCard },
-      { href: "/payments?type=Tax", label: "Taxes", icon: Calculator },
       { href: "/payments", label: "Payment Timeline", icon: CreditCard },
       { href: "/fees", label: "Fee Calculator", icon: Calculator },
     ],
