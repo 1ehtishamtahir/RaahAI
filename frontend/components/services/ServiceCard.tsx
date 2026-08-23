@@ -13,7 +13,6 @@ export default function ServiceCard() {
     <div className="bg-white rounded-2xl border border-border p-4">
       <div className="flex items-center justify-between mb-3">
         <div className="font-semibold">{t.services}</div>
-        <a href="/services" className="text-xs text-raah-green font-medium">{t.viewAll}</a>
       </div>
       <div className="space-y-2">
         {services.map((s) => (
