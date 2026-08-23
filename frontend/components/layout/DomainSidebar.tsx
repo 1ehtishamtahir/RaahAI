@@ -28,6 +28,7 @@ const DOMAIN_CONFIG: Record<string, { title_en: string; title_ur: string; icon: 
       { href: "/identity?svc=marriage_registration", label: "Marriage Registration", icon: Heart },
       { href: "/identity?svc=death_registration", label: "Death Registration", icon: Skull },
       { href: "/eligibility", label: "Eligibility Check", icon: ClipboardCheck },
+      { href: "/offices", label: "Office Locator", icon: Building2 },
     ],
   },
   vehicle: {
@@ -89,7 +90,6 @@ const DOMAIN_CONFIG: Record<string, { title_en: string; title_ur: string; icon: 
       { href: "/family", label: "Overview", icon: LayoutDashboard },
       { href: "/family?view=profile", label: "Household Profile", icon: Users },
       { href: "/family?view=programs", label: "Program Matching", icon: Award },
-      { href: "/eligibility", label: "Eligibility Check", icon: ClipboardCheck },
     ],
   },
   updates: {

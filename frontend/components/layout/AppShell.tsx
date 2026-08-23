@@ -18,6 +18,7 @@ const DOMAIN_MAP: Record<string, string> = {
   "/family": "family",
   "/updates": "updates",
   "/eligibility": "identity",
+  "/offices": "identity",
 };
 
 function getDomain(pathname: string): string | null {
