@@ -101,3 +101,85 @@ export async function deleteAlertApi(alertId: string) {
   if (!res.ok) throw new Error(await res.text());
   return res.json();
 }
+
+// --- Citizen Command Center ---
+export async function citizenDashboardApi() {
+  const res = await fetch(`${API}/api/citizen/dashboard`);
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+export async function citizenProfileApi() {
+  const res = await fetch(`${API}/api/citizen/profile`);
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+export async function identityListApi() {
+  const res = await fetch(`${API}/api/identity`);
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+export async function identityFlowApi(service: string) {
+  const res = await fetch(`${API}/api/identity/${service}`);
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+export async function identityStatusApi(service: string) {
+  const res = await fetch(`${API}/api/identity/${service}/status`);
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+export async function vehiclesApi() {
+  const res = await fetch(`${API}/api/vehicle`);
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+export async function challansApi(status?: string) {
+  const q = status ? `?status=${status}` : "";
+  const res = await fetch(`${API}/api/challans${q}`);
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+export async function paymentsTimelineApi() {
+  const res = await fetch(`${API}/api/payments/timeline`);
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+export async function opportunitiesApi() {
+  const res = await fetch(`${API}/api/opportunities`);
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+export async function opportunitiesRecommendedApi() {
+  const res = await fetch(`${API}/api/opportunities/recommended`);
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+export async function familyProfileApi() {
+  const res = await fetch(`${API}/api/family/profile`);
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+export async function familyProgramsApi() {
+  const res = await fetch(`${API}/api/family/programs`);
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+export async function updatesLatestApi() {
+  const res = await fetch(`${API}/api/updates/latest`);
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+export async function updatesRecommendedApi() {
+  const res = await fetch(`${API}/api/updates/recommended`);
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+export async function orchestratorApi(query: string, lang: string = "en") {
+  const res = await fetch(`${API}/api/orchestrator/route`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ query, lang }),
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
