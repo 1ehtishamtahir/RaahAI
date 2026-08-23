@@ -114,29 +114,47 @@ BIRTH_FLOW = MissionFlow(
     last_verified="2026-08-01",
 )
 
+MARRIAGE_FLOW = MissionFlow(
+    service="marriage_registration", name_en="Marriage Registration (Nikah)", name_ur="نکاح کا اندراج",
+    mission_steps=[
+        MissionStep(step="1", title_en="Requirement", title_ur="ضرورت", description_en="Register Nikah at Union Council", description_ur="یونین کونسل میں نکاح کا اندراج", status="done"),
+        MissionStep(step="2", title_en="Eligibility", title_ur="اہلیت", description_en="Both spouses 18+, valid Nikah with witnesses", description_ur="دونوں 18+، درست نکاح اور گواہ", status="pending"),
+        MissionStep(step="3", title_en="Documents", title_ur="دستاویزات", description_en="Nikahnama, CNICs of spouses + witnesses", description_ur="نکاح نامہ، میاں بیوی اور گواہوں کے شناختی کارڈ", status="pending"),
+        MissionStep(step="4", title_en="Fee", title_ur="فیس", description_en="PKR 1,000 at Union Council", description_ur="یونین کونسل میں 1000 روپے", status="pending"),
+        MissionStep(step="5", title_en="Application", title_ur="درخواست", description_en="Submit Nikahnama at Union Council, get certificate", description_ur="یونین کونسل میں نکاح نامہ جمع کرائیں", status="pending"),
+        MissionStep(step="6", title_en="Tracking", title_ur="ٹریکنگ", description_en="Collect marriage certificate from Union Council", description_ur="یونین کونسل سے سرٹیفکیٹ وصول کریں", status="pending"),
+    ],
+    required_documents=["Nikahnama (original)", "CNICs of spouses", "CNICs of witnesses", "Photos"],
+    eligibility=["Both spouses 18+", "Valid Nikah with Nikah Khawan"],
+    fee_normal="PKR 1,000", fee_urgent="PKR 1,000",
+    application_method=["Visit Union Council with Nikahnama", "Submit CNICs of spouses + witnesses", "Pay fee", "Receive marriage certificate"],
+    tracking_url="https://www.nadra.gov.pk", official_source="Local Government — nadra.gov.pk", last_verified="2026-08-01",
+)
+
+DEATH_FLOW = MissionFlow(
+    service="death_registration", name_en="Death Registration", name_ur="وفات کا اندراج",
+    mission_steps=[
+        MissionStep(step="1", title_en="Requirement", title_ur="ضرورت", description_en="Register death at Union Council for certificate", description_ur="یونین کونسل میں وفات کا اندراج", status="done"),
+        MissionStep(step="2", title_en="Eligibility", title_ur="اہلیت", description_en="Legal heir / family member of deceased", description_ur="مرحوم کا قانونی وارث / خاندان", status="pending"),
+        MissionStep(step="3", title_en="Documents", title_ur="دستاویزات", description_en="Deceased CNIC, hospital death certificate, applicant CNIC", description_ur="مرحوم کا شناختی کارڈ، ہسپتال سرٹیفکیٹ، درخواست دہندہ کا کارڈ", status="pending"),
+        MissionStep(step="4", title_en="Fee", title_ur="فیس", description_en="PKR 1,000 at Union Council", description_ur="یونین کونسل میں 1000 روپے", status="pending"),
+        MissionStep(step="5", title_en="Application", title_ur="درخواست", description_en="Submit death certificate at Union Council", description_ur="یونین کونسل میں سرٹیفکیٹ جمع کرائیں", status="pending"),
+        MissionStep(step="6", title_en="Tracking", title_ur="ٹریکنگ", description_en="Collect death certificate from Union Council", description_ur="یونین کونسل سے سرٹیفکیٹ وصول کریں", status="pending"),
+    ],
+    required_documents=["Deceased CNIC (original)", "Hospital death certificate", "Applicant CNIC", "Graveyard receipt (if any)"],
+    eligibility=["Legal heir / family member", "Within 30 days recommended"],
+    fee_normal="PKR 1,000", fee_urgent="PKR 1,000",
+    application_method=["Get hospital death certificate", "Visit Union Council", "Submit documents + fee", "Receive death certificate"],
+    tracking_url="https://www.nadra.gov.pk", official_source="Local Government — nadra.gov.pk", last_verified="2026-08-01",
+)
+
 FLOWS = {
     "cnic": CNIC_FLOW,
     "passport": PASSPORT_FLOW,
     "frc": FRC_FLOW,
     "birth_registration": BIRTH_FLOW,
-    "marriage_registration": MissionFlow(
-        service="marriage_registration", name_en="Marriage Registration", name_ur="نکاح کا اندراج",
-        mission_steps=[MissionStep(step="1", title_en="Requirement", title_ur="ضرورت", description_en="Register marriage", description_ur="نکاح کا اندراج", status="done")],
-        required_documents=["Nikahnama", "CNICs of spouses", "Witness CNICs"],
-        eligibility=["Both spouses 18+", "Valid Nikah"],
-        fee_normal="PKR 1,000", fee_urgent="PKR 1,000",
-        application_method=["Union Council registration"], tracking_url="https://www.nadra.gov.pk",
-        official_source="Local Government", last_verified="2026-08-01",
-    ),
-    "death_registration": MissionFlow(
-        service="death_registration", name_en="Death Registration", name_ur="وفات کا اندراج",
-        mission_steps=[MissionStep(step="1", title_en="Requirement", title_ur="ضرورت", description_en="Register death", description_ur="وفات کا اندراج", status="done")],
-        required_documents=["Deceased CNIC", "Hospital death certificate", "Applicant CNIC"],
-        eligibility=["Legal heir / family member"],
-        fee_normal="PKR 1,000", fee_urgent="PKR 1,000",
-        application_method=["Union Council registration"], tracking_url="https://www.nadra.gov.pk",
-        official_source="Local Government", last_verified="2026-08-01",
-    ),
+    "marriage_registration": MARRIAGE_FLOW,
+    "death_registration": DEATH_FLOW,
 }
 
 @router.get("", response_model=dict)

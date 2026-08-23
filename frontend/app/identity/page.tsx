@@ -18,11 +18,13 @@ function IdentityInner() {
   const [list, setList] = useState<any>(null);
   const [flow, setFlow] = useState<any>(null);
   const [status, setStatus] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => { identityListApi().then(setList).catch(()=>{}); }, []);
   useEffect(() => {
     if (svcParam) {
-      identityFlowApi(svcParam).then(setFlow).catch(()=>{});
+      setError(null);
+      identityFlowApi(svcParam).then(setFlow).catch(()=>{ setFlow(null); setError(`Unknown service: ${svcParam}`); });
       if (subParam === "status") {
         identityStatusApi(svcParam).then(setStatus).catch(()=>{});
       } else {
@@ -31,6 +33,7 @@ function IdentityInner() {
     } else {
       setFlow(null);
       setStatus(null);
+      setError(null);
     }
   }, [svcParam, subParam]);
 
@@ -85,6 +88,12 @@ function IdentityInner() {
         <span className="font-medium text-raah-deep capitalize">{svcParam.replace(/_/g," ")}</span>
         {subParam && <><span>›</span><span className="capitalize">{subParam}</span></>}
       </div>
+
+      {error && (
+        <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-sm text-red-700">
+          {error} — <Link href="/identity" className="underline">Back to Overview</Link>
+        </div>
+      )}
 
       {flow && (
         <div className="bg-white border border-border rounded-2xl p-6">
