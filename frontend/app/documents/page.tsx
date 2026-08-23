@@ -3,14 +3,13 @@ import { useEffect, useState } from "react";
 import AppShell from "@/components/layout/AppShell";
 import { useLang } from "@/lib/LangContext";
 import Link from "next/link";
-import { ScanLine, FileText, Wallet, ListChecks, ArrowRight, Clock, Shield, Upload, Eye, CheckCircle } from "lucide-react";
-import { alertsApi, checklistApi } from "@/lib/api";
+import { ScanLine, FileText, Wallet, ArrowRight, Clock, Shield, Upload, Eye } from "lucide-react";
+import { alertsApi } from "@/lib/api";
 
 export default function DocumentsPage() {
   const { lang } = useLang();
   const [alerts, setAlerts] = useState<any[]>([]);
-  const [checklist, setChecklist] = useState<any>(null);
-  useEffect(()=>{ alertsApi().then(setAlerts).catch(()=>{}); checklistApi("passport","new").then(setChecklist).catch(()=>{}); },[]);
+  useEffect(()=>{ alertsApi().then(setAlerts).catch(()=>{}); },[]);
 
   const expiring = alerts.filter((a:any)=>a.status==="expiring_soon").length;
   const expired = alerts.filter((a:any)=>a.status==="expired").length;
@@ -20,10 +19,9 @@ export default function DocumentsPage() {
       <div className="space-y-6">
         <div>
           <h1 className="text-xl font-bold text-raah-deep flex items-center gap-2"><FileText size={20}/> Documents</h1>
-          <p className="text-sm text-text-secondary mt-1">Scanner • Explainer • My Documents (Wallet) • Dynamic Checklist — unified hub</p>
+          <p className="text-sm text-text-secondary mt-1">Scanner • Explainer • My Documents (Wallet) — unified hub</p>
         </div>
 
-        {/* Stats */}
         <div className="grid grid-cols-3 gap-3">
           <div className="bg-white border border-border rounded-xl p-3 text-center">
             <div className="text-xl font-bold text-raah-deep">{alerts.length}</div>
@@ -40,8 +38,7 @@ export default function DocumentsPage() {
           </div>
         </div>
 
-        {/* Main 4 tiles — now with live previews */}
-        <div className="grid md:grid-cols-2 gap-4">
+        <div className="grid md:grid-cols-3 gap-4">
           <Link href="/ocr" className="bg-white border border-border rounded-2xl p-6 hover:border-raah-green/30 hover:shadow-sm transition group">
             <div className="flex items-center justify-between">
               <div className="w-10 h-10 rounded-xl bg-teal-600 text-white flex items-center justify-center"><ScanLine size={18}/></div>
@@ -80,7 +77,7 @@ export default function DocumentsPage() {
               </span>
             </div>
             <div className="font-semibold mt-3">My Documents (Wallet)</div>
-            <div className="text-sm text-text-secondary mt-1">Store your docs securely — expiry alerts & renewal links</div>
+            <div className="text-sm text-text-secondary mt-1">Store docs with images — view, download, expiry alerts & renewal</div>
             <div className="mt-3 space-y-2">
               {alerts.slice(0,2).map((a:any)=>(
                 <div key={a.id} className="flex items-center justify-between p-2 rounded-lg bg-raah-soft border border-border text-xs">
@@ -91,24 +88,6 @@ export default function DocumentsPage() {
               {!alerts.length && <div className="text-xs text-text-muted">No documents yet — add via Wallet</div>}
             </div>
             <div className="text-xs text-raah-green mt-3 flex items-center gap-1">Open Wallet <ArrowRight size={12} className="group-hover:translate-x-1 transition"/></div>
-          </Link>
-
-          <Link href="/checklist" className="bg-white border border-border rounded-2xl p-6 hover:border-raah-green/30 hover:shadow-sm transition group">
-            <div className="flex items-center justify-between">
-              <div className="w-10 h-10 rounded-xl bg-violet-600 text-white flex items-center justify-center"><ListChecks size={18}/></div>
-              <span className="text-xs px-2 py-1 rounded-full bg-violet-50 text-violet-700 border border-violet-200">{checklist ? `${checklist.completed_count}/${checklist.total_count} done` : "—"}</span>
-            </div>
-            <div className="font-semibold mt-3">Dynamic Checklist</div>
-            <div className="text-sm text-text-secondary mt-1">Personalized checklist per service & situation — with progress</div>
-            {checklist && (
-              <div className="mt-3">
-                <div className="w-full bg-border rounded-full h-1.5 overflow-hidden">
-                  <div className="bg-violet-600 h-1.5 rounded-full" style={{width: `${checklist.progress*100}%`}}></div>
-                </div>
-                <div className="text-xs text-text-muted mt-1 flex items-center gap-1"><CheckCircle size={12} className="text-violet-600"/> {checklist.service} • {checklist.situation}</div>
-              </div>
-            )}
-            <div className="text-xs text-raah-green mt-3 flex items-center gap-1">Open Checklist <ArrowRight size={12} className="group-hover:translate-x-1 transition"/></div>
           </Link>
         </div>
 

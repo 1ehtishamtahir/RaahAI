@@ -14,7 +14,6 @@ const DOMAIN_MAP: Record<string, string> = {
   "/documents": "documents",
   "/ocr": "documents",
   "/alerts": "documents",
-  "/checklist": "documents",
   "/opportunities": "opportunities",
   "/family": "family",
   "/updates": "updates",

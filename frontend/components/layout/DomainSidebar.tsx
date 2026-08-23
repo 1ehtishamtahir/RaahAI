@@ -65,7 +65,6 @@ const DOMAIN_CONFIG: Record<string, { title_en: string; title_ur: string; icon: 
       { href: "/ocr", label: "Document Scanner", icon: ScanLine },
       { href: "/documents", label: "Document Explainer", icon: FileText },
       { href: "/alerts", label: "My Documents (Wallet)", icon: Wallet },
-      { href: "/checklist", label: "Dynamic Checklist", icon: ListChecks },
     ],
   },
   opportunities: {
