@@ -1,7 +1,8 @@
+import { useState } from "react";
 import SourceBadge from "./SourceBadge";
+import { feedbackApi } from "@/lib/api";
 
 function renderInline(s: string) {
-  // handle **bold** and *italic* without external dep
   const parts: React.ReactNode[] = [];
   let last = 0;
   const re = /\*\*(.+?)\*\*|\*(.+?)\*/g;
@@ -40,7 +41,6 @@ function Markdown({ text }: { text: string }) {
       nodes.push(<div key={`sp-${i}`} className="h-2" />);
       return;
     }
-    // headings ### / ## / #
     const h3 = line.match(/^###\s+(.*)/);
     const h2 = line.match(/^##\s+(.*)/);
     const h1 = line.match(/^#\s+(.*)/);
@@ -59,17 +59,15 @@ function Markdown({ text }: { text: string }) {
       nodes.push(<div key={i} className="font-bold text-[16px] text-raah-deep mt-3 mb-1">{renderInline(h1[1])}</div>);
       return;
     }
-    // bullets: ● * - •
-    const bullet = line.match(/^\s*[●•*\-]\s+(.*)/);
+    const bullet = line.match(/^\s*[●\u2022*\-]\s+(.*)/);
     if (bullet) {
       list.push(bullet[1]);
       return;
     }
-    // numbered: ① ② or 1. 2.
-    const numbered = line.match(/^\s*(?:[①②③④⑤⑥⑦⑧⑨⑩]|\d+\.)\s+(.*)/);
+    const numbered = line.match(/^\s*(?:[\u2460\u2461\u2462\u2463\u2464\u2465\u2466\u2467\u2468\u2469]|\d+\.)\s+(.*)/);
     if (numbered) {
       flushList(i);
-      nodes.push(<div key={i} className="flex gap-2 text-[14px] my-1"><span className="text-raah-green">•</span><span>{renderInline(numbered[1])}</span></div>);
+      nodes.push(<div key={i} className="flex gap-2 text-[14px] my-1"><span className="text-raah-green">\u2022</span><span>{renderInline(numbered[1])}</span></div>);
       return;
     }
     flushList(i);
@@ -79,14 +77,31 @@ function Markdown({ text }: { text: string }) {
   return <div className="text-[14px] leading-relaxed">{nodes}</div>;
 }
 
-export default function AIMessage({ text, time, citations, grounded = true }: { text: string; time: string; citations?: { title: string; snippet?: string }[]; grounded?: boolean }) {
-  const isFallback = /don't have verified information|تصدیق شدہ معلومات نہیں/i.test(text);
+export default function AIMessage({ text, time, citations, grounded = true, messageId }: { text: string; time: string; citations?: { title: string; snippet?: string }[]; grounded?: boolean; messageId?: string }) {
+  const isFallback = /don't have verified information|\u062a\u0635\u062f\u06cc\u0642 \u0634\u062f\u06c9 \u0645\u0639\u0644\u0648\u0645\u0627\u062a \u0646\u06c1\u06cc\u0646/i.test(text);
+  const [feedback, setFeedback] = useState<"up" | "down" | null>(null);
+  const [copied, setCopied] = useState(false);
+
+  async function handleFeedback(rating: "up" | "down") {
+    if (feedback) return;
+    setFeedback(rating);
+    try {
+      await feedbackApi(messageId || Date.now().toString(), rating);
+    } catch {}
+  }
+
+  function handleCopy() {
+    navigator.clipboard?.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }
+
   return (
     <div className="flex gap-3">
       <div className="w-8 h-8 rounded-full bg-raah-green text-white flex items-center justify-center text-xs font-bold shrink-0">R</div>
       <div className="flex-1 bg-white border border-border rounded-2xl rounded-bl-md p-4 shadow-sm">
         <div className="flex items-center justify-between text-xs text-text-muted mb-2">
-          <span className="font-semibold text-raah-deep flex items-center gap-1">RaahAI <span className="text-raah-success">✓</span></span>
+          <span className="font-semibold text-raah-deep flex items-center gap-1">RaahAI <span className="text-raah-success">\u2713</span></span>
           <span>{time}</span>
         </div>
         <Markdown text={text} />
@@ -100,10 +115,28 @@ export default function AIMessage({ text, time, citations, grounded = true }: { 
           </div>
         )}
 
-        <div className="mt-3 flex items-center gap-3 text-text-muted">
-          <button className="hover:text-raah-green text-sm" title="Like">♡</button>
-          <button className="hover:text-raah-green text-sm" title="Dislike">👎</button>
-          <button className="hover:text-raah-green text-sm" title="Copy" onClick={() => navigator.clipboard?.writeText(text)}>⧉</button>
+        <div className="mt-3 flex items-center gap-3">
+          <button
+            onClick={() => handleFeedback("up")}
+            className={`text-sm transition ${feedback === "up" ? "text-raah-green font-bold" : "text-text-muted hover:text-raah-green"}`}
+            title="Helpful"
+          >
+            {feedback === "up" ? "\u2764" : "\u2661"}
+          </button>
+          <button
+            onClick={() => handleFeedback("down")}
+            className={`text-sm transition ${feedback === "down" ? "text-red-500 font-bold" : "text-text-muted hover:text-red-500"}`}
+            title="Not helpful"
+          >
+            {feedback === "down" ? "\ud83d\udc4e" : "\ud83d\udc4e"}
+          </button>
+          <button
+            onClick={handleCopy}
+            className="text-sm text-text-muted hover:text-raah-green transition"
+            title="Copy"
+          >
+            {copied ? "\u2713" : "\u29c9"}
+          </button>
         </div>
       </div>
     </div>

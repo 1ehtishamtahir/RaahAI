@@ -67,4 +67,31 @@ class VoiceResponse(BaseModel):
     transcript: str
     answer: str
     citations: List[Citation] = []
-    audio_url: Optional[str] = None  # or base64
+    audio_url: Optional[str] = None
+
+# ---- Fees ----
+class FeeRequest(BaseModel):
+    service: str
+    urgency: str = "normal"
+    pages: int = 36
+
+# ---- Eligibility ----
+class EligibilityRequest(BaseModel):
+    age: int = 25
+    is_pakistani: bool = True
+    has_cnic: bool = True
+
+# ---- Feedback ----
+class FeedbackRequest(BaseModel):
+    message_id: str
+    rating: str
+    comment: Optional[str] = None
+    session_id: Optional[str] = None
+
+# ---- Alerts ----
+class AddAlertRequest(BaseModel):
+    document_type: str
+    holder_name: str
+    cnic: str
+    issue_date: str
+    expiry_date: str
