@@ -74,8 +74,8 @@ export default function ChatWindow() {
   }
 
   return (
-    <div className="flex flex-col h-[calc(100vh-72px-48px)] bg-white rounded-[20px] border border-border overflow-hidden">
-      <div className="flex-1 overflow-y-auto p-4 lg:p-6 space-y-4">
+    <div className="flex flex-col h-[calc(100vh-72px-48px)] bg-white rounded-[20px] border border-border">
+      <div className="flex-1 overflow-y-auto p-4 lg:p-6 space-y-4 min-h-0">
         {messages.map((m) =>
           m.role === "user" ? <UserMessage key={m.id} text={m.text} time={m.time} /> : <AIMessage key={m.id} text={m.text} time={m.time} citations={m.citations} grounded={m.grounded} />
         )}
