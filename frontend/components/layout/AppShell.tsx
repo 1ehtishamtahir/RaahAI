@@ -2,9 +2,12 @@
 import Sidebar from "./Sidebar";
 import TopHeader from "./TopHeader";
 import DomainSidebar from "./DomainSidebar";
-import { useState, Suspense } from "react";
-import { usePathname } from "next/navigation";
+import { useState, Suspense, useEffect } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/lib/AuthContext";
+
+const PUBLIC_PATHS = ["/login", "/register"];
 
 const DOMAIN_MAP: Record<string, string> = {
   "/identity": "identity",
@@ -32,8 +35,33 @@ function getDomain(pathname: string): string | null {
 export default function AppShell({ children, rightPanel }: { children: React.ReactNode; rightPanel?: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
+  const { user, loading } = useAuth();
   const isDashboard = pathname === "/dashboard";
+  const isPublic = PUBLIC_PATHS.includes(pathname);
   const domain = getDomain(pathname);
+
+  useEffect(() => {
+    if (!loading && !user && !isPublic) {
+      router.push("/login");
+    }
+  }, [user, loading, isPublic, router]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#FBFDFC] flex items-center justify-center">
+        <div className="text-sm text-text-muted animate-pulse">Loading RaahAI...</div>
+      </div>
+    );
+  }
+
+  if (!user && !isPublic) {
+    return (
+      <div className="min-h-screen bg-[#FBFDFC] flex items-center justify-center">
+        <div className="text-sm text-text-muted">Redirecting to login...</div>
+      </div>
+    );
+  }
 
   // Dashboard: no sidebar at all (Citizen Command Center standalone)
   if (isDashboard) {
