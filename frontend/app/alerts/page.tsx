@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import AppShell from "@/components/layout/AppShell";
 import { useLang } from "@/lib/LangContext";
 import { alertsApi, deleteAlertApi } from "@/lib/api";
-import { Bell, AlertTriangle, CheckCircle, XCircle, Plus, Trash2, ExternalLink, Eye, Download, Upload, FileImage } from "lucide-react";
+import { Bell, AlertTriangle, CheckCircle, XCircle, Plus, Trash2, ExternalLink, Eye, Download, Upload, FileImage, Calendar, ShieldCheck, Check } from "lucide-react";
 
 const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
@@ -18,10 +18,14 @@ export default function AlertsPage() {
   const [alerts, setAlerts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const [form, setForm] = useState({ document_type: "passport", holder_name: "", cnic: "", issue_date: "", expiry_date: "" });
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [viewImage, setViewImage] = useState<string | null>(null);
+  const [dragOver, setDragOver] = useState(false);
 
   function load() {
     setLoading(true);
@@ -32,7 +36,12 @@ export default function AlertsPage() {
 
   function onFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const f = e.target.files?.[0] || null;
+    if (f && f.size > 5 * 1024 * 1024) {
+      setError("Image too large (max 5MB)");
+      return;
+    }
     setFile(f);
+    setError(null);
     if (f) {
       const url = URL.createObjectURL(f);
       setPreview(url);
@@ -41,40 +50,71 @@ export default function AlertsPage() {
     }
   }
 
-  async function addAlert() {
-    if (!form.holder_name || !form.cnic || !form.issue_date || !form.expiry_date) return;
-    if (file) {
-      const fd = new FormData();
-      fd.append("document_type", form.document_type);
-      fd.append("holder_name", form.holder_name);
-      fd.append("cnic", form.cnic);
-      fd.append("issue_date", form.issue_date);
-      fd.append("expiry_date", form.expiry_date);
-      fd.append("file", file);
-      const res = await fetch(`${API}/alerts/upload`, { method: "POST", body: fd });
-      if (!res.ok) {
-        alert("Failed to add document: " + await res.text());
+  function onDrop(e: React.DragEvent) {
+    e.preventDefault();
+    setDragOver(false);
+    const f = e.dataTransfer.files?.[0] || null;
+    if (f) {
+      if (f.size > 5 * 1024 * 1024) {
+        setError("Image too large (max 5MB)");
         return;
       }
-    } else {
-      const res = await fetch(`${API}/alerts`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-      if (!res.ok) {
-        alert("Failed to add document");
-        return;
-      }
+      setFile(f);
+      setPreview(URL.createObjectURL(f));
+      setError(null);
     }
-    setForm({ document_type: "passport", holder_name: "", cnic: "", issue_date: "", expiry_date: "" });
-    setFile(null);
-    setPreview(null);
-    setShowForm(false);
-    load();
+  }
+
+  function validate() {
+    if (!form.holder_name.trim()) return "Holder name is required";
+    if (!form.cnic.trim()) return "CNIC is required";
+    if (!/^\d{5}-\d{7}-\d$/.test(form.cnic.trim()) && !/^\d{13}$/.test(form.cnic.replace(/-/g,""))) return "CNIC format: 42101-1234567-1 or 13 digits";
+    if (!form.issue_date) return "Issue date is required";
+    if (!form.expiry_date) return "Expiry date is required";
+    if (new Date(form.expiry_date) <= new Date(form.issue_date)) return "Expiry must be after issue date";
+    return null;
+  }
+
+  async function addAlert() {
+    const v = validate();
+    if (v) { setError(v); return; }
+    setSaving(true);
+    setError(null);
+    try {
+      if (file) {
+        const fd = new FormData();
+        fd.append("document_type", form.document_type);
+        fd.append("holder_name", form.holder_name.trim());
+        fd.append("cnic", form.cnic.trim());
+        fd.append("issue_date", form.issue_date);
+        fd.append("expiry_date", form.expiry_date);
+        fd.append("file", file);
+        const res = await fetch(`${API}/alerts/upload`, { method: "POST", body: fd });
+        if (!res.ok) throw new Error(await res.text());
+      } else {
+        const res = await fetch(`${API}/alerts`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...form, holder_name: form.holder_name.trim(), cnic: form.cnic.trim() }),
+        });
+        if (!res.ok) throw new Error(await res.text());
+      }
+      setForm({ document_type: "passport", holder_name: "", cnic: "", issue_date: "", expiry_date: "" });
+      setFile(null);
+      setPreview(null);
+      setShowForm(false);
+      setSuccess("Document added successfully!");
+      setTimeout(()=>setSuccess(null), 3000);
+      load();
+    } catch (e: any) {
+      setError(e.message || "Failed to add document");
+    } finally {
+      setSaving(false);
+    }
   }
 
   async function remove(id: string) {
+    if(!confirm("Delete this document?")) return;
     await deleteAlertApi(id);
     load();
   }
@@ -96,12 +136,15 @@ export default function AlertsPage() {
             </p>
           </div>
           <button
-            onClick={() => setShowForm(!showForm)}
+            onClick={() => { setShowForm(!showForm); setError(null); }}
             className="flex items-center gap-2 px-4 py-2 bg-raah-green text-white rounded-xl text-sm font-medium hover:bg-raah-deep transition"
           >
             <Plus size={16} /> {lang === "ur" ? "نئی دستاویز" : "Add Document"}
           </button>
         </div>
+
+        {success && <div className="mt-4 p-3 rounded-xl bg-raah-mint border border-raah-green/20 text-sm text-raah-deep flex items-center gap-2"><Check size={16}/> {success}</div>}
+        {error && !showForm && <div className="mt-4 p-3 rounded-xl bg-red-50 border border-red-200 text-sm text-red-700">{error}</div>}
 
         <div className="mt-6 grid grid-cols-3 gap-3">
           <div className="p-4 rounded-xl bg-raah-mint border border-raah-green/20 text-center">
@@ -119,74 +162,91 @@ export default function AlertsPage() {
         </div>
 
         {showForm && (
-          <div className="mt-4 p-4 rounded-xl border border-raah-green bg-raah-soft">
+          <div className="mt-4 p-5 rounded-xl border-2 border-raah-green/30 bg-raah-soft">
+            <div className="font-semibold text-sm mb-3 flex items-center gap-2"><FileImage size={14}/> Add New Document</div>
+            {error && <div className="mb-3 p-2 rounded-lg bg-red-50 border border-red-200 text-xs text-red-700">{error}</div>}
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-xs text-text-muted">{lang === "ur" ? "دستاویز کی قسم" : "Document Type"}</label>
+                <label className="text-xs font-medium text-text-secondary">Document Type *</label>
                 <select
                   value={form.document_type}
                   onChange={(e) => setForm({ ...form, document_type: e.target.value })}
-                  className="w-full mt-1 px-3 py-2 rounded-lg border border-border text-sm bg-white"
+                  className="w-full mt-1 px-3 py-2.5 rounded-xl border border-border text-sm bg-white focus:outline-none focus:ring-2 focus:ring-raah-green/20"
                 >
-                  <option value="passport">{lang === "ur" ? "پاسپورٹ" : "Passport"}</option>
-                  <option value="cnic">{lang === "ur" ? "شناختی کارڈ" : "CNIC"}</option>
-                  <option value="business">{lang === "ur" ? "کاروبار" : "Business Registration"}</option>
+                  <option value="passport">Passport</option>
+                  <option value="cnic">CNIC</option>
+                  <option value="business">Business Registration</option>
                 </select>
               </div>
               <div>
-                <label className="text-xs text-text-muted">{lang === "ur" ? "نام" : "Name"}</label>
+                <label className="text-xs font-medium text-text-secondary">Holder Name *</label>
                 <input
                   value={form.holder_name}
                   onChange={(e) => setForm({ ...form, holder_name: e.target.value })}
-                  className="w-full mt-1 px-3 py-2 rounded-lg border border-border text-sm"
-                  placeholder={lang === "ur" ? "نام دار" : "Holder name"}
+                  className="w-full mt-1 px-3 py-2.5 rounded-xl border border-border text-sm focus:outline-none focus:ring-2 focus:ring-raah-green/20"
+                  placeholder="Ehtisham Tahir"
                 />
               </div>
               <div>
-                <label className="text-xs text-text-muted">CNIC</label>
+                <label className="text-xs font-medium text-text-secondary">CNIC *</label>
                 <input
                   value={form.cnic}
                   onChange={(e) => setForm({ ...form, cnic: e.target.value })}
-                  className="w-full mt-1 px-3 py-2 rounded-lg border border-border text-sm"
+                  className="w-full mt-1 px-3 py-2.5 rounded-xl border border-border text-sm focus:outline-none focus:ring-2 focus:ring-raah-green/20"
                   placeholder="42101-1234567-1"
                 />
+                <div className="text-[11px] text-text-muted mt-1">Format: 42101-1234567-1</div>
               </div>
               <div>
-                <label className="text-xs text-text-muted">{lang === "ur" ? "جاری صدور" : "Issue Date"}</label>
+                <label className="text-xs font-medium text-text-secondary flex items-center gap-1"><Calendar size={12}/> Issue Date *</label>
                 <input
                   type="date"
                   value={form.issue_date}
                   onChange={(e) => setForm({ ...form, issue_date: e.target.value })}
-                  className="w-full mt-1 px-3 py-2 rounded-lg border border-border text-sm"
+                  className="w-full mt-1 px-3 py-2.5 rounded-xl border border-border text-sm focus:outline-none focus:ring-2 focus:ring-raah-green/20"
                 />
               </div>
               <div>
-                <label className="text-xs text-text-muted">{lang === "ur" ? "ختمامیت" : "Expiry Date"}</label>
+                <label className="text-xs font-medium text-text-secondary flex items-center gap-1"><Calendar size={12}/> Expiry Date *</label>
                 <input
                   type="date"
                   value={form.expiry_date}
                   onChange={(e) => setForm({ ...form, expiry_date: e.target.value })}
-                  className="w-full mt-1 px-3 py-2 rounded-lg border border-border text-sm"
+                  className="w-full mt-1 px-3 py-2.5 rounded-xl border border-border text-sm focus:outline-none focus:ring-2 focus:ring-raah-green/20"
                 />
               </div>
               <div>
-                <label className="text-xs text-text-muted flex items-center gap-1"><FileImage size={12}/> Document Image (optional)</label>
-                <label className="w-full mt-1 flex items-center gap-2 px-3 py-2 rounded-lg border border-dashed border-raah-green/30 bg-white text-sm cursor-pointer hover:bg-raah-mint">
-                  <Upload size={14} className="text-raah-green"/>
-                  <span className="text-text-secondary truncate">{file ? file.name : "Upload image (JPG/PNG/PDF, max 5MB)"}</span>
-                  <input type="file" accept="image/*,.pdf" className="hidden" onChange={onFileChange} />
-                </label>
-                {preview && <img src={preview} alt="preview" className="mt-2 w-full h-24 object-cover rounded-lg border border-border" />}
+                <label className="text-xs font-medium text-text-secondary flex items-center gap-1"><FileImage size={12}/> Document Image</label>
+                <div
+                  onDragOver={e=>{e.preventDefault(); setDragOver(true);}}
+                  onDragLeave={()=>setDragOver(false)}
+                  onDrop={onDrop}
+                  className={`w-full mt-1 flex flex-col items-center justify-center gap-2 px-3 py-4 rounded-xl border-2 border-dashed text-sm cursor-pointer transition ${dragOver?"border-raah-green bg-raah-mint":"border-raah-green/30 bg-white hover:bg-raah-mint"}`}
+                >
+                  <Upload size={20} className="text-raah-green"/>
+                  <span className="text-text-secondary text-xs text-center">{file ? file.name : "Drag & drop or click to upload (JPG/PNG/PDF, max 5MB)"}</span>
+                  <span className="text-[11px] text-text-muted">Optional but recommended for view/download</span>
+                  <input type="file" accept="image/*,.pdf" className="hidden" onChange={onFileChange} id="doc-file" />
+                  <label htmlFor="doc-file" className="px-3 py-1 rounded-full bg-white border border-border text-xs cursor-pointer">Choose File</label>
+                </div>
+                {preview && (
+                  <div className="mt-2 relative">
+                    <img src={preview} alt="preview" className="w-full h-32 object-cover rounded-xl border border-border" />
+                    <button onClick={()=>{setFile(null); setPreview(null);}} className="absolute top-1 right-1 p-1 rounded-full bg-black/60 text-white"><XCircle size={14}/></button>
+                    <div className="text-[11px] text-raah-green mt-1 flex items-center gap-1"><ShieldCheck size={12}/> Image ready — will be saved with document</div>
+                  </div>
+                )}
               </div>
             </div>
-            <div className="mt-3 flex gap-2">
-              <button onClick={addAlert} className="px-4 py-2 bg-raah-green text-white rounded-lg text-sm font-medium hover:bg-raah-deep">
-                {lang === "ur" ? "محفوظ" : "Save"}
+            <div className="mt-4 flex gap-2">
+              <button onClick={addAlert} disabled={saving} className="px-6 py-2.5 bg-raah-green text-white rounded-xl text-sm font-medium hover:bg-raah-deep disabled:opacity-50 flex items-center gap-2">
+                {saving ? "Saving..." : <><Check size={14}/> Save Document</>}
               </button>
-              <button onClick={() => { setShowForm(false); setFile(null); setPreview(null); }} className="px-4 py-2 border border-border rounded-lg text-sm text-text-secondary hover:bg-gray-50">
-                {lang === "ur" ? "رد" : "Cancel"}
+              <button onClick={() => { setShowForm(false); setFile(null); setPreview(null); setError(null); }} className="px-4 py-2.5 border border-border rounded-xl text-sm text-text-secondary hover:bg-gray-50">
+                Cancel
               </button>
             </div>
+            <div className="text-[11px] text-text-muted mt-2">* Required fields. Document will be checked for expiry and status auto-calculated.</div>
           </div>
         )}
 
@@ -199,15 +259,18 @@ export default function AlertsPage() {
               </div>
             ))
           ) : alerts.length === 0 ? (
-            <div className="border border-dashed border-border rounded-xl p-8 text-center text-text-muted text-sm">
-              {lang === "ur" ? "ابھی کوئی دستاویز نہیں" : "No documents added yet — add your first document with image"}
+            <div className="border border-dashed border-border rounded-xl p-8 text-center">
+              <FileImage size={32} className="mx-auto text-text-muted"/>
+              <div className="text-sm text-text-secondary mt-2">No documents yet</div>
+              <div className="text-xs text-text-muted mt-1">Add your first document with image to enable view/download and expiry tracking</div>
+              <button onClick={()=>setShowForm(true)} className="mt-3 px-4 py-2 bg-raah-green text-white rounded-full text-xs">Add Document</button>
             </div>
           ) : (
             alerts.map((alert) => {
               const status = STATUS_CONFIG[alert.status] || STATUS_CONFIG.valid;
               const StatusIcon = status.icon;
               return (
-                <div key={alert.id} className="border border-border rounded-xl p-4 flex items-start justify-between hover:border-raah-green/30 transition">
+                <div key={alert.id} className="border border-border rounded-xl p-4 flex items-start justify-between hover:border-raah-green/30 transition hover:shadow-sm">
                   <div className="flex items-start gap-3 flex-1">
                     <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${status.color}`}>
                       <StatusIcon size={18} />
@@ -215,46 +278,47 @@ export default function AlertsPage() {
                     <div className="flex-1">
                       <div className="font-semibold text-sm">{lang === "ur" ? alert.document_name_ur : alert.document_name_en}</div>
                       <div className="text-xs text-text-muted mt-0.5">{alert.holder_name} | CNIC: {alert.cnic}</div>
-                      <div className="text-xs text-text-muted mt-1">
-                        {lang === "ur" ? "ختمامیت: " : "Expires: "}{alert.expiry_date}
+                      <div className="text-xs text-text-muted mt-1 flex items-center gap-1">
+                        <Calendar size={12}/> Expires: {alert.expiry_date}
                         {alert.status === "expired" && (
                           <span className="text-red-600 font-medium ml-2">
-                            ({Math.abs(alert.days_until_expiry)} {lang === "ur" ? "دن" : "days"} {lang === "ur" ? "پہلے" : "ago"})
+                            ({Math.abs(alert.days_until_expiry)} days ago)
                           </span>
                         )}
                         {alert.status === "expiring_soon" && (
                           <span className="text-yellow-600 font-medium ml-2">
-                            ({alert.days_until_expiry} {lang === "ur" ? "دن" : "days"} {lang === "ur" ? "باقی" : "left"})
+                            ({alert.days_until_expiry} days left)
                           </span>
                         )}
                       </div>
                       <div className="flex flex-wrap gap-2 mt-3">
                         {alert.has_image ? (
                           <>
-                            <button onClick={()=>setViewImage(`${API}/alerts/${alert.id}/image`)} className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-raah-mint border border-raah-green/20 text-xs text-raah-deep hover:bg-raah-green hover:text-white transition">
+                            <button onClick={()=>setViewImage(`${API}/alerts/${alert.id}/image`)} className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-raah-green text-white text-xs font-medium hover:bg-raah-deep transition">
                               <Eye size={12}/> View
                             </button>
-                            <a href={`${API}/alerts/${alert.id}/download`} target="_blank" className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-white border border-border text-xs text-text-secondary hover:border-raah-green/30">
+                            <a href={`${API}/alerts/${alert.id}/download`} className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-white border border-border text-xs text-text-secondary hover:border-raah-green/30 hover:text-raah-green transition">
                               <Download size={12}/> Download
                             </a>
                           </>
                         ) : (
-                          <span className="text-xs text-text-muted flex items-center gap-1"><FileImage size={12}/> No image</span>
+                          <span className="text-xs text-text-muted flex items-center gap-1 px-3 py-1.5 rounded-full bg-gray-50 border border-border"><FileImage size={12}/> No image — edit to add</span>
                         )}
                         <a
                           href={alert.renewal_url}
                           target="_blank"
                           rel="noopener"
-                          className="flex items-center gap-1 text-xs text-raah-green hover:text-raah-deep border border-raah-green/20 px-3 py-1.5 rounded-full bg-white"
+                          className="flex items-center gap-1 text-xs text-raah-green hover:text-raah-deep border border-raah-green/20 px-3 py-1.5 rounded-full bg-white hover:bg-raah-mint transition"
                         >
-                          <ExternalLink size={12} /> {lang === "ur" ? "تجدید کریں" : "Renew Now"}
+                          <ExternalLink size={12} /> Renew Now
                         </a>
                       </div>
                     </div>
                   </div>
                   <button
                     onClick={() => remove(alert.id)}
-                    className="text-text-muted hover:text-red-500 transition p-1 shrink-0"
+                    className="text-text-muted hover:text-red-500 transition p-1 shrink-0 hover:bg-red-50 rounded-full"
+                    title="Delete"
                   >
                     <Trash2 size={16} />
                   </button>
@@ -269,12 +333,12 @@ export default function AlertsPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60" onClick={()=>setViewImage(null)}>
           <div className="bg-white rounded-2xl max-w-2xl w-full p-4" onClick={e=>e.stopPropagation()}>
             <div className="flex items-center justify-between mb-3">
-              <div className="font-semibold text-sm">Document Image</div>
-              <button onClick={()=>setViewImage(null)} className="p-1 rounded-full hover:bg-raah-soft">✕</button>
+              <div className="font-semibold text-sm flex items-center gap-2"><Eye size={14}/> Document Image</div>
+              <button onClick={()=>setViewImage(null)} className="p-1 rounded-full hover:bg-raah-soft"><XCircle size={16}/></button>
             </div>
             <img src={viewImage} alt="document" className="w-full max-h-[70vh] object-contain rounded-xl border border-border bg-raah-soft" />
             <div className="mt-3 flex gap-2 justify-end">
-              <a href={viewImage.replace("/image","/download")} target="_blank" className="px-4 py-2 rounded-xl border border-border text-sm">Download</a>
+              <a href={viewImage.replace("/image","/download")} className="px-4 py-2 rounded-xl border border-border text-sm flex items-center gap-1"><Download size={14}/> Download</a>
               <button onClick={()=>setViewImage(null)} className="px-4 py-2 rounded-xl bg-raah-green text-white text-sm">Close</button>
             </div>
           </div>
