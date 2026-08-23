@@ -13,6 +13,8 @@ const DOMAIN_MAP: Record<string, string> = {
   "/fees": "payments",
   "/documents": "documents",
   "/ocr": "documents",
+  "/alerts": "documents",
+  "/checklist": "documents",
   "/opportunities": "opportunities",
   "/family": "family",
   "/updates": "updates",
