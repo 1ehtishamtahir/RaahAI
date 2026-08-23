@@ -146,8 +146,20 @@ export async function challansApi(status?: string) {
   if (!res.ok) throw new Error(await res.text());
   return res.json();
 }
-export async function paymentsTimelineApi() {
-  const res = await fetch(`${API}/api/payments/timeline`);
+export async function paymentsTimelineApi(params?: { status?: string; category?: string; type?: string; q?: string; sort?: string }) {
+  const qs = new URLSearchParams();
+  if (params?.status) qs.append("status", params.status);
+  if (params?.category) qs.append("category", params.category);
+  if (params?.type) qs.append("type", params.type);
+  if (params?.q) qs.append("q", params.q);
+  if (params?.sort) qs.append("sort", params.sort);
+  const url = `${API}/api/payments/timeline${qs.toString() ? `?${qs}` : ""}`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+export async function paymentsAnalyticsApi() {
+  const res = await fetch(`${API}/api/payments/analytics`);
   if (!res.ok) throw new Error(await res.text());
   return res.json();
 }
