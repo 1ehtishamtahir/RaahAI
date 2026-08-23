@@ -4,6 +4,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import AppShell from "@/components/layout/AppShell";
 import { useLang } from "@/lib/LangContext";
 import { familyProfileApi } from "@/lib/api";
+const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 import { Users, User, Award, Home, Shield, Plus, X, Calendar, MapPin, Search } from "lucide-react";
 
 function FamilyInner(){
@@ -20,13 +21,13 @@ function FamilyInner(){
 
   function load(){
     familyProfileApi().then(setData).catch(()=>{});
-    fetch("http://localhost:8000/api/family/stats").then(r=>r.json()).then(setStats).catch(()=>{});
+    fetch(`${API}/api/family/stats`).then(r=>r.json()).then(setStats).catch(()=>{});
   }
   useEffect(()=>{load();},[]);
 
   async function addMember(){
     if(!newMember.name || !newMember.cnic) return;
-    await fetch("http://localhost:8000/api/family/member", {
+    await fetch(`${API}/api/family/member`, {
       method:"POST",
       headers:{"Content-Type":"application/json"},
       body: JSON.stringify(newMember)
@@ -155,7 +156,7 @@ function FamilyInner(){
               <div className="text-xs text-raah-green">{selectedProgram.official_source} • Verified {selectedProgram.last_verified}</div>
             </div>
             <div className="mt-4 flex gap-2">
-              <a href="https://bisp.gov.pk" target="_blank" className="flex-1 py-2.5 rounded-xl bg-raah-green text-white text-sm text-center">View Official Site</a>
+              <a href={selectedProgram.apply_url || "https://bisp.gov.pk"} target="_blank" className="flex-1 py-2.5 rounded-xl bg-raah-green text-white text-sm text-center">View Official Site</a>
               <button onClick={()=>setSelectedProgram(null)} className="px-4 py-2.5 rounded-xl border border-border text-sm">Close</button>
             </div>
           </div>

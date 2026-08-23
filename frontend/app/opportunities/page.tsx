@@ -4,6 +4,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import AppShell from "@/components/layout/AppShell";
 import { useLang } from "@/lib/LangContext";
 import { opportunitiesRecommendedApi } from "@/lib/api";
+const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 import { GraduationCap, Search, Filter, Calendar, Award, ShieldCheck, ExternalLink, X } from "lucide-react";
 
 function OpportunitiesInner(){
@@ -25,7 +26,7 @@ function OpportunitiesInner(){
     const params = new URLSearchParams();
     if(cat) params.append("category", cat);
     if(q) params.append("q", q);
-    const url = `http://localhost:8000/api/opportunities${params.toString()?`?${params}`:""}`;
+    const url = `${API}/api/opportunities${params.toString()?`?${params}`:""}`;
     fetch(url).then(r=>r.json()).then(setAll).catch(()=>{});
   },[cat,q]);
 
@@ -43,7 +44,7 @@ function OpportunitiesInner(){
   function setQAndUrl(v: string){
     setQ(v);
     const p = new URLSearchParams();
-    if(cat) p.append("category", cat);
+    if(cat) p.append("cat", cat);
     if(v) p.append("q", v);
     router.push(`/opportunities${p.toString()?`?${p}`:""}`);
   }

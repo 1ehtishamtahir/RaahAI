@@ -11,7 +11,7 @@ const MENU = [
   { key: "vehicle", href: "/vehicle", icon: Car, color: "bg-blue-600", label_en: "Vehicle", label_ur: "گاڑی", desc_en: "Registration, Transfer, Token Tax", desc_ur: "رجسٹریشن، ٹرانسفر، ٹوکن ٹیکس" },
   { key: "challans", href: "/challans", icon: AlertTriangle, color: "bg-amber-600", label_en: "Challans", label_ur: "چالان", desc_en: "Pending & Paid Challans", desc_ur: "زیر التواء اور ادا شدہ چالان" },
   { key: "payments", href: "/payments", icon: CreditCard, color: "bg-violet-600", label_en: "Gov Payments", label_ur: "سرکاری ادائیگیاں", desc_en: "Fees, Taxes, Timeline", desc_ur: "فیس، ٹیکس، ٹائم لائن" },
-  { key: "documents", href: "/ocr", icon: FileText, color: "bg-teal-600", label_en: "Documents", label_ur: "دستاویزات", desc_en: "Scanner, Wallet, Checklist", desc_ur: "اسکینر، والٹ، چیک لسٹ" },
+  { key: "documents", href: "/documents", icon: FileText, color: "bg-teal-600", label_en: "Documents", label_ur: "دستاویزات", desc_en: "Scanner, Wallet, Checklist", desc_ur: "اسکینر، والٹ، چیک لسٹ" },
   { key: "opportunities", href: "/opportunities", icon: GraduationCap, color: "bg-indigo-600", label_en: "Opportunities", label_ur: "مواقع", desc_en: "Scholarships & Youth Programs", desc_ur: "اسکالرشپ اور یوتھ پروگرام" },
   { key: "family", href: "/family", icon: Users, color: "bg-rose-600", label_en: "Family Programs", label_ur: "فیملی پروگرام", desc_en: "Household & Program Matching", desc_ur: "گھرانہ اور پروگرام میچنگ" },
   { key: "updates", href: "/updates", icon: Bell, color: "bg-orange-600", label_en: "Gov Updates", label_ur: "سرکاری اپ ڈیٹس", desc_en: "Radar & Policy Categories", desc_ur: "ریڈار اور پالیسی زمرہ جات" },
@@ -65,7 +65,7 @@ export default function DashboardPage() {
         {/* Menu Grid */}
         <div>
           <h2 className="font-bold text-raah-deep mb-3">Your Services</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             {MENU.map((m) => (
               <Link key={m.key} href={m.href} className="bg-white border border-border rounded-2xl p-4 hover:shadow-md hover:border-raah-green/30 transition group">
                 <div className={`w-10 h-10 rounded-xl ${m.color} text-white flex items-center justify-center mb-3`}><m.icon size={18}/></div>

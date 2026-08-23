@@ -15,7 +15,7 @@ export default function TopHeader({ onMenu }: { onMenu?: () => void }) {
           <div className="font-semibold flex items-center gap-2">
             <span>👋</span> {t.greeting.split("!")[0]}!
           </div>
-          <div className="text-sm text-text-secondary">{t.greeting.split("!")[1] || "I'm RaahAI, how can I help you today?"}</div>
+          <div className="text-sm text-text-secondary">{t.greeting.split("!")[1]?.trim() || "I'm RaahAI, how can I help you today?"}</div>
         </div>
       </div>
       <div className="flex items-center gap-2">
@@ -33,10 +33,10 @@ export default function TopHeader({ onMenu }: { onMenu?: () => void }) {
         >
           <Sun size={16} />
         </button>
-        <button className="w-9 h-9 rounded-full border border-border flex items-center justify-center relative">
+        <Link href="/notifications" className="w-9 h-9 rounded-full border border-border flex items-center justify-center relative hover:bg-raah-soft">
           <Bell size={16} />
           <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full" />
-        </button>
+        </Link>
         <img src="https://i.pravatar.cc/100?img=12" alt="avatar" className="w-9 h-9 rounded-full hidden sm:block" />
       </div>
     </header>

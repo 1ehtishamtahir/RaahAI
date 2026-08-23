@@ -4,6 +4,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import AppShell from "@/components/layout/AppShell";
 import { useLang } from "@/lib/LangContext";
 import { Bell, Radar, Tag, Calendar, ShieldCheck, Search, ExternalLink, X } from "lucide-react";
+const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 function UpdatesInner(){
   const {lang}=useLang();
@@ -32,11 +33,11 @@ function UpdatesInner(){
     params.append("limit","20");
     if(cat && cat!=="All") params.append("category", cat);
     if(q) params.append("q", q);
-    fetch(`http://localhost:8000/api/updates/latest?${params}`).then(r=>r.json()).then(setLatest).catch(()=>{});
+    fetch(`${API}/api/updates/latest?${params}`).then(r=>r.json()).then(setLatest).catch(()=>{});
   }
 
   useEffect(()=>{ fetchLatest(); },[cat,q]);
-  useEffect(()=>{ fetch("http://localhost:8000/api/updates/recommended").then(r=>r.json()).then(setRec).catch(()=>{}); },[]);
+  useEffect(()=>{ fetch(`${API}/api/updates/recommended`).then(r=>r.json()).then(setRec).catch(()=>{}); },[]);
 
   const categories = ["All","Education","Employment","Tax","Transport","Business","Youth","Family","Welfare","Identity"];
   const filtered = latest?.updates || [];

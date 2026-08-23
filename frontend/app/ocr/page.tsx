@@ -4,6 +4,7 @@ import AppShell from "@/components/layout/AppShell";
 import UploadCard from "@/components/documents/UploadCard";
 import { useLang } from "@/lib/LangContext";
 import { CheckCircle, AlertTriangle, MessageCircle, Send, Sparkles } from "lucide-react";
+const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 type Field = {
   label: string;
@@ -48,7 +49,7 @@ export default function OCRPage() {
       fd.append("field_value", field.value);
       fd.append("question", followQ);
       fd.append("lang", lang);
-      const res = await fetch("http://localhost:8000/ocr/ask", { method: "POST", body: fd });
+      const res = await fetch(`${API}/ocr/ask`, { method: "POST", body: fd });
       const data = await res.json();
       setFollowA(data.answer);
     } catch {

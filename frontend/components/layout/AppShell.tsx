@@ -4,6 +4,7 @@ import TopHeader from "./TopHeader";
 import DomainSidebar from "./DomainSidebar";
 import { useState, Suspense } from "react";
 import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 const DOMAIN_MAP: Record<string, string> = {
   "/identity": "identity",
@@ -76,10 +77,14 @@ export default function AppShell({ children, rightPanel }: { children: React.Rea
             )}
           </div>
           <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-border flex justify-around py-2 text-xs">
-            <a href="/dashboard" className="flex flex-col items-center text-text-secondary">Home</a>
-            <a href="/identity" className="flex flex-col items-center text-text-secondary">Identity</a>
-            <a href="/documents" className="flex flex-col items-center text-text-secondary">Docs</a>
-            <a href="/updates" className="flex flex-col items-center text-text-secondary">Updates</a>
+            {[
+              { href: "/dashboard", label: "Home" },
+              { href: "/identity", label: "Identity" },
+              { href: "/documents", label: "Docs" },
+              { href: "/updates", label: "Updates" },
+            ].map((item) => (
+              <a key={item.href} href={item.href} className={cn("flex flex-col items-center", pathname === item.href || pathname.startsWith(item.href + "?") ? "text-raah-green font-medium" : "text-text-secondary")}>{item.label}</a>
+            ))}
           </div>
         </div>
       </div>
@@ -111,11 +116,15 @@ export default function AppShell({ children, rightPanel }: { children: React.Rea
           )}
         </div>
         <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-border flex justify-around py-2 text-xs">
-          <a href="/" className="flex flex-col items-center text-raah-green">Chat</a>
-          <a href="/ocr" className="flex flex-col items-center text-text-secondary">Scan</a>
-          <a href="/voice" className="flex flex-col items-center text-text-secondary">Voice</a>
-          <a href="/dashboard" className="flex flex-col items-center text-text-secondary">Home</a>
-        </div>
+            {[
+              { href: "/", label: "Chat" },
+              { href: "/ocr", label: "Scan" },
+              { href: "/voice", label: "Voice" },
+              { href: "/dashboard", label: "Home" },
+            ].map((item) => (
+              <a key={item.href} href={item.href} className={cn("flex flex-col items-center", pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href)) ? "text-raah-green font-medium" : "text-text-secondary")}>{item.label}</a>
+            ))}
+          </div>
       </div>
     </div>
   );

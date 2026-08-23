@@ -108,7 +108,7 @@ export default function Sidebar() {
       <nav className="flex-1 space-y-0.5 mt-2 overflow-y-auto">
         <NavSection items={mainNav} lang={lang} pathname={pathname} />
         <NavSection items={commandCenter} lang={lang} pathname={pathname} title={lang==="ur"?"سٹیزن کمانڈ سینٹر":"Command Center"} />
-        <NavSection items={toolsNav} lang={lang} pathname={pathname} title="Tools" />
+        <NavSection items={toolsNav} lang={lang} pathname={pathname} title={lang==="ur"?"ٹولز":"Tools"} />
         <NavSection items={otherNav} lang={lang} pathname={pathname} />
       </nav>
 

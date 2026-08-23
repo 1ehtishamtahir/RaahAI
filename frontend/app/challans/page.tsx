@@ -17,7 +17,7 @@ export default function ChallansPage(){
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-bold text-raah-deep flex items-center gap-2"><Info size={20}/> Challan Details</h1>
+            <h1 className="text-xl font-bold text-raah-deep flex items-center gap-2"><AlertTriangle size={20}/> Challan Details</h1>
             <p className="text-sm text-text-secondary mt-1">All challans with violation details and explanations — Pending & Paid</p>
           </div>
           <div className="flex gap-2">

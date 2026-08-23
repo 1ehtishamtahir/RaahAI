@@ -124,7 +124,7 @@ export default function DomainSidebar({ domain }: { domain: string }) {
     <div className="h-screen sticky top-0 flex flex-col bg-white border-r border-border p-4">
       {/* Back to Dashboard */}
       <Link href="/dashboard" className="flex items-center gap-2 text-xs text-text-secondary hover:text-raah-green mb-3">
-        <ArrowLeft size={14} /> Back to Dashboard
+        <ArrowLeft size={14} /> {lang==="ur"?"ڈیش بورڈ پی واپس":"Back to Dashboard"}
       </Link>
 
       {/* Domain Header */}
@@ -134,7 +134,7 @@ export default function DomainSidebar({ domain }: { domain: string }) {
         </div>
         <div>
           <div className="font-bold text-raah-deep text-sm leading-none">{title}</div>
-          <div className="text-[11px] text-text-secondary">Mission Mode</div>
+          <div className="text-[11px] text-text-secondary">{lang==="ur"?"مشن موڈ":"Mission Mode"}</div>
         </div>
       </div>
 
@@ -213,7 +213,7 @@ export default function DomainSidebar({ domain }: { domain: string }) {
       {/* Language */}
       <div className="mt-3 p-3 rounded-xl border border-border bg-raah-soft">
         <div className="flex items-center gap-2 text-xs text-text-secondary mb-2">
-          <Globe size={14} /> Language
+          <Globe size={14} /> {lang==="ur"?"زبان":"Language"}
         </div>
         <div className="flex rounded-full bg-white border border-border p-1">
           <button
