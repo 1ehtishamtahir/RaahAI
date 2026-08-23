@@ -3,7 +3,7 @@ import { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import AppShell from "@/components/layout/AppShell";
 import { useLang } from "@/lib/LangContext";
-import { familyProfileApi } from "@/lib/api";
+import { familyProfileApi, familyAddMemberApi } from "@/lib/api";
 const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 import { Users, User, Award, Home, Shield, Plus, X, Calendar, MapPin, Search } from "lucide-react";
 
@@ -21,17 +21,15 @@ function FamilyInner(){
 
   function load(){
     familyProfileApi().then(setData).catch(()=>{});
-    fetch(`${API}/api/family/stats`).then(r=>r.json()).then(setStats).catch(()=>{});
+    const token = typeof window !== "undefined" ? localStorage.getItem("raahai-token") : null;
+    const headers: Record<string,string> = token ? {Authorization:`Bearer ${token}`} : {};
+    fetch(`${API}/api/family/stats`, {headers}).then(r=>r.json()).then(setStats).catch(()=>{});
   }
   useEffect(()=>{load();},[]);
 
   async function addMember(){
     if(!newMember.name || !newMember.cnic) return;
-    await fetch(`${API}/api/family/member`, {
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body: JSON.stringify(newMember)
-    });
+    await familyAddMemberApi(newMember);
     setNewMember({name:"", relation:"Sibling", age:18, cnic:"", education:"Matric"});
     setShowAdd(false);
     load();

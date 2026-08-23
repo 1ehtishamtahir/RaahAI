@@ -1,29 +1,59 @@
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Query, Depends, HTTPException
 from typing import Optional
+from sqlalchemy.orm import Session
+from app.core.database import get_db
+from app.core.auth import get_current_user
+from app.models.db_models import User, ChallanRecord
 
 router = APIRouter(prefix="/api/challans", tags=["challans"])
 
-CHALLANS = [
-    {"id": "CH-2026-001", "category": "Traffic", "amount": 2000, "status": "Pending", "issue_date": "2026-08-10", "due_date": "2026-09-10", "source": "Traffic Police — Sindh", "vehicle": "ABC-123", "violation": "Signal violation — Shara-e-Faisal", "explanation_en": "You crossed the signal at Shara-e-Faisal. Pay within 30 days to avoid fine.", "explanation_ur": "آپ نے شارع فیصل پر سگنل توڑا۔ 30 دن کے اندر ادائیگی کریں۔"},
-    {"id": "CH-2026-002", "category": "Traffic", "amount": 1500, "status": "Paid", "issue_date": "2026-07-15", "due_date": "2026-08-15", "source": "Traffic Police — Punjab", "vehicle": "XYZ-789", "violation": "No helmet — Mall Road", "explanation_en": "Riding without helmet on Mall Road.", "explanation_ur": "مال روڈ پر ہیلمٹ کے بغیر سواری۔"},
-    {"id": "CH-2025-089", "category": "Excise", "amount": 5000, "status": "Pending", "issue_date": "2026-06-20", "due_date": "2026-07-20", "source": "Excise & Taxation", "vehicle": "ABC-123", "violation": "Token tax overdue", "explanation_en": "Token tax for FY 2025-26 not paid.", "explanation_ur": "ٹوکن ٹیکس ادا نہیں کیا گیا۔"},
-]
 
 @router.get("")
-def list_challans(status: Optional[str] = Query(None, description="Pending|Paid"), category: Optional[str] = None):
-    data = CHALLANS
+def list_challans(
+    status: Optional[str] = Query(None, description="Pending|Paid"),
+    category: Optional[str] = None,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    q = db.query(ChallanRecord).filter(ChallanRecord.user_id == current_user.id)
     if status:
-        data = [c for c in data if c["status"].lower() == status.lower()]
+        q = q.filter(ChallanRecord.status.ilike(status))
     if category:
-        data = [c for c in data if c["category"].lower() == category.lower()]
-    pending = sum(1 for c in CHALLANS if c["status"]=="Pending")
-    paid = sum(1 for c in CHALLANS if c["status"]=="Paid")
-    return {"challans": data, "summary": {"total": len(CHALLANS), "pending": pending, "paid": paid, "pending_amount": sum(c["amount"] for c in CHALLANS if c["status"]=="Pending")}}
+        q = q.filter(ChallanRecord.category.ilike(category))
+    challans_list = q.order_by(ChallanRecord.created_at.desc()).all()
+
+    all_challans = db.query(ChallanRecord).filter(ChallanRecord.user_id == current_user.id).all()
+    pending = sum(1 for c in all_challans if c.status == "Pending")
+    paid = sum(1 for c in all_challans if c.status == "Paid")
+
+    result = [{
+        "id": c.id, "category": c.category or "Traffic", "amount": c.amount or 0,
+        "status": c.status or "Pending", "issue_date": c.issue_date or "",
+        "due_date": c.due_date or "", "source": c.source or "",
+        "vehicle": c.vehicle_plate or "", "violation": c.violation or "",
+        "explanation_en": c.explanation_en or "", "explanation_ur": c.explanation_ur or "",
+    } for c in challans_list]
+
+    return {
+        "challans": result,
+        "summary": {
+            "total": len(all_challans), "pending": pending, "paid": paid,
+            "pending_amount": sum(c.amount or 0 for c in all_challans if c.status == "Pending"),
+        },
+    }
+
 
 @router.get("/{challan_id}")
-def get_challan(challan_id: str):
-    for c in CHALLANS:
-        if c["id"] == challan_id:
-            return c
-    from fastapi import HTTPException
-    raise HTTPException(status_code=404, detail="Challan not found")
+def get_challan(challan_id: str, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    c = db.query(ChallanRecord).filter(
+        ChallanRecord.id == challan_id, ChallanRecord.user_id == current_user.id
+    ).first()
+    if not c:
+        raise HTTPException(status_code=404, detail="Challan not found")
+    return {
+        "id": c.id, "category": c.category or "Traffic", "amount": c.amount or 0,
+        "status": c.status or "Pending", "issue_date": c.issue_date or "",
+        "due_date": c.due_date or "", "source": c.source or "",
+        "vehicle": c.vehicle_plate or "", "violation": c.violation or "",
+        "explanation_en": c.explanation_en or "", "explanation_ur": c.explanation_ur or "",
+    }

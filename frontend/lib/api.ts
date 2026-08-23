@@ -12,7 +12,7 @@ export async function authLoginApi(email: string, password: string) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password }),
   });
-  if (!res.ok) throw new Error((await res.json().catch(()=>({}))).detail || "Login failed");
+  if (!res.ok) throw new Error((await res.json().catch(() => ({}))).detail || "Login failed");
   return res.json();
 }
 
@@ -22,14 +22,14 @@ export async function authRegisterApi(data: any) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   });
-  if (!res.ok) throw new Error((await res.json().catch(()=>({}))).detail || "Registration failed");
+  if (!res.ok) throw new Error((await res.json().catch(() => ({}))).detail || "Registration failed");
   return res.json();
 }
 
 export async function chatApi(query: string, lang: string, session_id?: string) {
   const res = await fetch(`${API}/chat`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...authHeaders() },
     body: JSON.stringify({ query, lang, session_id }),
   });
   if (!res.ok) throw new Error(await res.text());
@@ -40,7 +40,7 @@ export async function ocrApi(file: File, lang: string) {
   const fd = new FormData();
   fd.append("file", file);
   fd.append("lang", lang);
-  const res = await fetch(`${API}/ocr`, { method: "POST", body: fd });
+  const res = await fetch(`${API}/ocr`, { method: "POST", body: fd, headers: authHeaders() });
   if (!res.ok) throw new Error(await res.text());
   return res.json();
 }
@@ -49,14 +49,14 @@ export async function voiceApi(audio: Blob, lang: string) {
   const fd = new FormData();
   fd.append("audio", audio, "audio.webm");
   fd.append("lang", lang);
-  const res = await fetch(`${API}/voice`, { method: "POST", body: fd });
+  const res = await fetch(`${API}/voice`, { method: "POST", body: fd, headers: authHeaders() });
   if (!res.ok) throw new Error(await res.text());
   return res.json();
 }
 
 export async function checklistApi(service: string, situation: string, completed: string[] = []) {
   const params = new URLSearchParams({ service, situation, completed: completed.join(",") });
-  const res = await fetch(`${API}/checklist?${params}`);
+  const res = await fetch(`${API}/checklist?${params}`, { headers: authHeaders() });
   if (!res.ok) throw new Error(await res.text());
   return res.json();
 }
@@ -84,7 +84,7 @@ export async function eligibilityApi(data: { age: number; is_pakistani?: boolean
 export async function feedbackApi(message_id: string, rating: string, comment?: string) {
   const res = await fetch(`${API}/feedback`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...authHeaders() },
     body: JSON.stringify({ message_id, rating, comment }),
   });
   if (!res.ok) throw new Error(await res.text());
@@ -107,15 +107,15 @@ export async function officesCitiesApi() {
 }
 
 export async function alertsApi() {
-  const res = await fetch(`${API}/alerts`);
+  const res = await fetch(`${API}/alerts`, { headers: authHeaders() });
   if (!res.ok) throw new Error(await res.text());
   return res.json();
 }
 
-export async function addAlertApi(data: { document_type: string; holder_name: string; cnic: string; issue_date: string; expiry_date: string }) {
+export async function addAlertApi(data: { document_type: string; holder_name: string; cnic: string; issue_date: string; expiry_date: string; custom_type_name?: string }) {
   const res = await fetch(`${API}/alerts`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...authHeaders() },
     body: JSON.stringify(data),
   });
   if (!res.ok) throw new Error(await res.text());
@@ -123,7 +123,7 @@ export async function addAlertApi(data: { document_type: string; holder_name: st
 }
 
 export async function deleteAlertApi(alertId: string) {
-  const res = await fetch(`${API}/alerts/${alertId}`, { method: "DELETE" });
+  const res = await fetch(`${API}/alerts/${alertId}`, { method: "DELETE", headers: authHeaders() });
   if (!res.ok) throw new Error(await res.text());
   return res.json();
 }
@@ -131,7 +131,7 @@ export async function deleteAlertApi(alertId: string) {
 export async function updateAlertApi(alertId: string, data: { document_type?: string; holder_name?: string; cnic?: string; issue_date?: string; expiry_date?: string; custom_type_name?: string }) {
   const res = await fetch(`${API}/alerts/${alertId}`, {
     method: "PUT",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...authHeaders() },
     body: JSON.stringify(data),
   });
   if (!res.ok) throw new Error(await res.text());
@@ -165,7 +165,7 @@ export async function identityStatusApi(service: string) {
   return res.json();
 }
 export async function vehiclesApi() {
-  const res = await fetch(`${API}/api/vehicle`);
+  const res = await fetch(`${API}/api/vehicle`, { headers: authHeaders() });
   if (!res.ok) throw new Error(await res.text());
   return res.json();
 }
@@ -178,7 +178,7 @@ export async function vehicleFlowApi(service: string) {
 
 export async function challansApi(status?: string) {
   const q = status ? `?status=${status}` : "";
-  const res = await fetch(`${API}/api/challans${q}`);
+  const res = await fetch(`${API}/api/challans${q}`, { headers: authHeaders() });
   if (!res.ok) throw new Error(await res.text());
   return res.json();
 }
@@ -190,12 +190,12 @@ export async function paymentsTimelineApi(params?: { status?: string; category?:
   if (params?.q) qs.append("q", params.q);
   if (params?.sort) qs.append("sort", params.sort);
   const url = `${API}/api/payments/timeline${qs.toString() ? `?${qs}` : ""}`;
-  const res = await fetch(url);
+  const res = await fetch(url, { headers: authHeaders() });
   if (!res.ok) throw new Error(await res.text());
   return res.json();
 }
 export async function paymentsAnalyticsApi() {
-  const res = await fetch(`${API}/api/payments/analytics`);
+  const res = await fetch(`${API}/api/payments/analytics`, { headers: authHeaders() });
   if (!res.ok) throw new Error(await res.text());
   return res.json();
 }
@@ -210,12 +210,21 @@ export async function opportunitiesRecommendedApi() {
   return res.json();
 }
 export async function familyProfileApi() {
-  const res = await fetch(`${API}/api/family/profile`);
+  const res = await fetch(`${API}/api/family/profile`, { headers: authHeaders() });
   if (!res.ok) throw new Error(await res.text());
   return res.json();
 }
 export async function familyProgramsApi() {
-  const res = await fetch(`${API}/api/family/programs`);
+  const res = await fetch(`${API}/api/family/programs`, { headers: authHeaders() });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+export async function familyAddMemberApi(data: any) {
+  const res = await fetch(`${API}/api/family/member`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...authHeaders() },
+    body: JSON.stringify(data),
+  });
   if (!res.ok) throw new Error(await res.text());
   return res.json();
 }
@@ -235,6 +244,24 @@ export async function orchestratorApi(query: string, lang: string = "en") {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ query, lang }),
   });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+export async function chatSessionsApi() {
+  const res = await fetch(`${API}/chat/sessions`, { headers: authHeaders() });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+export async function chatSessionMessagesApi(sessionId: string) {
+  const res = await fetch(`${API}/chat/sessions/${sessionId}/messages`, { headers: authHeaders() });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+export async function chatSessionDeleteApi(sessionId: string) {
+  const res = await fetch(`${API}/chat/sessions/${sessionId}`, { method: "DELETE", headers: authHeaders() });
   if (!res.ok) throw new Error(await res.text());
   return res.json();
 }
