@@ -133,6 +133,13 @@ export async function vehiclesApi() {
   if (!res.ok) throw new Error(await res.text());
   return res.json();
 }
+
+export async function vehicleFlowApi(service: string) {
+  const res = await fetch(`${API}/api/vehicle/flow/${service}`);
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
 export async function challansApi(status?: string) {
   const q = status ? `?status=${status}` : "";
   const res = await fetch(`${API}/api/challans${q}`);

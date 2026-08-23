@@ -34,9 +34,10 @@ const DOMAIN_CONFIG: Record<string, { title_en: string; title_ur: string; icon: 
     title_ur: "گاڑی",
     icon: Car,
     items: [
-      { href: "/vehicle#registration", label: "Vehicle Registration", icon: Car },
-      { href: "/vehicle#transfer", label: "Ownership Transfer", icon: Car },
-      { href: "/vehicle#token", label: "Token Tax", icon: Calculator },
+      { href: "/vehicle", label: "Overview", icon: LayoutDashboard },
+      { href: "/vehicle?svc=registration", label: "Vehicle Registration", icon: Car },
+      { href: "/vehicle?svc=transfer", label: "Ownership Transfer", icon: Car },
+      { href: "/vehicle?svc=token_tax", label: "Token Tax", icon: Calculator },
     ],
   },
   challans: {
@@ -146,9 +147,7 @@ export default function DomainSidebar({ domain }: { domain: string }) {
           const status = searchParams.get("status");
           let active = false;
           const svcVal = item.href.includes("svc=") ? item.href.split("svc=")[1].split("&")[0] : null;
-          if (item.href === "/identity") {
-            active = pathname === "/identity" && !svc;
-          } else if (svcVal) {
+          if (svcVal) {
             active = svc === svcVal;
           } else if (item.href.includes("cat=")) {
             active = cat === item.href.split("cat=")[1];
@@ -158,11 +157,7 @@ export default function DomainSidebar({ domain }: { domain: string }) {
             active = false;
           } else {
             const base = item.href.split("?")[0].split("#")[0];
-            if (item.href === "/challans" || item.href === "/updates" || item.href === "/payments") {
-              active = pathname === base && !cat && !status && !svc;
-            } else {
-              active = pathname === base;
-            }
+            active = pathname === base && !svc && !cat && !status;
           }
           return (
             <div key={item.href}>
