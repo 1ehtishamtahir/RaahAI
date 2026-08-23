@@ -53,8 +53,8 @@ const DOMAIN_CONFIG: Record<string, { title_en: string; title_ur: string; icon: 
     title_ur: "سرکاری ادائیگیاں",
     icon: CreditCard,
     items: [
-      { href: "/payments#fees", label: "Fees", icon: CreditCard },
-      { href: "/payments#taxes", label: "Taxes", icon: Calculator },
+      { href: "/payments?type=Fee", label: "Fees", icon: CreditCard },
+      { href: "/payments?type=Tax", label: "Taxes", icon: Calculator },
       { href: "/payments", label: "Payment Timeline", icon: CreditCard },
       { href: "/fees", label: "Fee Calculator", icon: Calculator },
     ],
@@ -155,12 +155,13 @@ export default function DomainSidebar({ domain }: { domain: string }) {
             active = false;
           } else {
             const base = item.href.split("?")[0].split("#")[0];
+            const type = searchParams.get("type");
             if (domain === "challans" && base === "/challans") {
               active = pathname === base;
             } else if (base === "/identity" || base === "/vehicle") {
               active = pathname === base && !svc;
             } else {
-              active = pathname === base && !svc && !cat && !status;
+              active = pathname === base && !svc && !cat && !status && !type;
             }
           }
           return (

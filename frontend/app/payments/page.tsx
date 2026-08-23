@@ -1,24 +1,35 @@
 "use client";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, Suspense } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import AppShell from "@/components/layout/AppShell";
 import { useLang } from "@/lib/LangContext";
 import { paymentsTimelineApi, paymentsAnalyticsApi } from "@/lib/api";
 import { CreditCard, Receipt, Banknote, Clock, Smartphone, Building2, ExternalLink, X, Search, Download, Filter, AlertTriangle, CheckCircle, TrendingUp, Calendar } from "lucide-react";
 
-export default function PaymentsPage(){
+function PaymentsInner(){
   const {lang}=useLang();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const urlType = searchParams.get("type");
   const [data,setData]=useState<any>(null);
   const [analytics,setAnalytics]=useState<any>(null);
   const [payFor,setPayFor]=useState<any>(null);
   const [q,setQ]=useState("");
   const [status,setStatus]=useState<string|undefined>(undefined);
-  const [type,setType]=useState<string|undefined>(undefined);
+  const [type,setType]=useState<string|undefined>(urlType || undefined);
   const [category,setCategory]=useState<string|undefined>(undefined);
   const [sort,setSort]=useState("due_date");
   const [view,setView]=useState<"timeline"|"table">("timeline");
 
+  useEffect(()=>{ if(urlType) setType(urlType); else setType(undefined); },[urlType]);
   useEffect(()=>{ paymentsTimelineApi({status, category, type, q: q||undefined, sort}).then(setData).catch(()=>{}); },[status, category, type, q, sort]);
   useEffect(()=>{ paymentsAnalyticsApi().then(setAnalytics).catch(()=>{}); },[]);
+
+  function setTypeAndUrl(v?: string){
+    setType(v);
+    if(v) router.push(`/payments?type=${v}`);
+    else router.push("/payments");
+  }
 
   const filteredCount = data?.timeline?.length || 0;
 
@@ -35,7 +46,6 @@ export default function PaymentsPage(){
   }
 
   return (
-    <AppShell>
       <div className="space-y-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
           <div>
@@ -48,7 +58,6 @@ export default function PaymentsPage(){
           </div>
         </div>
 
-        {/* Summary — now 5 cards with overdue/due soon */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
           <div className="bg-white border border-border rounded-xl p-3 text-center"><div className="text-xl font-bold">{data?.summary?.total||0}</div><div className="text-xs text-text-muted">Total</div><div className="text-[10px] text-text-muted">PKR {(data?.summary?.paid_amount||0)+(data?.summary?.pending_amount||0)+(data?.summary?.overdue_amount||0)}</div></div>
           <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 text-center"><div className="text-xl font-bold text-amber-600">{data?.summary?.pending||0}</div><div className="text-xs text-text-muted">Pending</div><div className="text-[10px] text-amber-700">PKR {data?.summary?.pending_amount?.toLocaleString()||0}</div></div>
@@ -57,7 +66,6 @@ export default function PaymentsPage(){
           <div className="bg-raah-mint border border-raah-green/20 rounded-xl p-3 text-center"><div className="text-xl font-bold text-raah-green">{data?.summary?.paid||0}</div><div className="text-xs text-text-muted">Paid</div><div className="text-[10px] text-raah-green">PKR {data?.summary?.paid_amount?.toLocaleString()||0}</div></div>
         </div>
 
-        {/* Analytics */}
         {analytics && (
           <div className="grid md:grid-cols-2 gap-4">
             <div className="bg-white border border-border rounded-2xl p-4">
@@ -84,7 +92,6 @@ export default function PaymentsPage(){
           </div>
         )}
 
-        {/* Controls: search + filters + sort */}
         <div className="bg-white border border-border rounded-2xl p-4">
           <div className="flex flex-col md:flex-row gap-3">
             <div className="flex-1 flex items-center gap-2 bg-raah-soft border border-border rounded-full px-3 py-2">
@@ -107,7 +114,6 @@ export default function PaymentsPage(){
             </select>
           </div>
 
-          {/* Status + Type pills */}
           <div className="flex flex-wrap gap-2 mt-3">
             <span className="text-xs text-text-muted flex items-center gap-1"><Filter size={12}/> Status:</span>
             {[
@@ -126,7 +132,7 @@ export default function PaymentsPage(){
               {k:"Tax", label:"Taxes"},
               {k:"Fine", label:"Fines"},
             ].map(p=>(
-              <button key={p.label} onClick={()=>setType(p.k)} className={`px-3 py-1 rounded-full text-xs border ${type===p.k?"bg-raah-green text-white border-raah-green":"bg-white border-border hover:border-raah-green/30"}`}>{p.label}</button>
+              <button key={p.label} onClick={()=>setTypeAndUrl(p.k)} className={`px-3 py-1 rounded-full text-xs border ${type===p.k?"bg-raah-green text-white border-raah-green":"bg-white border-border hover:border-raah-green/30"}`}>{p.label}</button>
             ))}
             <span className="text-xs text-text-muted ml-auto">{filteredCount} results</span>
           </div>
@@ -153,7 +159,6 @@ export default function PaymentsPage(){
           </div>
         </div>
 
-        {/* Timeline or Table */}
         <div className="bg-white border border-border rounded-2xl p-6">
           <div className="font-semibold text-sm mb-3 flex items-center justify-between">
             <span>{view==="timeline"?"Payment Timeline":"Payments Table"} — {filteredCount} items</span>
@@ -211,7 +216,6 @@ export default function PaymentsPage(){
             </div>
           )}
         </div>
-      </div>
 
       {payFor && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40" onClick={()=>setPayFor(null)}>
@@ -234,6 +238,16 @@ export default function PaymentsPage(){
           </div>
         </div>
       )}
+      </div>
+  );
+}
+
+export default function PaymentsPage(){
+  return (
+    <AppShell>
+      <Suspense fallback={<div className="p-6 text-sm text-text-muted animate-pulse">Loading Payments...</div>}>
+        <PaymentsInner />
+      </Suspense>
     </AppShell>
   );
 }
