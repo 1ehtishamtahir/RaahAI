@@ -144,12 +144,18 @@ export default function DomainSidebar({ domain }: { domain: string }) {
           const sub = searchParams.get("sub");
           const cat = searchParams.get("cat");
           const status = searchParams.get("status");
+          const view = searchParams.get("view");
+          const q = searchParams.get("q");
           let active = false;
           const svcVal = item.href.includes("svc=") ? item.href.split("svc=")[1].split("&")[0] : null;
+          const viewVal = item.href.includes("view=") ? item.href.split("view=")[1].split("&")[0] : null;
+          const catVal = item.href.includes("cat=") ? item.href.split("cat=")[1].split("&")[0] : null;
           if (svcVal) {
             active = svc === svcVal;
-          } else if (item.href.includes("cat=")) {
-            active = cat === item.href.split("cat=")[1];
+          } else if (viewVal) {
+            active = view === viewVal;
+          } else if (catVal) {
+            active = cat === catVal;
           } else if (item.href.includes("status=")) {
             active = status === item.href.split("status=")[1];
           } else if (item.href.includes("#")) {
@@ -162,7 +168,7 @@ export default function DomainSidebar({ domain }: { domain: string }) {
             } else if (base === "/identity" || base === "/vehicle") {
               active = pathname === base && !svc;
             } else {
-              active = pathname === base && !svc && !cat && !status && !type;
+              active = pathname === base && !svc && !cat && !status && !type && !view;
             }
           }
           return (
