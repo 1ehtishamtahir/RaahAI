@@ -2,10 +2,10 @@
 
 > Persistent context for RaahAI. This file is the single source of truth for what has been read, decided, and scaffolded. Keep it updated after every major change.
 
-**Last Updated:** 2026-08-22 (Gemini migration)  
-**Workspace:** `D:\1-Projects\RaahAI - Bano Qabil Hackathon\RaahAI`  
-**Hackathon:** Bano Qabil AI Hackathon 2026  
-**Version:** 3.0 (Gemini — Qwen replaced, tsc 0, backend + frontend live on 3001/8000)
+**Last Updated:** 2026-08-23 (v4.0 — 7 new features)
+**Workspace:** `D:\1-Projects\RaahAI - Bano Qabil Hackathon\RaahAI`
+**Hackathon:** Bano Qabil AI Hackathon 2026
+**Version:** 4.0 (15 features, 68/68 tests pass, pushed to GitHub)
 
 ---
 
@@ -54,7 +54,7 @@ All specs were copied to `docs/` for permanence:
 - **Security:** Sensitive fields not persisted beyond session; UI masking; PostgreSQL stores only session metadata / checklist state, not raw images/CNIC numbers; file validation (MIME + size 10MB).
 - **Design mapping:** Colors `Raah Green #087F3E`, Deep `#075C2D`, Mint `#EAF7EE`, Soft Mint `#F3FAF5`, Success `#159447`, neutrals `#17201B/#66716B/#98A29C/#E3E9E5/#FBFDFC`; fonts Inter + Noto Sans + Noto Sans Arabic; radii 16–20px; sidebar 308px, right panel 390–420px.
 
-## 6. What Was Scaffolded (v2.0 — 100%)
+## 6. What Was Scaffolded (v4.0 — 100%)
 
 ### Root
 - `README.md`, `.gitignore`, `docker-compose.yml`, `docs/` (4 specs), `memory.md`
@@ -63,30 +63,39 @@ All specs were copied to `docs/` for permanence:
 - `requirements.txt` (+ gtts, edge-tts, pypdf, pymupdf, `google-generativeai==0.8.3`, `google-genai==0.8.0`), `.env.example`, `.env`, `Dockerfile`, `alembic.ini`
 - `app/core/config.py` — pydantic-settings cached (now `GEMINI_API_KEY`, `GEMINI_MODEL`, `GEMINI_EMBEDDING_MODEL` + legacy Qwen)
 - `app/core/database.py` + `app/models/db_models.py` — Session, ChatHistory, ChecklistState (fallback to sqlite)
-- `app/models/schemas.py` — all schemas
+- `app/models/schemas.py` — all schemas (Chat, OCR, Checklist, Voice, Fees, Eligibility, Feedback, Alerts)
 - `app/services/gemini.py` — **primary** (new + legacy SDK, structured mock, `call_gemini()`), `qwen.py` kept as fallback (`call_qwen` legacy)
 - `app/services/embeddings.py` — **Gemini primary** (`text-embedding-004` via `genai.embed_content`) + Qwen fallback + hash fallback (768-dim)
 - `app/services/vectorstore.py` — PersistentClient with in-memory keyword fallback (no C++ tools)
-- `app/services/rag.py` — `rag_answer()` now imports `gemini.call_gemini` (falls back to qwen)
-- `app/services/ocr.py` — preprocess + heuristic labeling (cv2 optional, mock fallback) + `explain_fields` now via Gemini
+- `app/services/rag.py` — `rag_answer()` with Roman Urdu detection, greeting/thanks handling, grounding guardrails
+- `app/services/ocr.py` — preprocess + heuristic labeling (cv2 optional, mock fallback) + `explain_fields` now via Gemini + Smart Document Matcher
 - `app/services/checklist.py` — TEMPLATES
 - `app/services/voice.py` — Whisper + gTTS + edge-tts + empty fallback
-- `app/routers/chat.py` (`POST /chat`), `ocr_router.py` (`POST /ocr` now via Gemini), `voice.py` (`POST /voice`), `checklist.py` (`GET /checklist` + `POST /checklist/update` with DB persistence via `session_id`)
-- `app/main.py` — CORS (now `3000,3001`), `Base.metadata.create_all`, `/health`
+- `app/routers/chat.py` (`POST /chat`), `ocr_router.py` (`POST /ocr` + `POST /ocr/ask`), `voice.py` (`POST /voice`), `checklist.py` (`GET /checklist` + `POST /checklist/update`)
+- `app/routers/fees.py` (`POST /fees` + `GET /fees/all`) — passport/CNIC/business × normal/urgent/executive
+- `app/routers/eligibility.py` (`POST /eligibility`) — age-based service eligibility with docs + steps
+- `app/routers/feedback.py` (`POST /feedback` + `GET /feedback/stats`) — thumbs up/down with stats
+- `app/routers/offices.py` (`GET /offices` + `GET /offices/cities` + `GET /offices/{id}`) — 12 offices across 6 cities
+- `app/routers/alerts.py` (`GET /alerts` + `POST /alerts` + `DELETE /alerts/{id}`) — document expiry tracker
+- `app/main.py` — CORS (3000,3001), `Base.metadata.create_all`, `/health`, all 10 routers
 - `data/seed_chunks.json` — 9 chunks (passport×3, cnic×3, business×2, privacy×1)
 - `scripts/ingest.py`, `scripts/seed_chroma.py`, `scripts/seed_checklist.py`
 
 ### Frontend (`frontend/`)
 - `package.json`, `tailwind.config.ts`, `postcss.config.js`, `tsconfig.json` (paths `@/*`), `next.config.mjs`, `.env.example`, `.env.local`, `Dockerfile`
-- `styles/globals.css` + `lib/utils.ts`, `lib/api.ts`, `lib/i18n.ts` (expanded en/ur), `lib/LangContext.tsx` (localStorage + `dir` toggle)
-- `components/layout/AppShell.tsx` (useLang), `Sidebar.tsx` (useLang, 10 nav, language pills), `TopHeader.tsx` (useLang)
-- `components/chat/ChatWindow.tsx` (useLang, history localStorage, staged loading `searchOfficial`→`preparing`), `UserMessage.tsx`, `AIMessage.tsx`, `SourceBadge.tsx`, `ChatInput.tsx` (useLang placeholder)
-- `components/checklist/ChecklistCard.tsx` (loading/error + useLang), `ChecklistItem.tsx`, `ProgressBar.tsx`
-- `components/services/ServiceCard.tsx` (useLang)
-- `components/documents/UploadCard.tsx` (useLang, staged `readingDoc`→`understanding`, progress bar, error Try Again, masked CNIC note)
+- `styles/globals.css` + `lib/utils.ts`, `lib/api.ts` (12 API functions), `lib/i18n.ts` (expanded en/ur), `lib/LangContext.tsx` (localStorage + `dir` toggle)
+- `components/layout/AppShell.tsx` (useLang), `Sidebar.tsx` (useLang, **14 nav items** with Urdu translations, language pills), `TopHeader.tsx` (useLang)
+- `components/chat/ChatWindow.tsx` (useLang, history localStorage, staged loading, quick-prompt chips), `UserMessage.tsx`, `AIMessage.tsx` (**feedback buttons** with API persistence), `SourceBadge.tsx`, `ChatInput.tsx`
+- `components/checklist/ChecklistCard.tsx`, `ChecklistItem.tsx`, `ProgressBar.tsx`
+- `components/services/ServiceCard.tsx`
+- `components/documents/UploadCard.tsx` (onComplete callback for OCR page integration)
 - `components/ui/Skeleton.tsx`, `components/ui/ErrorState.tsx`
-- `app/layout.tsx` (LangProvider), `app/page.tsx` (rightPanel), `app/ocr/page.tsx`, `app/voice/page.tsx` (useLang, gTTS lang), `app/checklist/page.tsx`, `app/documents/page.tsx`, `app/history/page.tsx`, `app/saved/page.tsx`, `app/notifications/page.tsx`, `app/settings/page.tsx`, `app/help/page.tsx`, `app/services/page.tsx`
-- Verified: `npx tsc --noEmit` exit 0, `python -m py_compile` all 17 py OK, `frontend/public/logo.png` copied
+- `app/layout.tsx` (LangProvider), `app/page.tsx` (rightPanel), `app/ocr/page.tsx` (**service detection + follow-up questions**), `app/voice/page.tsx`, `app/checklist/page.tsx`, `app/documents/page.tsx`, `app/history/page.tsx`, `app/saved/page.tsx`, `app/notifications/page.tsx`, `app/settings/page.tsx`, `app/help/page.tsx`, `app/services/page.tsx`
+- `app/fees/page.tsx` — Fee Calculator with service/urgency selection + breakdown
+- `app/eligibility/page.tsx` — Age-based eligibility check with expandable results
+- `app/offices/page.tsx` — Filterable office directory (city + type)
+- `app/alerts/page.tsx` — Document expiry tracker with add/delete + renewal links
+- Verified: `npx tsc --noEmit` exit 0, `python -m py_compile` all 23 py OK, `frontend/public/logo.png` copied
 
 ## 7. API Contract (backend ↔ frontend)
 
@@ -94,12 +103,24 @@ All specs were copied to `docs/` for permanence:
 |----------|--------|---------|---------|
 | `/health` | GET | — | `{status, service, version}` |
 | `/chat` | POST | `{query, lang, session_id?, service?}` | `{answer, citations[], grounded, session_id}` |
-| `/ocr` | POST (multipart) | `file, lang` | `{fields[{label,value,confidence,needs_confirmation,explanation}], raw_text, masked_fields}` |
+| `/ocr` | POST (multipart) | `file, lang` | `{fields[{label,value,confidence,needs_confirmation,explanation}], raw_text, masked_fields, matched_service}` |
+| `/ocr/ask` | POST (multipart) | `field_label, field_value, question, lang` | `{answer, field, value}` |
 | `/voice` | POST (multipart) | `audio, lang` | `{transcript, answer, citations[], audio_url?}` |
 | `/checklist` | GET | `?service&situation&completed=comma&session_id` | `{service,situation,items[], progress, completed_count, total_count}` |
 | `/checklist/update` | POST | `{service,situation,checked_ids[]}` + `?session_id` | same |
+| `/fees` | POST | `{service, urgency, pages?}` | `{service, service_name_en, service_name_ur, urgency, government_fee, bank_charges, total, currency, payment_method, processing_time, notes[], valid_upto}` |
+| `/fees/all` | GET | — | `[{service, service_name_en, service_name_ur, urgency, government_fee, bank_charges, total, processing_time}]` |
+| `/eligibility` | POST | `{age, is_pakistani?, has_cnic?}` | `[{service, name_en, name_ur, eligible, reasons[], required_documents[], steps[], fee_normal, fee_urgent}]` |
+| `/feedback` | POST | `{message_id, rating, comment?, session_id?}` | `{status, message}` |
+| `/feedback/stats` | GET | — | `{total, up, down, percentage}` |
+| `/offices` | GET | `?city=&type=` | `[{id, name_en, name_ur, type, city, address, phone, hours, lat, lng}]` |
+| `/offices/cities` | GET | — | `["Faisalabad", "Islamabad", ...]` |
+| `/offices/{id}` | GET | — | `{id, name_en, name_ur, type, city, address, phone, hours, lat, lng}` |
+| `/alerts` | GET | — | `[{id, document_type, document_name_en, document_name_ur, holder_name, cnic, issue_date, expiry_date, days_until_expiry, status, renewal_url, notes[]}]` |
+| `/alerts` | POST | `{document_type, holder_name, cnic, issue_date, expiry_date}` | same as GET item |
+| `/alerts/{id}` | DELETE | — | `{status: "ok"}` |
 
-CORS origins from `CORS_ORIGINS` env (default `http://localhost:3000`).
+CORS origins from `CORS_ORIGINS` env (default `http://localhost:3000,http://localhost:3001`).
 
 ## 8. Key Design Tokens (for frontend dev)
 
@@ -108,7 +129,7 @@ CORS origins from `CORS_ORIGINS` env (default `http://localhost:3000`).
 - **Typography** — page 24–28/700, section 18–20/650, card 16–18/600, body 14–16/400.
 - **UX principles** — answers scannable with headings Required Documents / Process / Fees / Eligibility / Important Notes / Source; every answer has Source pill; checklist shows `In Progress` + progress bar; voice is minimal (◉ Listening...); OCR flow Upload→Detection→Extraction→Recognition→Explanation→Checklist; input fixed bottom with safety notice.
 
-## 9. Phases Status (v2.0 — 100%)
+## 9. Phases Status (v4.0 — 100%)
 
 - [x] **Phase 0 Setup** — repo structure, Next.js + FastAPI skeletons, DB config, chroma wrapper, Qwen stub verified.
 - [x] **Phase 1 Chat+RAG** — `seed_chunks.json` + `seed_chroma.py` (offline hash embeddings), structured mock in `qwen.py:29` (service-aware, Urdu/English), `tsc` 0 errors, `chatApi` wired.
@@ -117,6 +138,7 @@ CORS origins from `CORS_ORIGINS` env (default `http://localhost:3000`).
 - [x] **Phase 4 Voice** — `voice.py` (whisper→gTTS→edge-tts→fallback), `voice/page.tsx` (MediaRecorder→voiceApi, useLang, speechSynthesis lang), `TopHeader` Voice Mode i18n.
 - [x] **Phase 5 Polish** — `Skeleton.tsx`, `ErrorState.tsx`, staged Loadings (`searchOfficial`, `preparing`, `readingDoc`, `understanding`), error Try Again, history/saved/notifications/settings/help/services pages, RTL via `LangContext` (`document.dir`), responsive.
 - [x] **Phase 6 Rehearsal** — demo script: `Passport banwane ke liye kya documents chahiye?` → structured answer + Source: DGIP → Upload form → OCR masked → checklist 3/5 → voice. Judge Q&A prepared (privacy, accuracy, sources) in `settings` + `help`.
+- [x] **Phase 7 New Features (v4.0)** — Fee Calculator, Eligibility Checker, Regional Offices, Document Expiry Alerts, Feedback System, Roman Urdu Detection, Smart Document Matcher, OCR Follow-up Questions. 68/68 tests pass. Pushed to GitHub.
 
 ## 10. Environment & Runbook
 
@@ -148,13 +170,12 @@ curl -X POST http://localhost:8000/chat -H "Content-Type: application/json" -d '
 
 **Required env:** `GEMINI_API_KEY` (optional, mock shows `[DEMO — set GEMINI_API_KEY for live Gemini]`), `DASHSCOPE_API_KEY` (legacy fallback), `DATABASE_URL`, `CHROMA_PATH`, `NEXT_PUBLIC_API_URL`.
 
-## 11. Next Actions (post-Gemini, optional)
+## 11. Next Actions (post-v4.0, optional)
 
-1. **Live Gemini test** — set `GEMINI_API_KEY` from https://aistudio.google.com/app/apikey and run `POST /chat` with Urdu + English, verify citations no longer show `[DEMO ...]` prefix.
-2. **Real ingestion** — run `ingest.py` on full PDF, `collection.count()` should be >9 (uses Gemini embeddings when key set).
-3. **OCR real images** — test Pakistani form photos, tune `adaptiveThreshold` if needed.
-4. **Deploy** — Vercel `frontend/`, Render `backend/`, Supabase `DATABASE_URL`, set `CORS_ORIGINS` + `GEMINI_API_KEY` env on Render.
-5. **Upgrade to `google-genai`** — `google-generativeai` is deprecated (FutureWarning), already supports `google.genai` new SDK; `pip install google-genai` done, migration complete.
+1. **Deploy** — Vercel `frontend/`, Render `backend/`, Supabase `DATABASE_URL`, set `CORS_ORIGINS` + `GEMINI_API_KEY` env on Render.
+2. **Demo video** — 30-60 sec screen recording showing: chat → OCR → checklist → fees → eligibility → offices → Urdu → dark mode.
+3. **README polish** — Add screenshots/GIFs, architecture diagram, live demo link.
+4. **Submit** — Upload to Bano Qabil portal with all required fields.
 
 ## 12. Decisions Log
 
@@ -168,6 +189,7 @@ curl -X POST http://localhost:8000/chat -H "Content-Type: application/json" -d '
 - Created missing 6 pages to complete 11 MVP screens per `Dessign.md:863`.
 - Verified `tsc --noEmit` 0 and `py_compile` all OK before marking 100%.
 - **2026-08-22 Gemini migration:** Replaced Qwen (`qwen-plus`, `dashscope`) with Gemini (`gemini-1.5-flash`, `text-embedding-004`) as primary per user request. Kept `qwen.py` as fallback, created `gemini.py` handling both `google.genai` new + `google.generativeai` legacy SDKs, updated `embeddings.py` to try Gemini→Qwen→hash, `rag.py` to call `gemini.call_gemini`, `ocr_router.py` to use Gemini `explain_fields`, `config.py` + `.env` + `requirements.txt` + `README.md` updated. Backend verified: `POST /chat` now returns `[DEMO - set GEMINI_API_KEY for live Gemini]` instead of Qwen, both live on 3001/8000.
+- **2026-08-23 v4.0 features:** Added 7 new features (Fee Calculator, Eligibility Checker, Regional Offices, Document Expiry Alerts, Feedback System, Roman Urdu Detection, Smart Document Matcher + OCR Follow-up). All in-memory for demo speed. Backend: 5 new routers (fees, eligibility, feedback, offices, alerts) + updated rag.py + ocr_router.py. Frontend: 4 new pages (fees, eligibility, offices, alerts) + enhanced AIMessage + OCR page + Sidebar (14 nav items). 68/68 tests pass. Roman Urdu auto-detection works (`passport kaise banwana` → translated → answered in Urdu). Pushed to GitHub.
 
 ## 13. Contacts & Links
 
