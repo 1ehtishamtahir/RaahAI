@@ -265,3 +265,15 @@ export async function chatSessionDeleteApi(sessionId: string) {
   if (!res.ok) throw new Error(await res.text());
   return res.json();
 }
+
+export async function notificationsApi() {
+  const res = await fetch(`${API}/api/notifications`, { headers: authHeaders() });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+export async function notificationsCountApi() {
+  const res = await fetch(`${API}/api/notifications/count`, { headers: authHeaders() });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}

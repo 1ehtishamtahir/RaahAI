@@ -19,6 +19,7 @@ from app.routers.family import router as family_router
 from app.routers.updates import router as updates_router
 from app.routers.citizen import router as citizen_router
 from app.routers.orchestrator import router as orchestrator_router
+from app.routers.notifications import router as notifications_router
 from app.core.database import Base, engine, SessionLocal
 
 settings = get_settings()
@@ -140,6 +141,7 @@ app.include_router(family_router)
 app.include_router(updates_router)
 app.include_router(citizen_router)
 app.include_router(orchestrator_router)
+app.include_router(notifications_router)
 
 
 @app.get("/health")
