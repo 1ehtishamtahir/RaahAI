@@ -31,31 +31,33 @@ export default function DashboardPage() {
     <AppShell>
       <div className="space-y-6">
         {/* Header */}
-        <div className="rounded-2xl p-6 text-white relative overflow-hidden" style={{backgroundImage:"url(/banner-bg.png)",backgroundSize:"cover",backgroundPosition:"center"}}>
-          <div className="absolute inset-0 bg-gradient-to-r from-raah-deep/80 via-raah-green/70 to-emerald-700/60"/>
-          {!data ? (
-            <div className="space-y-2 animate-pulse relative z-10">
-              <div className="h-3 w-32 bg-white/20 rounded"/>
-              <div className="h-6 w-48 bg-white/20 rounded"/>
-              <div className="h-3 w-40 bg-white/20 rounded"/>
-            </div>
-          ) : (
-            <div className="relative z-10">
-              <div className="text-xs font-medium uppercase tracking-widest opacity-60 mb-1">Citizen Command Center</div>
-              <div className="text-2xl font-bold mt-1">
-                Welcome, {user?.name || data?.citizen?.name || "Citizen"}
+        <div className="rounded-2xl text-white relative overflow-hidden" style={{backgroundImage:"url(/banner-bg.png)",backgroundSize:"cover",backgroundPosition:"right center"}}>
+          <div className="absolute inset-0 bg-gradient-to-r from-raah-deep/90 via-raah-green/60 to-transparent"/>
+          <div className="relative z-10 p-6">
+            {!data ? (
+              <div className="space-y-2 animate-pulse">
+                <div className="h-3 w-32 bg-white/20 rounded"/>
+                <div className="h-6 w-48 bg-white/20 rounded"/>
+                <div className="h-3 w-40 bg-white/20 rounded"/>
               </div>
-              <div className="text-sm opacity-80 mt-1 flex items-center gap-1.5">
-                <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-300"/>
-                {user?.cnic || data?.citizen?.cnic || ""}
-                <span className="opacity-40 mx-1">|</span>
-                {user?.city || data?.citizen?.city || ""}
-              </div>
-              <div className="mt-3">
-                <span className="px-3 py-1 rounded-full bg-white/15 text-xs font-medium backdrop-blur-sm">Your Government. Your Data. Your AI Copilot.</span>
-              </div>
-            </div>
-          )}
+            ) : (
+              <>
+                <div className="text-xs font-medium uppercase tracking-widest opacity-50 mb-1">Citizen Command Center</div>
+                <div className="text-2xl font-bold mt-1">
+                  Welcome, {user?.name || data?.citizen?.name || "Citizen"}
+                </div>
+                <div className="text-sm opacity-80 mt-1 flex items-center gap-1.5">
+                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-300"/>
+                  {user?.cnic || data?.citizen?.cnic || ""}
+                  <span className="opacity-40 mx-1">|</span>
+                  {user?.city || data?.citizen?.city || ""}
+                </div>
+                <div className="mt-3">
+                  <span className="px-3 py-1 rounded-full bg-white/15 text-xs font-medium backdrop-blur-sm">Your Government. Your Data. Your AI Copilot.</span>
+                </div>
+              </>
+            )}
+          </div>
         </div>
 
         {/* Summary Cards */}
