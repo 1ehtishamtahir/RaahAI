@@ -31,11 +31,10 @@ export default function DashboardPage() {
     <AppShell>
       <div className="space-y-6">
         {/* Header */}
-        <div className="bg-gradient-to-r from-raah-green via-emerald-700 to-raah-deep rounded-2xl p-6 text-white relative overflow-hidden">
-          <div className="absolute -right-8 -top-8 w-32 h-32 bg-white/5 rounded-full"/>
-          <div className="absolute -right-2 -bottom-10 w-24 h-24 bg-white/5 rounded-full"/>
+        <div className="rounded-2xl p-6 text-white relative overflow-hidden" style={{backgroundImage:"url(/banner-bg.png)",backgroundSize:"cover",backgroundPosition:"center"}}>
+          <div className="absolute inset-0 bg-gradient-to-r from-raah-deep/80 via-raah-green/70 to-emerald-700/60"/>
           {!data ? (
-            <div className="space-y-2 animate-pulse">
+            <div className="space-y-2 animate-pulse relative z-10">
               <div className="h-3 w-32 bg-white/20 rounded"/>
               <div className="h-6 w-48 bg-white/20 rounded"/>
               <div className="h-3 w-40 bg-white/20 rounded"/>
