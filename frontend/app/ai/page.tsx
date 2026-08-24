@@ -1,7 +1,7 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Send, MessageCircle } from "lucide-react";
+import { ArrowLeft, Send, MessageCircle, Mic, MicOff, Volume2 } from "lucide-react";
 import { useLang } from "@/lib/LangContext";
 import { useAuth } from "@/lib/AuthContext";
 import { chatApi } from "@/lib/api";
@@ -17,8 +17,15 @@ export default function AIPage() {
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
+  const [speechSupported, setSpeechSupported] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const recognitionRef = useRef<any>(null);
+
+  useEffect(() => {
+    setSpeechSupported("webkitSpeechRecognition" in window || "SpeechRecognition" in window);
+  }, []);
 
   useEffect(() => {
     if (messages.length === 0) {
@@ -82,6 +89,39 @@ export default function AIPage() {
     { label: " challan check", q: "Mera challan ka status check karein" },
   ];
 
+  function toggleVoice() {
+    if (!speechSupported) return;
+    if (isRecording && recognitionRef.current) {
+      recognitionRef.current.stop();
+      setIsRecording(false);
+      return;
+    }
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+    recognition.lang = lang === "ur" ? "ur-PK" : "en-US";
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+    recognitionRef.current = recognition;
+    recognition.onresult = (event: any) => {
+      const transcript = event.results[0][0].transcript;
+      setInput(prev => prev ? prev + " " + transcript : transcript);
+      setIsRecording(false);
+    };
+    recognition.onerror = () => setIsRecording(false);
+    recognition.onend = () => setIsRecording(false);
+    recognition.start();
+    setIsRecording(true);
+  }
+
+  function speakText(text: string) {
+    if (!("speechSynthesis" in window)) return;
+    const clean = text.replace(/[*#`>_\-]/g, "").replace(/\n+/g, ". ").slice(0, 500);
+    const utterance = new SpeechSynthesisUtterance(clean);
+    utterance.lang = lang === "ur" ? "ur-PK" : "en-US";
+    utterance.rate = 0.9;
+    speechSynthesis.speak(utterance);
+  }
+
   return (
     <div className="min-h-screen bg-[#FBFDFC] flex flex-col">
       {/* Header */}
@@ -117,7 +157,14 @@ export default function AIPage() {
               </div>
             </div>
           ) : (
-            <AIMessage key={m.id} text={m.text} time={m.time} citations={m.citations} grounded={m.grounded} />
+            <>
+              <AIMessage key={m.id} text={m.text} time={m.time} citations={m.citations} grounded={m.grounded} />
+              {m.role === "assistant" && m.id !== "welcome" && (
+                <button onClick={() => speakText(m.text)} className="ml-2 mt-1 text-text-muted hover:text-raah-green transition" title="Read aloud">
+                  <Volume2 size={14}/>
+                </button>
+              )}
+            </>
           )
         )}
         {loading && (
@@ -157,6 +204,15 @@ export default function AIPage() {
               className="flex-1 outline-none text-sm placeholder:text-text-muted bg-transparent min-w-0"
               disabled={loading}
             />
+            {speechSupported && (
+              <button
+                onClick={toggleVoice}
+                className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 transition ${isRecording ? "bg-red-500 text-white animate-pulse" : "bg-raah-soft text-text-muted hover:text-raah-green"}`}
+                title={isRecording ? "Stop recording" : "Voice input"}
+              >
+                {isRecording ? <MicOff size={16}/> : <Mic size={16}/>}
+              </button>
+            )}
             <button
               onClick={onSend}
               disabled={loading || !input.trim()}

@@ -2,9 +2,9 @@
 import { useEffect, useState } from "react";
 import AppShell from "@/components/layout/AppShell";
 import { useLang } from "@/lib/LangContext";
-import { citizenDashboardApi } from "@/lib/api";
+import { citizenDashboardApi, aiDashboardSuggestions, aiDeadlines } from "@/lib/api";
 import Link from "next/link";
-import { Shield, Car, AlertTriangle, CreditCard, FileText, GraduationCap, Users, Bell, ArrowRight, CheckCircle, Clock, Building2, ClipboardCheck } from "lucide-react";
+import { Shield, Car, AlertTriangle, CreditCard, FileText, GraduationCap, Users, Bell, ArrowRight, CheckCircle, Clock, Building2, ClipboardCheck, Sparkles, Calendar } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
 
 const MENU = [
@@ -23,7 +23,9 @@ export default function DashboardPage() {
   const { lang } = useLang();
   const { user } = useAuth();
   const [data, setData] = useState<any>(null);
-  useEffect(() => { citizenDashboardApi().then(setData).catch(() => {}); }, []);
+  const [aiSuggestions, setAiSuggestions] = useState<any>(null);
+  const [deadlines, setDeadlines] = useState<any>(null);
+  useEffect(() => { citizenDashboardApi().then(setData).catch(() => {}); aiDashboardSuggestions().then(setAiSuggestions).catch(() => {}); aiDeadlines().then(setDeadlines).catch(() => {}); }, []);
 
   return (
     <AppShell>
@@ -61,6 +63,73 @@ export default function DashboardPage() {
               <div className="font-bold text-raah-deep">{data.summary.payments.pending} pending</div>
               <div className="text-xs text-amber-600 mt-1">PKR {data.summary.payments.pending_amount?.toLocaleString()}</div>
             </div>
+          </div>
+        )}
+
+        {/* AI Suggestions Widget */}
+        {aiSuggestions && aiSuggestions.data_summary && aiSuggestions.data_summary.length > 0 && (
+          <div className="bg-gradient-to-r from-raah-deep to-emerald-800 rounded-2xl p-5 text-white">
+            <div className="flex items-center gap-2 mb-3">
+              <Sparkles size={18} className="text-emerald-300" />
+              <span className="font-semibold text-sm">AI Copilot Suggestions</span>
+              {aiSuggestions.priority_count > 0 && (
+                <span className="ml-auto text-xs bg-amber-500 text-white px-2 py-0.5 rounded-full">
+                  {aiSuggestions.priority_count} urgent
+                </span>
+              )}
+            </div>
+            <div className="space-y-2">
+              {aiSuggestions.data_summary.map((item: string, i: number) => (
+                <div key={i} className="flex items-start gap-2 text-sm opacity-90">
+                  <span className="mt-0.5">•</span>
+                  <span>{item}</span>
+                </div>
+              ))}
+            </div>
+            {aiSuggestions.suggestions && (
+              <div className="mt-3 text-xs text-emerald-200 leading-relaxed whitespace-pre-line">{aiSuggestions.suggestions}</div>
+            )}
+          </div>
+        )}
+
+        {/* Deadline Timeline */}
+        {deadlines && deadlines.deadlines && deadlines.deadlines.length > 0 && (
+          <div className="bg-white border border-border rounded-2xl p-5">
+            <div className="flex items-center gap-2 mb-3">
+              <Calendar size={16} className="text-raah-green" />
+              <span className="font-semibold text-sm">Upcoming Deadlines</span>
+              {deadlines.urgent_count > 0 && (
+                <span className="ml-auto text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full">
+                  {deadlines.urgent_count} urgent
+                </span>
+              )}
+            </div>
+            <div className="space-y-2 max-h-64 overflow-y-auto">
+              {deadlines.deadlines.slice(0, 8).map((d: any, i: number) => (
+                <div key={i} className={`flex items-center gap-3 p-2 rounded-lg text-sm ${
+                  d.status === "expired" || d.status === "overdue" ? "bg-red-50 border border-red-200" :
+                  d.status === "expiring_soon" || d.status === "due_soon" ? "bg-amber-50 border border-amber-200" :
+                  "bg-raah-soft border border-border"
+                }`}>
+                  <span className={`w-2 h-2 rounded-full shrink-0 ${
+                    d.status === "expired" || d.status === "overdue" ? "bg-red-500" :
+                    d.status === "expiring_soon" || d.status === "due_soon" ? "bg-amber-500" : "bg-raah-green"
+                  }`}/>
+                  <span className="flex-1 truncate">{d.name}</span>
+                  <span className="text-xs text-text-muted whitespace-nowrap">{d.date}</span>
+                  <span className={`text-xs font-medium whitespace-nowrap ${
+                    d.status === "expired" || d.status === "overdue" ? "text-red-600" :
+                    d.status === "expiring_soon" || d.status === "due_soon" ? "text-amber-600" : "text-raah-green"
+                  }`}>
+                    {d.days_left < 0 ? `${Math.abs(d.days_left)}d overdue` : `${d.days_left}d left`}
+                  </span>
+                  {d.amount && <span className="text-xs font-medium">PKR {d.amount.toLocaleString()}</span>}
+                </div>
+              ))}
+            </div>
+            {deadlines.deadlines.length > 8 && (
+              <div className="text-xs text-text-muted mt-2 text-center">+{deadlines.deadlines.length - 8} more deadlines</div>
+            )}
           </div>
         )}
 

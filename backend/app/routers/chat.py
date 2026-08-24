@@ -53,7 +53,18 @@ async def chat(
         except Exception:
             pass
 
-    answer, citations, grounded = await rag_answer(req.query, lang=req.lang)
+    # Fetch conversation history for context
+    history = []
+    if user_id and req.session_id:
+        try:
+            prev_msgs = db.query(ChatMessage).filter(
+                ChatMessage.session_id == req.session_id
+            ).order_by(ChatMessage.created_at.desc()).limit(10).all()
+            history = [{"role": m.role, "content": m.content} for m in reversed(prev_msgs)]
+        except Exception:
+            pass
+
+    answer, citations, grounded = await rag_answer(req.query, lang=req.lang, history=history)
 
     # Persist to DB if user is logged in
     session_id = req.session_id

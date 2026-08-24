@@ -53,13 +53,23 @@ SERVICES: Passport (New needs B-Form, Renewal needs previous passport), CNIC (Ne
 SAFETY: Mask CNIC as XXXXX-XXXXXXX-X, never persist raw image/CNIC beyond session. Disclaimer already in UI.
 """
 
-def _build_prompt(query: str, context_chunks: List[Dict], lang: str = "en") -> str:
+def _build_prompt(query: str, context_chunks: List[Dict], lang: str = "en", history: list = None) -> str:
     context_text = "\n\n".join([f"[Source: {c.get('source','unknown')}] {c.get('text','')}" for c in context_chunks])
     if not context_text:
         context_text = "NO RELEVANT CONTEXT FOUND"
+
+    history_text = ""
+    if history:
+        recent = history[-6:]  # last 6 messages (3 turns)
+        history_text = "\n\nPrevious conversation:\n" + "\n".join([
+            f"{'User' if m.get('role') == 'user' else 'Assistant'}: {m.get('content', m.get('text', ''))[:200]}"
+            for m in recent
+        ])
+
     return f"""{SYSTEM_PROMPT}
 
 Language: {lang}
+{history_text}
 Context:
 {context_text}
 
@@ -97,10 +107,10 @@ def _mock_answer(query: str, context_chunks: List[Dict], lang: str = "en") -> st
     prefix = "[DEMO — set GEMINI_API_KEY for live Gemini]\n\n" if not settings.gemini_api_key else ""
     return f"{prefix}{body}\n\nSource: {source}"
 
-def call_gemini(query: str, context_chunks: List[Dict], lang: str = "en") -> str:
+def call_gemini(query: str, context_chunks: List[Dict], lang: str = "en", history: list = None) -> str:
     if not HAS_GENAI or not settings.gemini_api_key:
         return _mock_answer(query, context_chunks, lang)
-    prompt = _build_prompt(query, context_chunks, lang)
+    prompt = _build_prompt(query, context_chunks, lang, history=history)
     # Try new SDK first
     if HAS_NEW_GENAI:
         try:

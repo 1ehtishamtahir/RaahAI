@@ -3,16 +3,34 @@ import { useEffect, useState } from "react";
 import AppShell from "@/components/layout/AppShell";
 import { useLang } from "@/lib/LangContext";
 import Link from "next/link";
-import { ScanLine, FileText, Wallet, ArrowRight, Clock, Shield, Upload, Eye } from "lucide-react";
-import { alertsApi } from "@/lib/api";
+import { ScanLine, FileText, Wallet, ArrowRight, Clock, Shield, Upload, Eye, Sparkles, Loader2 } from "lucide-react";
+import { alertsApi, aiDocumentAdvisor } from "@/lib/api";
 
 export default function DocumentsPage() {
   const { lang } = useLang();
   const [alerts, setAlerts] = useState<any[]>([]);
+  const [advisorText, setAdvisorText] = useState("");
+  const [advisorLoading, setAdvisorLoading] = useState(false);
+  const [showAdvisor, setShowAdvisor] = useState(false);
   useEffect(()=>{ alertsApi().then(setAlerts).catch(()=>{}); },[]);
 
   const expiring = alerts.filter((a:any)=>a.status==="expiring_soon").length;
   const expired = alerts.filter((a:any)=>a.status==="expired").length;
+
+  const handleGetAdvisor = async () => {
+    setShowAdvisor(true);
+    setAdvisorLoading(true);
+    setAdvisorText("");
+    try {
+      const fields = alerts.map((a: any) => ({ label: a.document_type, value: a.document_name_en || a.custom_type_name || a.document_type }));
+      const res = await aiDocumentAdvisor(fields, "general", lang);
+      setAdvisorText(res.advisor);
+    } catch {
+      setAdvisorText("Unable to generate document advice. Please try again.");
+    } finally {
+      setAdvisorLoading(false);
+    }
+  };
 
   return (
     <AppShell>
@@ -36,6 +54,28 @@ export default function DocumentsPage() {
             <div className="text-xl font-bold text-red-600">{expired}</div>
             <div className="text-xs text-text-muted">Expired</div>
           </div>
+        </div>
+
+        {/* AI Document Advisor */}
+        <div className="bg-gradient-to-r from-emerald-600 to-teal-600 rounded-2xl p-5 text-white">
+          <div className="flex items-center gap-2 mb-2">
+            <Sparkles size={18} className="text-emerald-200" />
+            <span className="font-semibold text-sm">AI Document Advisor</span>
+          </div>
+          <p className="text-xs opacity-80 mb-3">Get personalized recommendations based on your documents — what services you need, checklist, and fees.</p>
+          {!showAdvisor ? (
+            <button onClick={handleGetAdvisor} className="px-4 py-2 bg-white text-emerald-700 rounded-full text-sm font-medium hover:bg-emerald-50 transition">
+              Analyze My Documents
+            </button>
+          ) : (
+            <div className="bg-white/10 rounded-xl p-4 mt-2">
+              {advisorLoading ? (
+                <div className="flex items-center gap-2 text-sm opacity-80"><Loader2 size={14} className="animate-spin"/> Analyzing documents...</div>
+              ) : (
+                <div className="text-sm leading-relaxed whitespace-pre-line opacity-90">{advisorText}</div>
+              )}
+            </div>
+          )}
         </div>
 
         <div className="grid md:grid-cols-3 gap-4">

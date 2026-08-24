@@ -3,9 +3,9 @@ import { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import AppShell from "@/components/layout/AppShell";
 import { useLang } from "@/lib/LangContext";
-import { opportunitiesRecommendedApi } from "@/lib/api";
+import { opportunitiesRecommendedApi, aiEligibilityMatch } from "@/lib/api";
 const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-import { GraduationCap, Search, Filter, Calendar, Award, ShieldCheck, ExternalLink, X } from "lucide-react";
+import { GraduationCap, Search, Filter, Calendar, Award, ShieldCheck, ExternalLink, X, Sparkles, Loader2, UserCheck } from "lucide-react";
 
 function OpportunitiesInner(){
   const {lang}=useLang();
@@ -18,6 +18,10 @@ function OpportunitiesInner(){
   const [q,setQ]=useState(urlQ);
   const [cat,setCat]=useState<string|undefined>(urlCat || undefined);
   const [selected,setSelected]=useState<any>(null);
+  const [eligModal, setEligModal] = useState(false);
+  const [eligLoading, setEligLoading] = useState(false);
+  const [eligResult, setEligResult] = useState<any>(null);
+  const [eligForm, setEligForm] = useState({ age: 25, education: "Bachelor", province: "Punjab", gender: "male" });
 
   useEffect(()=>{ setQ(urlQ); },[urlQ]);
   useEffect(()=>{ setCat(urlCat || undefined); },[urlCat]);
@@ -49,6 +53,19 @@ function OpportunitiesInner(){
     router.push(`/opportunities${p.toString()?`?${p}`:""}`);
   }
 
+  const handleEligCheck = async () => {
+    setEligLoading(true);
+    setEligResult(null);
+    try {
+      const res = await aiEligibilityMatch(eligForm);
+      setEligResult(res);
+    } catch {
+      setEligResult({ recommendations: "Unable to check eligibility. Please try again." });
+    } finally {
+      setEligLoading(false);
+    }
+  };
+
   const categories = ["All","Scholarships","Student Programs","Youth Programs","Family","Welfare"];
 
   return (
@@ -63,6 +80,60 @@ function OpportunitiesInner(){
             <input value={q} onChange={e=>setQAndUrl(e.target.value)} placeholder="Search scholarships, youth..." className="bg-transparent outline-none text-sm w-48"/>
             {q && <button onClick={()=>setQAndUrl("")} className="text-xs">✕</button>}
           </div>
+        </div>
+
+        {/* Smart Eligibility Matcher */}
+        <div className="bg-gradient-to-r from-indigo-600 to-violet-600 rounded-2xl p-5 text-white">
+          <div className="flex items-center gap-2 mb-2">
+            <UserCheck size={18} className="text-indigo-200" />
+            <span className="font-semibold text-sm">Smart Eligibility Matcher</span>
+          </div>
+          <p className="text-xs opacity-80 mb-3">Get AI-powered recommendations for government programs based on your profile.</p>
+          {!eligModal ? (
+            <button onClick={()=>setEligModal(true)} className="px-4 py-2 bg-white text-indigo-700 rounded-full text-sm font-medium hover:bg-indigo-50 transition">
+              Check My Eligibility
+            </button>
+          ) : (
+            <div className="bg-white/10 rounded-xl p-4 mt-2">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
+                <div>
+                  <label className="text-[10px] opacity-70">Age</label>
+                  <input type="number" value={eligForm.age} onChange={e=>setEligForm({...eligForm, age: +e.target.value})} className="w-full bg-white/20 rounded-lg px-3 py-1.5 text-sm outline-none"/>
+                </div>
+                <div>
+                  <label className="text-[10px] opacity-70">Education</label>
+                  <select value={eligForm.education} onChange={e=>setEligForm({...eligForm, education: e.target.value})} className="w-full bg-white/20 rounded-lg px-3 py-1.5 text-sm outline-none">
+                    <option value="Matric">Matric</option>
+                    <option value="Intermediate">Intermediate</option>
+                    <option value="Bachelor">Bachelor</option>
+                    <option value="Master">Master</option>
+                    <option value="PhD">PhD</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="text-[10px] opacity-70">Province</label>
+                  <select value={eligForm.province} onChange={e=>setEligForm({...eligForm, province: e.target.value})} className="w-full bg-white/20 rounded-lg px-3 py-1.5 text-sm outline-none">
+                    <option>Punjab</option><option>Sindh</option><option>KPK</option><option>Balochistan</option><option>Islamabad</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="text-[10px] opacity-70">Gender</label>
+                  <select value={eligForm.gender} onChange={e=>setEligForm({...eligForm, gender: e.target.value})} className="w-full bg-white/20 rounded-lg px-3 py-1.5 text-sm outline-none">
+                    <option value="male">Male</option><option value="female">Female</option>
+                  </select>
+                </div>
+              </div>
+              <button onClick={handleEligCheck} disabled={eligLoading} className="px-4 py-2 bg-white text-indigo-700 rounded-full text-sm font-medium hover:bg-indigo-50 disabled:opacity-50 flex items-center gap-2">
+                {eligLoading ? <><Loader2 size={14} className="animate-spin"/> Checking...</> : <><Sparkles size={14}/> Match Programs</>}
+              </button>
+              {eligResult && (
+                <div className="mt-3 text-sm leading-relaxed whitespace-pre-line opacity-90">{eligResult.recommendations}</div>
+              )}
+              {eligResult?.existing_programs && (
+                <div className="mt-2 text-xs opacity-70">Already enrolled: {eligResult.existing_programs}</div>
+              )}
+            </div>
+          )}
         </div>
 
         <div className="flex gap-2 overflow-x-auto pb-2">

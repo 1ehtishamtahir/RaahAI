@@ -2,15 +2,32 @@
 import { useEffect, useState } from "react";
 import AppShell from "@/components/layout/AppShell";
 import { useLang } from "@/lib/LangContext";
-import { challansApi } from "@/lib/api";
-import { AlertTriangle, CheckCircle, Clock, Info, CreditCard, Smartphone, Building2, ExternalLink, X } from "lucide-react";
+import { challansApi, aiChallanExplain } from "@/lib/api";
+import { AlertTriangle, CheckCircle, Clock, Info, CreditCard, Smartphone, Building2, ExternalLink, X, Sparkles, Loader2 } from "lucide-react";
 
 export default function ChallansPage(){
   const {lang}=useLang();
   const [data,setData]=useState<any>(null);
   const [filter,setFilter]=useState<string|undefined>(undefined);
   const [payFor, setPayFor] = useState<any>(null);
+  const [explainFor, setExplainFor] = useState<any>(null);
+  const [explainLoading, setExplainLoading] = useState(false);
+  const [explainText, setExplainText] = useState("");
   useEffect(()=>{ challansApi(filter).then(setData).catch(()=>{}); },[filter]);
+
+  const handleExplain = async (challan: any) => {
+    setExplainFor(challan);
+    setExplainLoading(true);
+    setExplainText("");
+    try {
+      const res = await aiChallanExplain(challan.id, lang);
+      setExplainText(res.explanation);
+    } catch {
+      setExplainText("Unable to generate explanation. Please try again.");
+    } finally {
+      setExplainLoading(false);
+    }
+  };
 
   return (
     <AppShell>
@@ -82,9 +99,14 @@ export default function ChallansPage(){
                 <div className="flex flex-col items-end gap-2 shrink-0 ml-3">
                   <span className={`px-2 py-1 rounded-full text-xs font-medium ${c.status==="Pending"?"bg-amber-100 text-amber-700":"bg-raah-mint text-raah-green"}`}>{c.status}</span>
                   {c.status==="Pending" ? (
-                    <button onClick={()=>setPayFor(c)} className="px-4 py-1.5 rounded-full bg-raah-green text-white text-xs font-medium hover:bg-raah-deep flex items-center gap-1">
-                      <CreditCard size={12}/> Pay Now
-                    </button>
+                    <div className="flex gap-2">
+                      <button onClick={()=>handleExplain(c)} className="px-3 py-1.5 rounded-full bg-emerald-600 text-white text-xs font-medium hover:bg-emerald-700 flex items-center gap-1">
+                        <Sparkles size={12}/> Explain
+                      </button>
+                      <button onClick={()=>setPayFor(c)} className="px-4 py-1.5 rounded-full bg-raah-green text-white text-xs font-medium hover:bg-raah-deep flex items-center gap-1">
+                        <CreditCard size={12}/> Pay Now
+                      </button>
+                    </div>
                   ) : (
                     <span className="text-xs text-text-muted flex items-center gap-1"><CheckCircle size={12}/> Paid</span>
                   )}
@@ -122,6 +144,29 @@ export default function ChallansPage(){
               <div className="text-[11px] text-text-muted">After payment, keep receipt and challan status will update to Paid within 24h. Source: {payFor.source}</div>
             </div>
             <button onClick={()=>setPayFor(null)} className="mt-4 w-full py-2 rounded-xl bg-raah-green text-white text-sm font-medium">Close</button>
+          </div>
+        </div>
+      )}
+
+      {/* AI Explain Modal */}
+      {explainFor && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40" onClick={()=>setExplainFor(null)}>
+          <div className="bg-white rounded-2xl max-w-md w-full p-6" onClick={e=>e.stopPropagation()}>
+            <div className="flex items-center justify-between">
+              <div className="font-bold text-raah-deep flex items-center gap-2"><Sparkles size={16} className="text-emerald-600"/> AI Explanation</div>
+              <button onClick={()=>setExplainFor(null)} className="p-1 rounded-full hover:bg-raah-soft"><X size={16}/></button>
+            </div>
+            <div className="text-sm text-text-secondary mt-1">{explainFor.id} • {explainFor.violation} • PKR {explainFor.amount.toLocaleString()}</div>
+            <div className="mt-4">
+              {explainLoading ? (
+                <div className="flex items-center gap-2 text-sm text-text-muted py-4 justify-center">
+                  <Loader2 size={16} className="animate-spin"/> Generating explanation...
+                </div>
+              ) : (
+                <div className="text-sm leading-relaxed whitespace-pre-line text-raah-deep">{explainText}</div>
+              )}
+            </div>
+            <button onClick={()=>setExplainFor(null)} className="mt-4 w-full py-2 rounded-xl bg-raah-green text-white text-sm font-medium">Close</button>
           </div>
         </div>
       )}

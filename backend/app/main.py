@@ -20,6 +20,7 @@ from app.routers.updates import router as updates_router
 from app.routers.citizen import router as citizen_router
 from app.routers.orchestrator import router as orchestrator_router
 from app.routers.notifications import router as notifications_router
+from app.routers.ai_features import router as ai_features_router
 from app.core.database import Base, engine, SessionLocal
 
 settings = get_settings()
@@ -27,7 +28,7 @@ settings = get_settings()
 app = FastAPI(
     title="RaahAI Backend",
     description="RaahAI Citizen Copilot \u2014 Identity, Vehicle, Challans, Payments, Documents, Opportunities, Family, Updates + RAG + OCR + Voice",
-    version="4.0.0",
+    version="4.1.0",
 )
 
 origins = [o.strip() for o in settings.cors_origins.split(",") if o.strip()]
@@ -142,11 +143,12 @@ app.include_router(updates_router)
 app.include_router(citizen_router)
 app.include_router(orchestrator_router)
 app.include_router(notifications_router)
+app.include_router(ai_features_router)
 
 
 @app.get("/health")
 def health():
-    return {"status": "ok", "service": "RaahAI", "version": "4.0.0"}
+    return {"status": "ok", "service": "RaahAI", "version": "4.1.0"}
 
 
 @app.get("/")

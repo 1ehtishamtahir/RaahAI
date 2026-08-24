@@ -95,7 +95,7 @@ def roman_to_urdu_script(query: str) -> str:
         result = result.replace(roman, urdu)
     return result
 
-async def rag_answer(query: str, lang: str = "en") -> Tuple[str, List[Dict], bool]:
+async def rag_answer(query: str, lang: str = "en", history: list = None) -> Tuple[str, List[Dict], bool]:
     import re
     q_low = query.lower().strip()
     q_tokens = re.findall(r"\b\w+\b", q_low, flags=re.UNICODE)
@@ -124,7 +124,7 @@ async def rag_answer(query: str, lang: str = "en") -> Tuple[str, List[Dict], boo
             fallback = "میرے پاس اس بارے میں تصدیق شدہ معلومات نہیں ہیں۔ براہ کرم سرکاری ویب سائٹ دیکھیں یا متعلقہ دفتر سے رابطہ کریں۔"
         return fallback, [], False
 
-    answer = call_llm(query, chunks, lang=lang)
+    answer = call_llm(query, chunks, lang=lang, history=history)
     fallback_phrases = [
         "don't have verified information",
         "don't have verified information on this",

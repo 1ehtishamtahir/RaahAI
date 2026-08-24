@@ -277,3 +277,41 @@ export async function notificationsCountApi() {
   if (!res.ok) throw new Error(await res.text());
   return res.json();
 }
+
+export async function aiDashboardSuggestions() {
+  const res = await fetch(`${API}/api/ai/dashboard-suggestions`, { headers: authHeaders() });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+export async function aiDeadlines() {
+  const res = await fetch(`${API}/api/ai/deadlines`, { headers: authHeaders() });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+export async function aiDocumentAdvisor(fields: any[], serviceType: string, lang: string) {
+  const res = await fetch(`${API}/api/ai/document-advisor`, {
+    method: "POST",
+    headers: { ...authHeaders(), "Content-Type": "application/json" },
+    body: JSON.stringify({ fields, service_type: serviceType, lang }),
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+export async function aiChallanExplain(challanId: string, lang: string) {
+  const res = await fetch(`${API}/api/ai/challan-explain/${challanId}?lang=${lang}`, { headers: authHeaders() });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+export async function aiEligibilityMatch(data: { age: number; education: string; province: string; gender: string }) {
+  const res = await fetch(`${API}/api/ai/eligibility-match`, {
+    method: "POST",
+    headers: { ...authHeaders(), "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
