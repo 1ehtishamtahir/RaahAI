@@ -53,7 +53,7 @@ SERVICES: Passport (New needs B-Form, Renewal needs previous passport), CNIC (Ne
 SAFETY: Mask CNIC as XXXXX-XXXXXXX-X, never persist raw image/CNIC beyond session. Disclaimer already in UI.
 """
 
-def _build_prompt(query: str, context_chunks: List[Dict], lang: str = "en", history: list = None) -> str:
+def _build_prompt(query: str, context_chunks: List[Dict], lang: str = "en", history: list = None, user_context: str = "") -> str:
     context_text = "\n\n".join([f"[Source: {c.get('source','unknown')}] {c.get('text','')}" for c in context_chunks])
     if not context_text:
         context_text = "NO RELEVANT CONTEXT FOUND"
@@ -66,20 +66,42 @@ def _build_prompt(query: str, context_chunks: List[Dict], lang: str = "en", hist
             for m in recent
         ])
 
+    personal_text = ""
+    if user_context:
+        personal_text = f"\n\nUser's Personal Data (from their account):\n{user_context}"
+
     return f"""{SYSTEM_PROMPT}
 
 Language: {lang}
 {history_text}
-Context:
+{personal_text}
+Knowledge Base Context:
 {context_text}
 
 Question: {query}
 
-Answer in {lang}. Include Source badge if context was used. Keep it scannable with headings."""
+Answer in {lang}. Use the User's Personal Data above to give personalized answers when the question is about their documents, vehicles, challans, payments, family, or programs. Include Source badge if knowledge base context was used. Keep it scannable with headings."""
 
-def _mock_answer(query: str, context_chunks: List[Dict], lang: str = "en") -> str:
+def _mock_answer(query: str, context_chunks: List[Dict], lang: str = "en", user_context: str = "") -> str:
+    q_low = query.lower()
+    is_ur = lang == "ur" or any(ord(c) > 1500 for c in query)
+
+    # ── Personal data-aware mock answers ─────────────────────────
+    if user_context:
+        personal_keywords = [
+            "my", "i have", "do i", "what do", "which", "how many",
+            "mera", "meri", "mere", "میرا", "میری", "میرے", "meray",
+            "mujhe", "مجھے", "kya hai mera", "میرے پاس",
+            "میری دستاویزات", "میری گاڑی", "میرے چالان", "میری ادائیگیاں",
+            "my documents", "my vehicles", "my challans", "my payments",
+            "my family", "pending", "expired", "expiring",
+            "زیر التواء", "مدت ختم", "ادا شدہ", "unci",
+        ]
+        if any(kw in q_low for kw in personal_keywords):
+            return f"Based on your RaahAI account data:\n\n{user_context[:2000]}\n\n---\nFor more details, visit the relevant section in the app (Documents, Vehicle, Challans, Payments, or Family)."
+
     if not context_chunks:
-        return "I don't have verified information on this. Please check the official website or visit the relevant office." if lang == "en" else "میرے پاس اس بارے میں تصدیق شدہ معلومات نہیں ہیں۔ براہ کرم سرکاری ویب سائٹ دیکھیں یا متعلقہ دفتر سے رابطہ کریں۔"
+        return "I don't have verified information on this. Please check the official website or visit the relevant office." if not is_ur else "میرے پاس اس بارے میں تصدیق شدہ معلومات نہیں ہیں۔ براہ کرم سرکاری ویب سائٹ دیکھیں یا متعلقہ دفتر سے رابطہ کریں۔"
     q_low = query.lower()
     is_ur = lang == "ur" or any(c in query for c in "اردو") or any(ord(c) > 1500 for c in query)
     if any(k in q_low for k in ["passport", "پاسپورٹ"]):
@@ -107,10 +129,10 @@ def _mock_answer(query: str, context_chunks: List[Dict], lang: str = "en") -> st
     prefix = "[DEMO — set GEMINI_API_KEY for live Gemini]\n\n" if not settings.gemini_api_key else ""
     return f"{prefix}{body}\n\nSource: {source}"
 
-def call_gemini(query: str, context_chunks: List[Dict], lang: str = "en", history: list = None) -> str:
+def call_gemini(query: str, context_chunks: List[Dict], lang: str = "en", history: list = None, user_context: str = "") -> str:
     if not HAS_GENAI or not settings.gemini_api_key:
-        return _mock_answer(query, context_chunks, lang)
-    prompt = _build_prompt(query, context_chunks, lang, history=history)
+        return _mock_answer(query, context_chunks, lang, user_context=user_context)
+    prompt = _build_prompt(query, context_chunks, lang, history=history, user_context=user_context)
     # Try new SDK first
     if HAS_NEW_GENAI:
         try:

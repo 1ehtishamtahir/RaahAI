@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, Request, HTTPException
 from fastapi.security import HTTPAuthorizationCredentials
 from app.models.schemas import ChatRequest, ChatResponse, Citation
 from app.services.rag import rag_answer
+from app.services.user_context import build_user_context
 from app.services.checklist import infer_situation_from_query
 from app.core.database import get_db
 from app.core.auth import security, get_current_user
@@ -64,7 +65,15 @@ async def chat(
         except Exception:
             pass
 
-    answer, citations, grounded = await rag_answer(req.query, lang=req.lang, history=history)
+    # Build personal data context from user's database
+    user_context = ""
+    if user_id:
+        try:
+            user_context = build_user_context(user_id, db)
+        except Exception:
+            pass
+
+    answer, citations, grounded = await rag_answer(req.query, lang=req.lang, history=history, user_context=user_context)
 
     # Persist to DB if user is logged in
     session_id = req.session_id

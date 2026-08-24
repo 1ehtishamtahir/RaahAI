@@ -95,7 +95,7 @@ def roman_to_urdu_script(query: str) -> str:
         result = result.replace(roman, urdu)
     return result
 
-async def rag_answer(query: str, lang: str = "en", history: list = None) -> Tuple[str, List[Dict], bool]:
+async def rag_answer(query: str, lang: str = "en", history: list = None, user_context: str = "") -> Tuple[str, List[Dict], bool]:
     import re
     q_low = query.lower().strip()
     q_tokens = re.findall(r"\b\w+\b", q_low, flags=re.UNICODE)
@@ -119,12 +119,23 @@ async def rag_answer(query: str, lang: str = "en", history: list = None) -> Tupl
 
     chunks = await search(query, top_k=4)
     if len(chunks) < MIN_CHUNKS:
+        # If user has personal data, still try to answer from it
+        if user_context:
+            answer = call_llm(query, [], lang=lang, history=history, user_context=user_context)
+            fallback_phrases = [
+                "don't have verified information",
+                "don't have verified information on this",
+                "میرے پاس اس بارے میں تصدیق شدہ معلومات نہیں",
+                "تصدیق شدہ معلومات نہیں",
+            ]
+            if not any(p.lower() in answer.lower() for p in fallback_phrases):
+                return answer, [{"title": "Your Account Data", "snippet": "Personal data from your RaahAI profile"}], True
         fallback = "I don't have verified information on this. Please check the official website or visit the relevant office."
         if lang == "ur":
             fallback = "میرے پاس اس بارے میں تصدیق شدہ معلومات نہیں ہیں۔ براہ کرم سرکاری ویب سائٹ دیکھیں یا متعلقہ دفتر سے رابطہ کریں۔"
         return fallback, [], False
 
-    answer = call_llm(query, chunks, lang=lang, history=history)
+    answer = call_llm(query, chunks, lang=lang, history=history, user_context=user_context)
     fallback_phrases = [
         "don't have verified information",
         "don't have verified information on this",
