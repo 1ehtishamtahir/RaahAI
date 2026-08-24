@@ -40,29 +40,44 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Summary */}
+        {/* Summary Cards */}
         {data?.summary && (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <div className="bg-white border border-border rounded-xl p-4">
-              <div className="text-xs text-text-muted">Identity</div>
-              <div className="font-bold text-raah-deep">{data.summary.identity.cnic_status} • {data.summary.identity.passport_status}</div>
-              <div className="text-xs text-amber-600 mt-1 flex items-center gap-1"><Clock size={12}/>{data.summary.identity.pending} pending</div>
-            </div>
-            <div className="bg-white border border-border rounded-xl p-4">
-              <div className="text-xs text-text-muted">Vehicles</div>
-              <div className="font-bold text-raah-deep">{data.summary.vehicle.count} vehicles</div>
-              <div className="text-xs text-amber-600 mt-1">{data.summary.vehicle.pending_token} token pending</div>
-            </div>
-            <div className="bg-white border border-border rounded-xl p-4">
-              <div className="text-xs text-text-muted">Challans</div>
-              <div className="font-bold text-raah-deep">{data.summary.challans.pending} pending</div>
+            <Link href="/identity" className="bg-white border border-border rounded-xl p-4 hover:shadow-md hover:border-raah-green/30 transition group">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center"><Shield size={16} className="text-emerald-600"/></div>
+                <span className="text-xs text-text-muted">{lang==="ur"?"شناخت":"Identity"}</span>
+              </div>
+              <div className="font-bold text-sm text-raah-deep">{data.summary.identity.cnic_status} • {data.summary.identity.passport_status}</div>
+              <div className="text-xs text-amber-600 mt-1 flex items-center gap-1"><Clock size={12}/>{data.summary.identity.pending} {lang==="ur"?"زیر التواء":"pending"}</div>
+            </Link>
+
+            <Link href="/vehicle" className="bg-white border border-border rounded-xl p-4 hover:shadow-md hover:border-raah-green/30 transition group">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center"><Car size={16} className="text-blue-600"/></div>
+                <span className="text-xs text-text-muted">{lang==="ur"?"گاڑی":"Vehicles"}</span>
+              </div>
+              <div className="font-bold text-sm text-raah-deep">{data.summary.vehicle.count} {lang==="ur"?"گاڑیاں":"vehicles"}</div>
+              <div className="text-xs text-amber-600 mt-1">{data.summary.vehicle.pending_token} {lang==="ur"?"ٹوکن زیر التواء":"token pending"}</div>
+            </Link>
+
+            <Link href="/challans" className="bg-white border border-border rounded-xl p-4 hover:shadow-md hover:border-raah-green/30 transition group">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center"><AlertTriangle size={16} className="text-amber-600"/></div>
+                <span className="text-xs text-text-muted">{lang==="ur"?"چالان":"Challans"}</span>
+              </div>
+              <div className="font-bold text-sm text-raah-deep">{data.summary.challans.pending} {lang==="ur"?"زیر التواء":"pending"}</div>
               <div className="text-xs text-red-600 mt-1">PKR {data.summary.challans.pending_amount?.toLocaleString()}</div>
-            </div>
-            <div className="bg-white border border-border rounded-xl p-4">
-              <div className="text-xs text-text-muted">Payments</div>
-              <div className="font-bold text-raah-deep">{data.summary.payments.pending} pending</div>
+            </Link>
+
+            <Link href="/payments" className="bg-white border border-border rounded-xl p-4 hover:shadow-md hover:border-raah-green/30 transition group">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-8 h-8 rounded-lg bg-violet-100 flex items-center justify-center"><CreditCard size={16} className="text-violet-600"/></div>
+                <span className="text-xs text-text-muted">{lang==="ur"?"ادائیگیاں":"Payments"}</span>
+              </div>
+              <div className="font-bold text-sm text-raah-deep">{data.summary.payments.pending} {lang==="ur"?"زیر التواء":"pending"}</div>
               <div className="text-xs text-amber-600 mt-1">PKR {data.summary.payments.pending_amount?.toLocaleString()}</div>
-            </div>
+            </Link>
           </div>
         )}
 
