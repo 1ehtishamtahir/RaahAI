@@ -119,9 +119,10 @@ async def rag_answer(query: str, lang: str = "en", history: list = None, user_co
 
     chunks = await search(query, top_k=4)
     if len(chunks) < MIN_CHUNKS:
-        # If user has personal data, still try to answer from it
+        # If user has personal data, always try to answer from it
         if user_context:
             answer = call_llm(query, [], lang=lang, history=history, user_context=user_context)
+            # If the answer contains real data (not a generic fallback), return it
             fallback_phrases = [
                 "don't have verified information",
                 "don't have verified information on this",
@@ -130,6 +131,9 @@ async def rag_answer(query: str, lang: str = "en", history: list = None, user_co
             ]
             if not any(p.lower() in answer.lower() for p in fallback_phrases):
                 return answer, [{"title": "Your Account Data", "snippet": "Personal data from your RaahAI profile"}], True
+            # Even if LLM returned fallback, we have user data — return it anyway
+            answer = call_llm(query, [], lang=lang, history=history, user_context=user_context)
+            return answer, [{"title": "Your Account Data", "snippet": "Personal data from your RaahAI profile"}], True
         fallback = "I don't have verified information on this. Please check the official website or visit the relevant office."
         if lang == "ur":
             fallback = "میرے پاس اس بارے میں تصدیق شدہ معلومات نہیں ہیں۔ براہ کرم سرکاری ویب سائٹ دیکھیں یا متعلقہ دفتر سے رابطہ کریں۔"
@@ -142,7 +146,11 @@ async def rag_answer(query: str, lang: str = "en", history: list = None, user_co
         "میرے پاس اس بارے میں تصدیق شدہ معلومات نہیں",
         "تصدیق شدہ معلومات نہیں",
     ]
+    # If we have user context, never return the fallback — answer from user data
     if any(p.lower() in answer.lower() for p in fallback_phrases):
+        if user_context:
+            answer = call_llm(query, [], lang=lang, history=history, user_context=user_context)
+            return answer, [{"title": "Your Account Data", "snippet": "Personal data from your RaahAI profile"}], True
         return answer, [], False
     seen = set()
     deduped = []
