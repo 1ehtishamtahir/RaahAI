@@ -27,8 +27,8 @@ export default function SplashScreen() {
 
       {/* Logo with spinning ring */}
       <div className="relative mb-8">
-        <div className="absolute -inset-4 rounded-3xl border-2 border-transparent splash-spin" style={{borderTopColor:"#087F3E",borderRightColor:"#087F3E"}}/>
-        <div className="w-24 h-24 rounded-2xl bg-white shadow-xl flex items-center justify-center border border-gray-100 relative z-10">
+        <div className="absolute -inset-4 rounded-3xl border-[3px] border-transparent splash-spin" style={{borderTopColor:"#087F3E",borderRightColor:"#159447",borderBottomColor:"#075C2D"}}/>
+        <div className="w-24 h-24 rounded-2xl bg-white shadow-[0_8px_40px_rgba(8,127,62,0.25)] flex items-center justify-center border border-gray-100 relative z-10">
           <Image src="/logo.png" alt="RaahAI" width={60} height={60} className="rounded-xl" />
         </div>
       </div>
@@ -41,11 +41,11 @@ export default function SplashScreen() {
         Your Smart Guide to Government Services
       </p>
 
-      {/* Bouncing dots */}
-      <div className={`flex items-center gap-1.5 mt-10 transition-opacity duration-500 ${phase >= 2 ? "opacity-100" : "opacity-0"}`}>
-        <span className="w-2 h-2 rounded-full bg-raah-green splash-bounce" style={{animationDelay:"0s"}}/>
-        <span className="w-2 h-2 rounded-full bg-raah-green splash-bounce" style={{animationDelay:"0.15s"}}/>
-        <span className="w-2 h-2 rounded-full bg-raah-green splash-bounce" style={{animationDelay:"0.3s"}}/>
+      {/* Loading dots */}
+      <div className={`flex items-center gap-2 mt-10 transition-opacity duration-500 ${phase >= 2 ? "opacity-100" : "opacity-0"}`}>
+        <span className="w-2.5 h-2.5 rounded-full bg-raah-green splash-bounce" style={{animationDelay:"0s"}}/>
+        <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 splash-bounce" style={{animationDelay:"0.15s"}}/>
+        <span className="w-2.5 h-2.5 rounded-full bg-raah-deep splash-bounce" style={{animationDelay:"0.3s"}}/>
       </div>
     </div>
   );
