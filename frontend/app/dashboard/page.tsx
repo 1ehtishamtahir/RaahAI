@@ -31,7 +31,9 @@ export default function DashboardPage() {
     <AppShell>
       <div className="space-y-6">
         {/* Header */}
-        <div className="bg-gradient-to-r from-raah-green to-emerald-700 rounded-2xl p-6 text-white">
+        <div className="bg-gradient-to-r from-raah-green via-emerald-700 to-raah-deep rounded-2xl p-6 text-white relative overflow-hidden">
+          <div className="absolute -right-8 -top-8 w-32 h-32 bg-white/5 rounded-full"/>
+          <div className="absolute -right-2 -bottom-10 w-24 h-24 bg-white/5 rounded-full"/>
           {!data ? (
             <div className="space-y-2 animate-pulse">
               <div className="h-3 w-32 bg-white/20 rounded"/>
@@ -39,14 +41,21 @@ export default function DashboardPage() {
               <div className="h-3 w-40 bg-white/20 rounded"/>
             </div>
           ) : (
-            <>
-              <div className="text-sm opacity-80">Citizen Command Center</div>
-              <div className="text-2xl font-bold mt-1">Welcome, {user?.name || data?.citizen?.name || "Citizen"} 👋</div>
-              <div className="text-sm opacity-80 mt-1">{user?.cnic || data?.citizen?.cnic || ""} • {user?.city || data?.citizen?.city || ""}</div>
-              <div className="mt-3 flex gap-2 text-xs">
-                <span className="px-3 py-1 rounded-full bg-white/20">Your Government. Your Data. Your AI Copilot.</span>
+            <div className="relative z-10">
+              <div className="text-xs font-medium uppercase tracking-widest opacity-60 mb-1">Citizen Command Center</div>
+              <div className="text-2xl font-bold mt-1">
+                Welcome, {user?.name || data?.citizen?.name || "Citizen"}
               </div>
-            </>
+              <div className="text-sm opacity-80 mt-1 flex items-center gap-1.5">
+                <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-300"/>
+                {user?.cnic || data?.citizen?.cnic || ""}
+                <span className="opacity-40 mx-1">|</span>
+                {user?.city || data?.citizen?.city || ""}
+              </div>
+              <div className="mt-3">
+                <span className="px-3 py-1 rounded-full bg-white/15 text-xs font-medium backdrop-blur-sm">Your Government. Your Data. Your AI Copilot.</span>
+              </div>
+            </div>
           )}
         </div>
 
