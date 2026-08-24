@@ -112,7 +112,7 @@ export default function FloatingChat() {
           {/* Backdrop on mobile */}
           <div className="sm:hidden fixed inset-0 bg-black/20 z-[55]" onClick={toggleOpen} />
 
-          <div className={`fixed z-[60] right-4 sm:right-6 w-[calc(100vw-32px)] sm:w-[400px] bg-white rounded-2xl border border-border shadow-2xl flex flex-col transition-all duration-200 ${minimized ? "h-[56px] bottom-20 sm:bottom-24" : "bottom-20 sm:bottom-24 max-h-[calc(100vh-120px)] sm:max-h-[560px]"}`}>
+          <div className={`fixed z-[60] right-4 sm:right-6 w-[calc(100vw-32px)] sm:w-[400px] bg-white rounded-2xl border border-border shadow-2xl flex flex-col overflow-hidden ${minimized ? "h-[56px] bottom-20 sm:bottom-24" : "h-[500px] sm:h-[520px] bottom-20 sm:bottom-24"}`}>
             {/* Header — always fixed */}
             <div className="bg-raah-green text-white px-4 py-3 flex items-center justify-between shrink-0 rounded-t-2xl">
               <div className="flex items-center gap-2.5">
