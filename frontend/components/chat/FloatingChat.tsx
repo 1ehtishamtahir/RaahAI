@@ -112,12 +112,9 @@ export default function FloatingChat() {
           {/* Backdrop on mobile */}
           <div className="sm:hidden fixed inset-0 bg-black/20 z-[55]" onClick={toggleOpen} />
 
-          <div className={`fixed z-[60] right-4 sm:right-6 w-[calc(100vw-32px)] sm:w-[400px] bg-white rounded-2xl border border-border shadow-2xl flex flex-col overflow-hidden transition-all duration-200 ${minimized ? "h-[56px] bottom-20 sm:bottom-24" : "bottom-20 sm:bottom-24 max-h-[calc(100vh-120px)] sm:max-h-[560px]"}`}>
-            {/* Header */}
-            <button
-              onClick={() => minimized ? setMinimized(false) : setMinimized(true)}
-              className="bg-raah-green text-white px-4 py-3 flex items-center justify-between shrink-0 w-full text-left hover:bg-raah-deep transition"
-            >
+          <div className={`fixed z-[60] right-4 sm:right-6 w-[calc(100vw-32px)] sm:w-[400px] bg-white rounded-2xl border border-border shadow-2xl flex flex-col transition-all duration-200 ${minimized ? "h-[56px] bottom-20 sm:bottom-24" : "bottom-20 sm:bottom-24 max-h-[calc(100vh-120px)] sm:max-h-[560px]"}`}>
+            {/* Header — always fixed */}
+            <div className="bg-raah-green text-white px-4 py-3 flex items-center justify-between shrink-0 rounded-t-2xl">
               <div className="flex items-center gap-2.5">
                 <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
                   <MessageCircle size={16} />
@@ -130,21 +127,19 @@ export default function FloatingChat() {
                 </div>
               </div>
               <div className="flex items-center gap-1">
-                <span className="w-7 h-7 rounded-full hover:bg-white/20 flex items-center justify-center transition">
+                <button onClick={() => setMinimized(!minimized)} className="w-7 h-7 rounded-full hover:bg-white/20 flex items-center justify-center transition">
                   <Minus size={14} />
-                </span>
-                <span
-                  onClick={(e) => { e.stopPropagation(); toggleOpen(); }}
-                  className="w-7 h-7 rounded-full hover:bg-white/20 flex items-center justify-center transition cursor-pointer"
-                >
+                </button>
+                <button onClick={toggleOpen} className="w-7 h-7 rounded-full hover:bg-white/20 flex items-center justify-center transition">
                   <X size={14} />
-                </span>
+                </button>
               </div>
-            </button>
+            </div>
 
-            {/* Messages */}
+            {/* Body — only visible when not minimized */}
             {!minimized && (
               <>
+                {/* Scrollable messages */}
                 <div className="flex-1 overflow-y-auto p-4 space-y-3 min-h-0">
                   {messages.map((m) =>
                     m.role === "user" ? (
@@ -167,42 +162,42 @@ export default function FloatingChat() {
                   <div ref={bottomRef} />
                 </div>
 
-                {/* Quick Prompts */}
-                <div className="px-3 pb-2 flex gap-1.5 overflow-x-auto scrollbar-thin">
-                  {quickPrompts.map((c) => (
-                    <button
-                      key={c.label}
-                      onClick={() => setInput(c.q)}
-                      disabled={loading}
-                      className="shrink-0 px-2.5 py-1 rounded-full border border-border bg-white text-[11px] hover:bg-raah-mint hover:border-raah-green/30 disabled:opacity-50 transition"
-                    >
-                      {c.label}
-                    </button>
-                  ))}
-                </div>
-
-                {/* Input */}
-                <div className="px-3 pb-3 shrink-0">
-                  <div className="flex items-center gap-2 bg-gray-50 border border-border rounded-full px-2 py-2 focus-within:ring-2 focus-within:ring-raah-green/30 focus-within:border-raah-green transition">
-                    <input
-                      ref={inputRef}
-                      value={input}
-                      onChange={(e) => setInput(e.target.value)}
-                      onKeyDown={(e) => e.key === "Enter" && onSend()}
-                      placeholder={lang === "ur" ? "اپنا سوال لکھیں..." : "Type your message..."}
-                      className="flex-1 outline-none text-[13px] placeholder:text-text-muted bg-transparent min-w-0"
-                      disabled={loading}
-                    />
-                    <button
-                      onClick={onSend}
-                      disabled={loading || !input.trim()}
-                      className="w-8 h-8 rounded-full bg-raah-green text-white flex items-center justify-center hover:bg-raah-deep disabled:opacity-40 shrink-0 transition"
-                    >
-                      <Send size={14} />
-                    </button>
+                {/* Fixed bottom — quick prompts + input */}
+                <div className="shrink-0 border-t border-border bg-white rounded-b-2xl">
+                  <div className="px-3 pt-2 pb-1 flex gap-1.5 overflow-x-auto scrollbar-thin">
+                    {quickPrompts.map((c) => (
+                      <button
+                        key={c.label}
+                        onClick={() => setInput(c.q)}
+                        disabled={loading}
+                        className="shrink-0 px-2.5 py-1 rounded-full border border-border bg-white text-[11px] hover:bg-raah-mint hover:border-raah-green/30 disabled:opacity-50 transition"
+                      >
+                        {c.label}
+                      </button>
+                    ))}
                   </div>
-                  <div className="text-center text-[10px] text-text-muted mt-1.5">
-                    {lang === "ur" ? "◇ راہائی صرف سرکاری ذرائع پر مبنی تجاویز فراہم کرتی ہے" : "◇ RaahAI provides official-source-based recommendations only"}
+                  <div className="px-3 pb-3">
+                    <div className="flex items-center gap-2 bg-gray-50 border border-border rounded-full px-2 py-2 focus-within:ring-2 focus-within:ring-raah-green/30 focus-within:border-raah-green transition">
+                      <input
+                        ref={inputRef}
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                        onKeyDown={(e) => e.key === "Enter" && onSend()}
+                        placeholder={lang === "ur" ? "اپنا سوال لکھیں..." : "Type your message..."}
+                        className="flex-1 outline-none text-[13px] placeholder:text-text-muted bg-transparent min-w-0"
+                        disabled={loading}
+                      />
+                      <button
+                        onClick={onSend}
+                        disabled={loading || !input.trim()}
+                        className="w-8 h-8 rounded-full bg-raah-green text-white flex items-center justify-center hover:bg-raah-deep disabled:opacity-40 shrink-0 transition"
+                      >
+                        <Send size={14} />
+                      </button>
+                    </div>
+                    <div className="text-center text-[10px] text-text-muted mt-1.5">
+                      {lang === "ur" ? "◇ راہائی صرف سرکاری ذرائع پر مبنی تجاویز فراہم کرتی ہے" : "◇ RaahAI provides official-source-based recommendations only"}
+                    </div>
                   </div>
                 </div>
               </>
