@@ -1,6 +1,7 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
-import { MessageCircle, X, Send, Minus } from "lucide-react";
+import { MessageCircle, X, Send, Minus, Maximize2 } from "lucide-react";
+import Link from "next/link";
 import { useLang } from "@/lib/LangContext";
 import { useAuth } from "@/lib/AuthContext";
 import { chatApi } from "@/lib/api";
@@ -112,7 +113,7 @@ export default function FloatingChat() {
           {/* Backdrop on mobile */}
           <div className="sm:hidden fixed inset-0 bg-black/20 z-[55]" onClick={toggleOpen} />
 
-          <div className={`fixed z-[60] right-4 sm:right-6 w-[calc(100vw-32px)] sm:w-[400px] bg-white rounded-2xl border border-border shadow-2xl flex flex-col overflow-hidden ${minimized ? "h-[56px] bottom-20 sm:bottom-24" : "h-[500px] sm:h-[520px] bottom-20 sm:bottom-24"}`}>
+          <div className={`fixed z-[60] right-4 sm:right-6 w-[calc(100vw-32px)] sm:w-[360px] bg-white rounded-2xl border border-border shadow-2xl flex flex-col overflow-hidden ${minimized ? "h-[56px] bottom-20 sm:bottom-24" : "h-[420px] sm:h-[440px] bottom-20 sm:bottom-24"}`}>
             {/* Header — always fixed */}
             <div className="bg-raah-green text-white px-4 py-3 flex items-center justify-between shrink-0 rounded-t-2xl">
               <div className="flex items-center gap-2.5">
@@ -130,6 +131,9 @@ export default function FloatingChat() {
                 <button onClick={() => setMinimized(!minimized)} className="w-7 h-7 rounded-full hover:bg-white/20 flex items-center justify-center transition">
                   <Minus size={14} />
                 </button>
+                <Link href="/ai" onClick={() => setOpen(false)} className="w-7 h-7 rounded-full hover:bg-white/20 flex items-center justify-center transition" title="Open full chat">
+                  <Maximize2 size={14} />
+                </Link>
                 <button onClick={toggleOpen} className="w-7 h-7 rounded-full hover:bg-white/20 flex items-center justify-center transition">
                   <X size={14} />
                 </button>
