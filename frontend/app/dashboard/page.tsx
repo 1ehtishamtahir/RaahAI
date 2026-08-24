@@ -31,9 +31,9 @@ export default function DashboardPage() {
     <AppShell>
       <div className="space-y-6">
         {/* Header */}
-        <div className="rounded-2xl text-white relative overflow-hidden" style={{backgroundImage:"url(/banner-bg.png)",backgroundSize:"cover",backgroundPosition:"right center"}}>
-          <div className="absolute inset-0 bg-gradient-to-r from-raah-deep/90 via-raah-green/60 to-transparent"/>
-          <div className="relative z-10 p-6">
+        <div className="rounded-2xl text-white relative overflow-hidden" style={{backgroundImage:"url(/banner-bg.png)",backgroundSize:"cover",backgroundPosition:"60% center",minHeight:"160px"}}>
+          <div className="absolute inset-0 bg-gradient-to-r from-raah-deep/95 via-raah-green/70 to-raah-green/20"/>
+          <div className="relative z-10 p-6 h-full flex flex-col justify-center">
             {!data ? (
               <div className="space-y-2 animate-pulse">
                 <div className="h-3 w-32 bg-white/20 rounded"/>
