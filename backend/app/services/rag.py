@@ -121,18 +121,8 @@ async def rag_answer(query: str, lang: str = "en", history: list = None, user_co
     if len(chunks) < MIN_CHUNKS:
         # If user has personal data, always try to answer from it
         if user_context:
-            answer = call_llm(query, [], lang=lang, history=history, user_context=user_context)
-            # If the answer contains real data (not a generic fallback), return it
-            fallback_phrases = [
-                "don't have verified information",
-                "don't have verified information on this",
-                "میرے پاس اس بارے میں تصدیق شدہ معلومات نہیں",
-                "تصدیق شدہ معلومات نہیں",
-            ]
-            if not any(p.lower() in answer.lower() for p in fallback_phrases):
-                return answer, [{"title": "Your Account Data", "snippet": "Personal data from your RaahAI profile"}], True
-            # Even if LLM returned fallback, we have user data — return it anyway
-            answer = call_llm(query, [], lang=lang, history=history, user_context=user_context)
+            from app.services.gemini import _mock_answer
+            answer = _mock_answer(query, [], lang=lang, user_context=user_context)
             return answer, [{"title": "Your Account Data", "snippet": "Personal data from your RaahAI profile"}], True
         fallback = "I don't have verified information on this. Please check the official website or visit the relevant office."
         if lang == "ur":
@@ -146,10 +136,11 @@ async def rag_answer(query: str, lang: str = "en", history: list = None, user_co
         "میرے پاس اس بارے میں تصدیق شدہ معلومات نہیں",
         "تصدیق شدہ معلومات نہیں",
     ]
-    # If we have user context, never return the fallback — answer from user data
+    # If LLM returned fallback but we have user context, answer from user data directly
     if any(p.lower() in answer.lower() for p in fallback_phrases):
         if user_context:
-            answer = call_llm(query, [], lang=lang, history=history, user_context=user_context)
+            from app.services.gemini import _mock_answer
+            answer = _mock_answer(query, [], lang=lang, user_context=user_context)
             return answer, [{"title": "Your Account Data", "snippet": "Personal data from your RaahAI profile"}], True
         return answer, [], False
     seen = set()
