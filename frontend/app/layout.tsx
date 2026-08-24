@@ -2,6 +2,7 @@ import "../styles/globals.css";
 import type { Metadata } from "next";
 import { LangProvider } from "@/lib/LangContext";
 import { AuthProvider } from "@/lib/AuthContext";
+import FloatingChat from "@/components/chat/FloatingChat";
 
 export const metadata: Metadata = {
   title: "RaahAI — Your Smart Guide to Government Services",
@@ -16,7 +17,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="antialiased">
         <LangProvider>
-          <AuthProvider>{children}</AuthProvider>
+          <AuthProvider>
+            {children}
+            <FloatingChat />
+          </AuthProvider>
         </LangProvider>
       </body>
     </html>
