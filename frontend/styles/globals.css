@@ -19,6 +19,40 @@ body {
   color: #17201B;
 }
 
+/* ── Urdu / Nastaleeq Font ──────────────────────────────────── */
+/* Jameel Noori Nastaleeq (local install) → Noto Nastaliq Urdu (Google CDN) → fallback */
+@font-face {
+  font-family: 'Jameel Noori Nastaleeq';
+  src: local('Jameel Noori Nastaleeq'),
+       local('JameelNooriNastaleeq-Regular'),
+       local('Jameel Noori Nastaleeq Regular');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Explicit Urdu text class — apply to any element containing Urdu */
+.urdu-text,
+.font-urdu {
+  font-family: 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', 'Noto Naskh Arabic', serif !important;
+  direction: rtl;
+  text-align: right;
+  line-height: 2.2;
+}
+
+/* When RTL mode is active, apply Nastaleeq to the whole page */
+html[dir="rtl"] body,
+html[dir="rtl"],
+html.urdu-mode body,
+html.urdu-mode {
+  font-family: 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', 'Noto Naskh Arabic', serif;
+}
+
+/* Apply Nastaleeq to all Urdu-script content automatically */
+:lang(ur) {
+  font-family: 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', 'Noto Naskh Arabic', serif;
+}
+
 .dark body {
   background: #0f1a14;
   color: #e8f0e8;

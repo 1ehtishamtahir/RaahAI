@@ -17,6 +17,11 @@ export function LangProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem("raahai-lang", lang);
     document.documentElement.lang = lang;
     document.documentElement.dir = lang === "ur" ? "rtl" : "ltr";
+    if (lang === "ur") {
+      document.documentElement.classList.add("urdu-mode");
+    } else {
+      document.documentElement.classList.remove("urdu-mode");
+    }
   }, [lang]);
   const setLang = (l: Lang) => setLangState(l);
   return <LangContext.Provider value={{ lang, setLang, t: strings[lang] }}>{children}</LangContext.Provider>;

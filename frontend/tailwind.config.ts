@@ -28,6 +28,8 @@ const config: Config = {
       },
       fontFamily: {
         sans: ["Inter", "Noto Sans", "Noto Sans Arabic", "sans-serif"],
+        urdu: ["'Jameel Noori Nastaleeq'", "'Noto Nastaliq Urdu'", "'Noto Naskh Arabic'", "serif"],
+        nastaleeq: ["'Jameel Noori Nastaleeq'", "'Noto Nastaliq Urdu'", "'Noto Naskh Arabic'", "serif"],
       },
     },
   },
