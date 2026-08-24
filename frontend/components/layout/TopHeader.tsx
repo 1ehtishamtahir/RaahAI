@@ -1,5 +1,5 @@
 "use client";
-import { Bell, Sun, Menu, LogOut, X, FileText, AlertTriangle, CreditCard, Clock, ChevronRight } from "lucide-react";
+import { Bell, Sun, Menu, LogOut, X, FileText, AlertTriangle, CreditCard, Clock, ChevronRight, Globe } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState, useRef } from "react";
@@ -21,7 +21,7 @@ const PRIORITY_DOT: Record<string, string> = {
 };
 
 export default function TopHeader({ onMenu }: { onMenu?: () => void }) {
-  const { lang } = useLang();
+  const { lang, setLang } = useLang();
   const { user, logout } = useAuth();
   const router = useRouter();
   const [notifCount, setNotifCount] = useState(0);
@@ -82,6 +82,16 @@ export default function TopHeader({ onMenu }: { onMenu?: () => void }) {
           title="Toggle theme"
         >
           <Sun size={16} />
+        </button>
+
+        {/* Language Toggle */}
+        <button
+          onClick={() => setLang(lang === "en" ? "ur" : "en")}
+          className="h-9 px-3 rounded-full border border-border flex items-center gap-1.5 hover:bg-raah-soft transition text-xs font-medium"
+          title={lang === "en" ? "اردو میں تبدیل کریں" : "Switch to English"}
+        >
+          <Globe size={14} />
+          {lang === "en" ? "اردو" : "EN"}
         </button>
 
         {/* Notification Bell + Dropdown */}
