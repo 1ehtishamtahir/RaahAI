@@ -32,16 +32,39 @@ export default function DashboardPage() {
       <div className="space-y-6">
         {/* Header */}
         <div className="bg-gradient-to-r from-raah-green to-emerald-700 rounded-2xl p-6 text-white">
-          <div className="text-sm opacity-80">Citizen Command Center</div>
-          <div className="text-2xl font-bold mt-1">Welcome, {user?.name || data?.citizen?.name || "Citizen"} 👋</div>
-          <div className="text-sm opacity-80 mt-1">{user?.cnic || data?.citizen?.cnic || ""} • {user?.city || data?.citizen?.city || ""}</div>
-          <div className="mt-3 flex gap-2 text-xs">
-            <span className="px-3 py-1 rounded-full bg-white/20">Your Government. Your Data. Your AI Copilot.</span>
-          </div>
+          {!data ? (
+            <div className="space-y-2 animate-pulse">
+              <div className="h-3 w-32 bg-white/20 rounded"/>
+              <div className="h-6 w-48 bg-white/20 rounded"/>
+              <div className="h-3 w-40 bg-white/20 rounded"/>
+            </div>
+          ) : (
+            <>
+              <div className="text-sm opacity-80">Citizen Command Center</div>
+              <div className="text-2xl font-bold mt-1">Welcome, {user?.name || data?.citizen?.name || "Citizen"} 👋</div>
+              <div className="text-sm opacity-80 mt-1">{user?.cnic || data?.citizen?.cnic || ""} • {user?.city || data?.citizen?.city || ""}</div>
+              <div className="mt-3 flex gap-2 text-xs">
+                <span className="px-3 py-1 rounded-full bg-white/20">Your Government. Your Data. Your AI Copilot.</span>
+              </div>
+            </>
+          )}
         </div>
 
         {/* Summary Cards */}
-        {data?.summary && (
+        {!data ? (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {[1,2,3,4].map(i => (
+              <div key={i} className="bg-white border border-border rounded-xl p-4 animate-pulse">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-8 h-8 rounded-lg bg-gray-200"/>
+                  <div className="h-3 w-16 bg-gray-200 rounded"/>
+                </div>
+                <div className="h-4 w-24 bg-gray-200 rounded mt-1"/>
+                <div className="h-3 w-20 bg-gray-100 rounded mt-2"/>
+              </div>
+            ))}
+          </div>
+        ) : data?.summary && (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <Link href="/identity" className="bg-white border border-border rounded-xl p-4 hover:shadow-md hover:border-raah-green/30 transition group">
               <div className="flex items-center gap-2 mb-2">
@@ -151,20 +174,40 @@ export default function DashboardPage() {
         {/* Menu Grid */}
         <div>
           <h2 className="font-bold text-raah-deep mb-3">Your Services</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {MENU.map((m) => (
-              <Link key={m.key} href={m.href} className="bg-white border border-border rounded-2xl p-4 hover:shadow-md hover:border-raah-green/30 transition group">
-                <div className={`w-10 h-10 rounded-xl ${m.color} text-white flex items-center justify-center mb-3`}><m.icon size={18}/></div>
-                <div className={`font-semibold text-sm text-raah-deep ${lang==="ur"?"font-urdu":""}`}>{lang==="ur"?m.label_ur:m.label_en}</div>
-                <div className={`text-xs text-text-muted mt-1 line-clamp-1 ${lang==="ur"?"font-urdu":""}`}>{lang==="ur"?m.desc_ur:m.desc_en}</div>
-                <div className="text-xs text-raah-green mt-2 flex items-center gap-1 group-hover:gap-2 transition-all">Open <ArrowRight size={12}/></div>
-              </Link>
-            ))}
-          </div>
+          {!data ? (
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              {[1,2,3,4,5,6].map(i => (
+                <div key={i} className="bg-white border border-border rounded-2xl p-4 animate-pulse">
+                  <div className="w-10 h-10 rounded-xl bg-gray-200 mb-3"/>
+                  <div className="h-4 w-24 bg-gray-200 rounded"/>
+                  <div className="h-3 w-32 bg-gray-100 rounded mt-2"/>
+                  <div className="h-3 w-16 bg-gray-100 rounded mt-3"/>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              {MENU.map((m) => (
+                <Link key={m.key} href={m.href} className="bg-white border border-border rounded-2xl p-4 hover:shadow-md hover:border-raah-green/30 transition group">
+                  <div className={`w-10 h-10 rounded-xl ${m.color} text-white flex items-center justify-center mb-3`}><m.icon size={18}/></div>
+                  <div className={`font-semibold text-sm text-raah-deep ${lang==="ur"?"font-urdu":""}`}>{lang==="ur"?m.label_ur:m.label_en}</div>
+                  <div className={`text-xs text-text-muted mt-1 line-clamp-1 ${lang==="ur"?"font-urdu":""}`}>{lang==="ur"?m.desc_ur:m.desc_en}</div>
+                  <div className="text-xs text-raah-green mt-2 flex items-center gap-1 group-hover:gap-2 transition-all">Open <ArrowRight size={12}/></div>
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Quick Actions */}
-        {data?.quick_actions && (
+        {!data ? (
+          <div className="bg-white border border-border rounded-2xl p-4 animate-pulse">
+            <div className="h-4 w-28 bg-gray-200 rounded mb-3"/>
+            <div className="flex gap-2">
+              {[1,2,3].map(i => <div key={i} className="h-8 w-24 bg-gray-200 rounded-full"/>)}
+            </div>
+          </div>
+        ) : data?.quick_actions && (
           <div className="bg-white border border-border rounded-2xl p-4">
             <div className="font-semibold text-sm mb-3">Quick Actions</div>
             <div className="flex gap-2 flex-wrap">
