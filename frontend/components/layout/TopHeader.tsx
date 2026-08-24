@@ -165,11 +165,11 @@ export default function TopHeader({ onMenu }: { onMenu?: () => void }) {
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-1.5">
                               <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${PRIORITY_DOT[n.priority] || "bg-gray-400"}`} />
-                              <span className="font-medium text-xs truncate">
+                              <span className={`font-medium text-xs truncate ${lang==="ur"?"font-urdu":""}`}>
                                 {lang === "ur" ? n.title_ur : n.title}
                               </span>
                             </div>
-                            <div className="text-[11px] text-text-muted mt-0.5 truncate">
+                            <div className={`text-[11px] text-text-muted mt-0.5 truncate ${lang==="ur"?"font-urdu":""}`}>
                               {lang === "ur" ? n.desc_ur : n.desc}
                             </div>
                             {n.time && (

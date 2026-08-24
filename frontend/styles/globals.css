@@ -31,26 +31,31 @@ body {
   font-display: swap;
 }
 
-/* Explicit Urdu text class — apply to any element containing Urdu */
+/* Urdu text class — use on elements containing Urdu/Arabic script */
 .urdu-text,
 .font-urdu {
   font-family: 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', 'Noto Naskh Arabic', serif !important;
   direction: rtl;
   text-align: right;
-  line-height: 2.2;
+  line-height: 1.8;
 }
 
-/* When RTL mode is active, apply Nastaleeq to the whole page */
-html[dir="rtl"] body,
-html[dir="rtl"],
-html.urdu-mode body,
-html.urdu-mode {
-  font-family: 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', 'Noto Naskh Arabic', serif;
+/* When Urdu mode is active, apply Nastaleeq ONLY to Urdu-script text via unicode-range */
+@font-face {
+  font-family: 'Nastaleeq Urdu Auto';
+  src: local('Jameel Noori Nastaleeq'),
+       local('JameelNooriNastaleeq-Regular'),
+       local('Noto Nastaliq Urdu');
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
+  font-display: swap;
 }
 
-/* Apply Nastaleeq to all Urdu-script content automatically */
-:lang(ur) {
-  font-family: 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', 'Noto Naskh Arabic', serif;
+html.urdu-mode body {
+  font-family: 'Inter', 'Noto Sans', 'Noto Sans Arabic', sans-serif;
+}
+
+html.urdu-mode body *:not(.font-urdu):not(.urdu-text):not(code):not(pre) {
+  font-family: 'Inter', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans Arabic', sans-serif;
 }
 
 .dark body {

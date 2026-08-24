@@ -82,7 +82,7 @@ function NavSection({ items, lang, pathname, title }: { items: typeof mainNav; l
             )}
           >
             <item.icon size={16} className={cn(active ? "text-raah-green" : "text-text-muted")} />
-            <span className="flex-1">{label}</span>
+            <span className={`flex-1 ${lang==="ur"?"font-urdu":""}`}>{label}</span>
             {active && <span className="text-raah-green">›</span>}
           </Link>
         );

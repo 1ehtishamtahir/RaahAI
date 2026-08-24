@@ -140,8 +140,8 @@ export default function DashboardPage() {
             {MENU.map((m) => (
               <Link key={m.key} href={m.href} className="bg-white border border-border rounded-2xl p-4 hover:shadow-md hover:border-raah-green/30 transition group">
                 <div className={`w-10 h-10 rounded-xl ${m.color} text-white flex items-center justify-center mb-3`}><m.icon size={18}/></div>
-                <div className="font-semibold text-sm text-raah-deep">{lang==="ur"?m.label_ur:m.label_en}</div>
-                <div className="text-xs text-text-muted mt-1 line-clamp-1">{lang==="ur"?m.desc_ur:m.desc_en}</div>
+                <div className={`font-semibold text-sm text-raah-deep ${lang==="ur"?"font-urdu":""}`}>{lang==="ur"?m.label_ur:m.label_en}</div>
+                <div className={`text-xs text-text-muted mt-1 line-clamp-1 ${lang==="ur"?"font-urdu":""}`}>{lang==="ur"?m.desc_ur:m.desc_en}</div>
                 <div className="text-xs text-raah-green mt-2 flex items-center gap-1 group-hover:gap-2 transition-all">Open <ArrowRight size={12}/></div>
               </Link>
             ))}
@@ -154,7 +154,7 @@ export default function DashboardPage() {
             <div className="font-semibold text-sm mb-3">Quick Actions</div>
             <div className="flex gap-2 flex-wrap">
               {data.quick_actions.map((a:any) => (
-                <Link key={a.href} href={a.href} className="px-4 py-2 rounded-full bg-raah-mint border border-raah-green/20 text-sm text-raah-deep hover:bg-raah-green hover:text-white transition">
+                <Link key={a.href} href={a.href} className={`px-4 py-2 rounded-full bg-raah-mint border border-raah-green/20 text-sm text-raah-deep hover:bg-raah-green hover:text-white transition ${lang==="ur"?"font-urdu":""}`}>
                   {lang==="ur"?a.label_ur:a.label_en}
                 </Link>
               ))}

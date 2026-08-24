@@ -134,7 +134,7 @@ export default function AIPage() {
             <Image src="/logo.png" alt="RaahAI" width={32} height={32} className="rounded-lg" />
             <div>
               <div className="font-semibold text-sm text-raah-deep">RaahAI</div>
-              <div className="text-[11px] text-text-muted">
+              <div className={`text-[11px] text-text-muted ${lang==="ur"?"font-urdu":""}`}>
                 {loading ? (lang === "ur" ? "سوچ رہا ہے..." : "Thinking...") : (lang === "ur" ? "آنلائن" : "Online")}
               </div>
             </div>
@@ -142,7 +142,7 @@ export default function AIPage() {
         </div>
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-green-500" />
-          <span className="text-xs text-text-muted">{lang === "ur" ? "سرکاری ذرائع" : "Official Sources"}</span>
+          <span className={`text-xs text-text-muted ${lang==="ur"?"font-urdu":""}`}>{lang === "ur" ? "سرکاری ذرائع" : "Official Sources"}</span>
         </div>
       </header>
 
@@ -168,7 +168,7 @@ export default function AIPage() {
           )
         )}
         {loading && (
-          <div className="flex gap-2 items-center text-sm text-text-muted px-2">
+          <div className={`flex gap-2 items-center text-sm text-text-muted px-2 ${lang==="ur"?"font-urdu":""}`}>
             <span className="w-2 h-2 bg-raah-green rounded-full animate-ping" />
             {lang === "ur" ? "جواب تیار ہو رہا ہے..." : "Preparing answer..."}
           </div>
@@ -221,7 +221,7 @@ export default function AIPage() {
               <Send size={18} />
             </button>
           </div>
-          <div className="text-center text-[11px] text-text-muted mt-2">
+          <div className={`text-center text-[11px] text-text-muted mt-2 ${lang==="ur"?"font-urdu":""}`}>
             {lang === "ur" ? "◇ راہائی صرف سرکاری ذرائع پر مبنی تجاویز فراہم کرتی ہے" : "◇ RaahAI provides official-source-based recommendations only"}
           </div>
         </div>

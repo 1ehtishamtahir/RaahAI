@@ -122,7 +122,7 @@ export default function FloatingChat() {
                 </div>
                 <div>
                   <div className="font-semibold text-sm">RaahAI Assistant</div>
-                  <div className="text-[10px] text-white/70">
+                  <div className={`text-[10px] text-white/70 ${lang==="ur"?"font-urdu":""}`}>
                     {loading ? (lang === "ur" ? "سوچ رہا ہے..." : "Thinking...") : (lang === "ur" ? "آنلائن • جواب دینے کے لیے تیار" : "Online • Ready to help")}
                   </div>
                 </div>
@@ -158,7 +158,7 @@ export default function FloatingChat() {
                     )
                   )}
                   {loading && (
-                    <div className="flex gap-2 items-center text-xs text-text-muted px-1">
+                    <div className={`flex gap-2 items-center text-xs text-text-muted px-1 ${lang==="ur"?"font-urdu":""}`}>
                       <span className="w-2 h-2 bg-raah-green rounded-full animate-ping" />
                       {lang === "ur" ? "جواب تیار ہو رہا ہے..." : "Preparing answer..."}
                     </div>
@@ -199,7 +199,7 @@ export default function FloatingChat() {
                         <Send size={14} />
                       </button>
                     </div>
-                    <div className="text-center text-[10px] text-text-muted mt-1.5">
+                    <div className={`text-center text-[10px] text-text-muted mt-1.5 ${lang==="ur"?"font-urdu":""}`}>
                       {lang === "ur" ? "◇ راہائی صرف سرکاری ذرائع پر مبنی تجاویز فراہم کرتی ہے" : "◇ RaahAI provides official-source-based recommendations only"}
                     </div>
                   </div>

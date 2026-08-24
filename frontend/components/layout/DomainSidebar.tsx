@@ -135,8 +135,8 @@ export default function DomainSidebar({ domain }: { domain: string }) {
           <TitleIcon size={18} />
         </div>
         <div>
-          <div className="font-bold text-raah-deep text-sm leading-none">{title}</div>
-          <div className="text-[11px] text-text-secondary">{lang==="ur"?"مشن موڈ":"Mission Mode"}</div>
+          <div className={`font-bold text-raah-deep text-sm leading-none ${lang==="ur"?"font-urdu":""}`}>{title}</div>
+          <div className={`text-[11px] text-text-secondary ${lang==="ur"?"font-urdu":""}`}>{lang==="ur"?"مشن موڈ":"Mission Mode"}</div>
         </div>
       </div>
 
