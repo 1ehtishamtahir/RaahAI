@@ -44,6 +44,9 @@ async def chat(
 ):
     _check_rate(request)
 
+    # Debug: log auth info
+    print(f"[chat] credentials={credentials}, has_token={bool(credentials and credentials.credentials)}")
+
     # Resolve user if token provided
     user_id = None
     if credentials:
@@ -51,17 +54,24 @@ async def chat(
             from app.core.auth import decode_token
             payload = decode_token(credentials.credentials)
             user_id = payload.get("sub")
-        except Exception:
-            pass
+            print(f"[chat] user_id={user_id}")
+        except Exception as e:
+            print(f"[chat] token decode failed: {e}")
 
     # Fetch conversation history for context
     history = []
     if user_id and req.session_id:
         try:
-            prev_msgs = db.query(ChatMessage).filter(
-                ChatMessage.session_id == req.session_id
-            ).order_by(ChatMessage.created_at.desc()).limit(10).all()
-            history = [{"role": m.role, "content": m.content} for m in reversed(prev_msgs)]
+            # Verify session belongs to this user before fetching messages
+            session_owner = db.query(ChatSession).filter(
+                ChatSession.id == req.session_id,
+                ChatSession.user_id == user_id
+            ).first()
+            if session_owner:
+                prev_msgs = db.query(ChatMessage).filter(
+                    ChatMessage.session_id == req.session_id
+                ).order_by(ChatMessage.created_at.desc()).limit(10).all()
+                history = [{"role": m.role, "content": m.content} for m in reversed(prev_msgs)]
         except Exception:
             pass
 
@@ -70,8 +80,9 @@ async def chat(
     if user_id:
         try:
             user_context = build_user_context(user_id, db)
-        except Exception:
-            pass
+            print(f"[chat] user_context length={len(user_context)}")
+        except Exception as e:
+            print(f"[chat] user_context error: {e}")
 
     answer, citations, grounded = await rag_answer(req.query, lang=req.lang, history=history, user_context=user_context)
 

@@ -25,7 +25,12 @@ export default function DashboardPage() {
   const [data, setData] = useState<any>(null);
   const [aiSuggestions, setAiSuggestions] = useState<any>(null);
   const [deadlines, setDeadlines] = useState<any>(null);
-  useEffect(() => { citizenDashboardApi().then(setData).catch(() => {}); aiDashboardSuggestions().then(setAiSuggestions).catch(() => {}); aiDeadlines().then(setDeadlines).catch(() => {}); }, []);
+  useEffect(() => {
+    setData(null); setAiSuggestions(null); setDeadlines(null);
+    citizenDashboardApi().then(setData).catch(() => {});
+    aiDashboardSuggestions().then(setAiSuggestions).catch(() => {});
+    aiDeadlines().then(setDeadlines).catch(() => {});
+  }, [user?.id]);
 
   return (
     <AppShell>

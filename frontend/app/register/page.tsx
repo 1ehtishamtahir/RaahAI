@@ -39,7 +39,7 @@ export default function RegisterPage() {
     setError("");
     try {
       await register(form);
-      router.push("/dashboard");
+      window.location.href = "/dashboard";
     } catch (err: any) {
       setError(err.message || "Registration failed");
     } finally {

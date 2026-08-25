@@ -46,13 +46,6 @@ def register(req: UserRegister, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(user)
 
-    # Seed demo data for new user
-    try:
-        from app.main import seed_demo_data
-        seed_demo_data(user.id)
-    except Exception:
-        pass
-
     token = create_access_token({"sub": user.id, "email": user.email})
     return TokenResponse(
         token=token,

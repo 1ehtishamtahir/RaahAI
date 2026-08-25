@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     dashscope_api_key: str = ""
     qwen_model: str = "qwen-plus"
     qwen_embedding_model: str = "text-embedding-v2"
-    cors_origins: str = "http://localhost:3000"
+    cors_origins: str = "http://localhost:3000,http://localhost:3001"
     upload_dir: str = "./uploads"
     max_upload_mb: int = 10
     ocr_engine: str = "paddle"

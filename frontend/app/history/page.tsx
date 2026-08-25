@@ -1,31 +1,45 @@
 "use client";
 import AppShell from "@/components/layout/AppShell";
 import { useLang } from "@/lib/LangContext";
+import { useAuth } from "@/lib/AuthContext";
 import { Clock, MessageCircle, Trash2 } from "lucide-react";
 import { useState, useEffect } from "react";
+import { chatSessionsApi } from "@/lib/api";
 
 type Hist = { id: string; title: string; date: string; preview: string };
 
 export default function HistoryPage() {
   const { t } = useLang();
+  const { user } = useAuth();
   const [history, setHistory] = useState<Hist[]>([]);
 
   useEffect(() => {
-    const raw = localStorage.getItem("raahai-history");
-    if (raw) {
-      try { setHistory(JSON.parse(raw)); } catch {}
-    } else {
-      setHistory([
-        { id: "1", title: "Passport renewal documents", date: "Today, 10:30 AM", preview: "Passport banwane ke liye kya documents chahiye?" },
-        { id: "2", title: "CNIC modification process", date: "Yesterday, 4:15 PM", preview: "CNIC me name correction ka process kya hai?" },
-        { id: "3", title: "Business Registration with SECP", date: "2 days ago", preview: "Business registration ke liye SECP requirements?" },
-      ]);
-    }
-  }, []);
+    if (!user) { setHistory([]); return; }
+    chatSessionsApi().then((res: any) => {
+      const sessions = (res.sessions || []).map((s: any) => ({
+        id: s.id,
+        title: s.title || "New Chat",
+        date: s.updated_at ? new Date(s.updated_at).toLocaleString() : "",
+        preview: "",
+      }));
+      setHistory(sessions);
+    }).catch(() => {
+      const raw = localStorage.getItem(`raahai-history-${user.id}`);
+      if (raw) {
+        try { setHistory(JSON.parse(raw)); } catch {}
+      } else {
+        setHistory([
+          { id: "1", title: "Passport renewal documents", date: "Today, 10:30 AM", preview: "Passport banwane ke liye kya documents chahiye?" },
+          { id: "2", title: "CNIC modification process", date: "Yesterday, 4:15 PM", preview: "CNIC me name correction ka process kya hai?" },
+          { id: "3", title: "Business Registration with SECP", date: "2 days ago", preview: "Business registration ke liye SECP requirements?" },
+        ]);
+      }
+    });
+  }, [user?.id]);
 
   function clear() {
     setHistory([]);
-    localStorage.removeItem("raahai-history");
+    if (user) localStorage.removeItem(`raahai-history-${user.id}`);
   }
 
   return (

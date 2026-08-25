@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import AppShell from "@/components/layout/AppShell";
 import { useLang } from "@/lib/LangContext";
+import { useAuth } from "@/lib/AuthContext";
 import { alertsApi, deleteAlertApi, updateAlertApi } from "@/lib/api";
 import { Bell, AlertTriangle, CheckCircle, XCircle, Plus, Trash2, ExternalLink, Eye, Download, Upload, FileImage, Calendar, ShieldCheck, Check, Pencil } from "lucide-react";
 
@@ -15,6 +16,7 @@ const STATUS_CONFIG: Record<string, { color: string; icon: any; label_en: string
 
 export default function AlertsPage() {
   const { lang } = useLang();
+  const { user } = useAuth();
   const [alerts, setAlerts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -33,7 +35,7 @@ export default function AlertsPage() {
     alertsApi().then(setAlerts).catch(() => setAlerts([])).finally(() => setLoading(false));
   }
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => { setAlerts([]); load(); }, [user?.id]);
 
   function onFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const f = e.target.files?.[0] || null;
