@@ -1,3 +1,5 @@
+import os
+import uuid
 from fastapi import APIRouter, HTTPException, UploadFile, File, Form, Depends
 from fastapi.responses import Response
 from pydantic import BaseModel
@@ -7,6 +9,8 @@ from sqlalchemy.orm import Session
 from app.core.database import get_db
 from app.core.auth import get_current_user
 from app.models.db_models import User, Document
+
+ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".pdf", ".webp"}
 
 router = APIRouter(prefix="/alerts", tags=["alerts"])
 
@@ -139,14 +143,17 @@ async def upload_alert(
         data = await file.read()
         if len(data) > 5 * 1024 * 1024:
             raise HTTPException(status_code=413, detail="Image too large (max 5MB)")
+        ext = os.path.splitext(file.filename)[1].lower()
+        if ext not in ALLOWED_EXTENSIONS:
+            raise HTTPException(status_code=400, detail=f"File type {ext} not allowed")
         has_image = True
-        filename = file.filename
-        import os
+        safe_filename = f"{uuid.uuid4().hex}{ext}"
         upload_dir = os.path.join("uploads", current_user.id)
         os.makedirs(upload_dir, exist_ok=True)
-        image_path = os.path.join(upload_dir, filename)
+        image_path = os.path.join(upload_dir, safe_filename)
         with open(image_path, "wb") as f:
             f.write(data)
+        filename = safe_filename
 
     doc = Document(
         user_id=current_user.id,
@@ -174,16 +181,20 @@ def get_image(alert_id: str, current_user: User = Depends(get_current_user), db:
     doc = db.query(Document).filter(Document.id == alert_id, Document.user_id == current_user.id).first()
     if not doc or not doc.image_path:
         raise HTTPException(status_code=404, detail="No image for this document")
-    import os
-    if not os.path.exists(doc.image_path):
+    resolved = os.path.realpath(doc.image_path)
+    allowed_dir = os.path.realpath(os.path.join("uploads", current_user.id))
+    if not resolved.startswith(allowed_dir):
+        raise HTTPException(status_code=403, detail="Access denied")
+    if not os.path.exists(resolved):
         raise HTTPException(status_code=404, detail="Image file not found")
-    with open(doc.image_path, "rb") as f:
+    with open(resolved, "rb") as f:
         data = f.read()
     content_type = "image/jpeg"
     if doc.image_filename:
         ext = doc.image_filename.rsplit(".", 1)[-1].lower()
-        content_type = {"jpg": "image/jpeg", "jpeg": "image/jpeg", "png": "image/png", "pdf": "application/pdf"}.get(ext, "image/jpeg")
-    return Response(content=data, media_type=content_type, headers={"Content-Disposition": f'inline; filename="{doc.image_filename}"'})
+        content_type = {"jpg": "image/jpeg", "jpeg": "image/jpeg", "png": "image/png", "pdf": "application/pdf", "webp": "image/webp"}.get(ext, "image/jpeg")
+    safe_name = doc.image_filename.replace('"', '').replace('\n', '').replace('\r', '')
+    return Response(content=data, media_type=content_type, headers={"Content-Disposition": f'inline; filename="{safe_name}"'})
 
 
 @router.get("/{alert_id}/download")
@@ -191,12 +202,16 @@ def download_image(alert_id: str, current_user: User = Depends(get_current_user)
     doc = db.query(Document).filter(Document.id == alert_id, Document.user_id == current_user.id).first()
     if not doc or not doc.image_path:
         raise HTTPException(status_code=404, detail="No image for this document")
-    import os
-    if not os.path.exists(doc.image_path):
+    resolved = os.path.realpath(doc.image_path)
+    allowed_dir = os.path.realpath(os.path.join("uploads", current_user.id))
+    if not resolved.startswith(allowed_dir):
+        raise HTTPException(status_code=403, detail="Access denied")
+    if not os.path.exists(resolved):
         raise HTTPException(status_code=404, detail="Image file not found")
-    with open(doc.image_path, "rb") as f:
+    with open(resolved, "rb") as f:
         data = f.read()
-    return Response(content=data, media_type="application/octet-stream", headers={"Content-Disposition": f'attachment; filename="{doc.image_filename}"'})
+    safe_name = (doc.image_filename or "download").replace('"', '').replace('\n', '').replace('\r', '')
+    return Response(content=data, media_type="application/octet-stream", headers={"Content-Disposition": f'attachment; filename="{safe_name}"'})
 
 
 @router.put("/{alert_id}", response_model=DocumentAlert)
@@ -236,7 +251,6 @@ def delete_alert(alert_id: str, current_user: User = Depends(get_current_user), 
     if not doc:
         raise HTTPException(status_code=404, detail="Document not found")
     if doc.image_path:
-        import os
         try:
             os.remove(doc.image_path)
         except OSError:

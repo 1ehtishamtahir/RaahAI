@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel
 from typing import Optional
 from sqlalchemy.orm import Session
@@ -10,8 +10,24 @@ from app.models.db_models import (
 )
 from app.models.schemas import UserRegister, UserLogin, TokenResponse, UserResponse
 from datetime import datetime
+import time
+from collections import defaultdict, deque
 
 router = APIRouter(prefix="/api/citizen", tags=["citizen"])
+
+_auth_rate_limit: defaultdict[str, deque] = defaultdict(deque)
+_AUTH_RATE_MAX = 10
+_AUTH_RATE_WINDOW = 300
+
+def _check_auth_rate(request: Request):
+    ip = request.client.host if request.client else "unknown"
+    now = time.time()
+    q = _auth_rate_limit[ip]
+    while q and q[0] < now - _AUTH_RATE_WINDOW:
+        q.popleft()
+    if len(q) >= _AUTH_RATE_MAX:
+        raise HTTPException(status_code=429, detail="Too many attempts. Please try again later.")
+    q.append(now)
 
 
 class CitizenProfile(BaseModel):
@@ -27,7 +43,8 @@ class CitizenProfile(BaseModel):
 
 
 @router.post("/register", response_model=TokenResponse)
-def register(req: UserRegister, db: Session = Depends(get_db)):
+def register(req: UserRegister, request: Request, db: Session = Depends(get_db)):
+    _check_auth_rate(request)
     existing = db.query(User).filter(User.email == req.email).first()
     if existing:
         raise HTTPException(status_code=400, detail="Email already registered")
@@ -54,7 +71,8 @@ def register(req: UserRegister, db: Session = Depends(get_db)):
 
 
 @router.post("/login", response_model=TokenResponse)
-def login(req: UserLogin, db: Session = Depends(get_db)):
+def login(req: UserLogin, request: Request, db: Session = Depends(get_db)):
+    _check_auth_rate(request)
     user = db.query(User).filter(User.email == req.email).first()
     if not user or not verify_password(req.password, user.password_hash):
         raise HTTPException(status_code=401, detail="Invalid email or password")

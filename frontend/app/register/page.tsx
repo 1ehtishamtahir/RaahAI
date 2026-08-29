@@ -31,8 +31,8 @@ export default function RegisterPage() {
       setError(lang === "ur" ? "نام، ای میل اور پاس ورڈ درکار ہیں" : "Name, email and password are required");
       return;
     }
-    if (form.password.length < 6) {
-      setError(lang === "ur" ? "پاس ورڈ کم از کم 6 حروف کا ہونا چاہیے" : "Password must be at least 6 characters");
+    if (form.password.length < 8) {
+      setError(lang === "ur" ? "پاس ورڈ کم از کم 8 حروف کا ہونا چاہیے" : "Password must be at least 8 characters");
       return;
     }
     setLoading(true);
@@ -128,7 +128,7 @@ export default function RegisterPage() {
                     value={form.password}
                     onChange={(e) => update("password", e.target.value)}
                     className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-border text-sm focus:outline-none focus:ring-2 focus:ring-raah-green/30 focus:border-raah-green transition"
-                    placeholder={lang === "ur" ? "کم از کم 6 حروف" : "Min 6 characters"}
+                    placeholder={lang === "ur" ? "کم از کم 8 حروف" : "Min 8 characters"}
                     autoComplete="new-password"
                   />
                   <button
@@ -141,7 +141,7 @@ export default function RegisterPage() {
                   </button>
                 </div>
                 <div className="text-[11px] text-text-muted mt-1">
-                  {lang === "ur" ? "کم از کم 6 حروف درکار ہیں" : "Must be at least 6 characters"}
+                  {lang === "ur" ? "کم از کم 8 حروف درکار ہیں" : "Must be at least 8 characters"}
                 </div>
               </div>
             </div>

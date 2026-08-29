@@ -100,7 +100,7 @@ class AddAlertRequest(BaseModel):
 class UserRegister(BaseModel):
     name: str = Field(..., min_length=2, max_length=100)
     email: str = Field(..., min_length=5)
-    password: str = Field(..., min_length=6)
+    password: str = Field(..., min_length=8)
     phone: Optional[str] = None
     cnic: Optional[str] = None
     province: Optional[str] = None

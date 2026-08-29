@@ -1,19 +1,23 @@
+import logging
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 from .config import get_settings
 
+logger = logging.getLogger(__name__)
 settings = get_settings()
 
-# Fallback to sqlite if postgres driver missing or URL invalid
 try:
-    engine = create_engine(settings.database_url, pool_pre_ping=True)
-    # test connection
+    engine = create_engine(
+        settings.database_url,
+        pool_pre_ping=True,
+        pool_size=20,
+        max_overflow=10,
+        pool_timeout=30,
+    )
     from sqlalchemy import text
     with engine.connect() as conn:
         conn.execute(text("SELECT 1"))
-    print(f"[database] connected to {settings.database_url[:30]}...")
-except Exception as e:
-    print(f"[database] postgres connect failed ({e}), falling back to sqlite:///./raahai.db")
+except Exception:
     engine = create_engine("sqlite:///./raahai.db", connect_args={"check_same_thread": False}, pool_pre_ping=True)
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

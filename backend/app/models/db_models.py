@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, DateTime, Boolean, Text, JSON, Integer, Float, ForeignKey
+from sqlalchemy import Column, String, DateTime, Boolean, Text, JSON, Integer, Float, ForeignKey, Index
 from sqlalchemy.orm import relationship
 import uuid
 from datetime import datetime
@@ -39,6 +39,7 @@ class User(Base):
 # ── Chat ──────────────────────────────────────────────────────────────
 class ChatSession(Base):
     __tablename__ = "chat_sessions"
+    __table_args__ = (Index("ix_chat_sessions_user_id", "user_id"),)
     id = Column(String, primary_key=True, default=_uuid)
     user_id = Column(String, ForeignKey("users.id"), nullable=False)
     title = Column(String, nullable=True)
@@ -52,6 +53,7 @@ class ChatSession(Base):
 
 class ChatMessage(Base):
     __tablename__ = "chat_messages"
+    __table_args__ = (Index("ix_chat_messages_session_id", "session_id"),)
     id = Column(String, primary_key=True, default=_uuid)
     session_id = Column(String, ForeignKey("chat_sessions.id"), nullable=False)
     role = Column(String, nullable=False)  # user | assistant
@@ -65,6 +67,7 @@ class ChatMessage(Base):
 # ── Documents (replaces alerts in-memory) ─────────────────────────────
 class Document(Base):
     __tablename__ = "documents"
+    __table_args__ = (Index("ix_documents_user_id", "user_id"),)
     id = Column(String, primary_key=True, default=_uuid)
     user_id = Column(String, ForeignKey("users.id"), nullable=False)
     document_type = Column(String, nullable=False)
@@ -102,6 +105,7 @@ class FeedbackEntry(Base):
 # ── Family ────────────────────────────────────────────────────────────
 class FamilyMember(Base):
     __tablename__ = "family_members"
+    __table_args__ = (Index("ix_family_members_user_id", "user_id"),)
     id = Column(String, primary_key=True, default=_uuid)
     user_id = Column(String, ForeignKey("users.id"), nullable=False)
     name = Column(String, nullable=False)
@@ -120,6 +124,7 @@ class FamilyMember(Base):
 
 class FamilyProgram(Base):
     __tablename__ = "family_programs"
+    __table_args__ = (Index("ix_family_programs_user_id", "user_id"),)
     id = Column(String, primary_key=True, default=_uuid)
     user_id = Column(String, ForeignKey("users.id"), nullable=False)
     program_name = Column(String, nullable=False)
@@ -139,6 +144,7 @@ class FamilyProgram(Base):
 # ── Vehicles ──────────────────────────────────────────────────────────
 class VehicleRecord(Base):
     __tablename__ = "vehicle_records"
+    __table_args__ = (Index("ix_vehicle_records_user_id", "user_id"),)
     id = Column(String, primary_key=True, default=_uuid)
     user_id = Column(String, ForeignKey("users.id"), nullable=False)
     registration_no = Column(String, nullable=True)
@@ -160,6 +166,7 @@ class VehicleRecord(Base):
 # ── Challans ──────────────────────────────────────────────────────────
 class ChallanRecord(Base):
     __tablename__ = "challan_records"
+    __table_args__ = (Index("ix_challan_records_user_id", "user_id"), Index("ix_challan_records_status", "status"),)
     id = Column(String, primary_key=True, default=_uuid)
     user_id = Column(String, ForeignKey("users.id"), nullable=False)
     vehicle_id = Column(String, ForeignKey("vehicle_records.id"), nullable=True)
@@ -182,6 +189,7 @@ class ChallanRecord(Base):
 # ── Payments ──────────────────────────────────────────────────────────
 class PaymentRecord(Base):
     __tablename__ = "payment_records"
+    __table_args__ = (Index("ix_payment_records_user_id", "user_id"), Index("ix_payment_records_status", "status"),)
     id = Column(String, primary_key=True, default=_uuid)
     user_id = Column(String, ForeignKey("users.id"), nullable=False)
     type = Column(String, nullable=True)  # Fee | Tax | Fine
@@ -205,6 +213,7 @@ class PaymentRecord(Base):
 # ── Checklist (existing, now with user_id) ───────────────────────────
 class ChecklistState(Base):
     __tablename__ = "checklist_states"
+    __table_args__ = (Index("ix_checklist_states_user_id", "user_id"),)
     id = Column(String, primary_key=True, default=_uuid)
     user_id = Column(String, ForeignKey("users.id"), nullable=False)
     service = Column(String, nullable=False)

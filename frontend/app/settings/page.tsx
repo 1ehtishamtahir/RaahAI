@@ -43,8 +43,7 @@ export default function SettingsPage() {
           </div>
 
           <div className="text-xs text-text-muted border-t border-border pt-4">
-            <div>Backend: <code className="bg-raah-soft px-1 rounded">{process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}</code></div>
-            <div className="mt-1">Version 1.0 • Bano Qabil Hackathon 2026</div>
+            <div>Version 1.0 • Bano Qabil Hackathon 2026</div>
           </div>
         </div>
       </div>

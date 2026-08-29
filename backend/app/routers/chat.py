@@ -49,8 +49,8 @@ async def chat(
             from app.core.auth import decode_token
             payload = decode_token(credentials.credentials)
             user_id = payload.get("sub")
-        except Exception as e:
-            print(f"[chat] token decode failed: {e}")
+        except Exception:
+            pass
 
     # Fetch conversation history for context
     history = []

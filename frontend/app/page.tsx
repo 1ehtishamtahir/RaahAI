@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import BannerCarousel from "@/components/ui/BannerCarousel";
+import dynamic from "next/dynamic";
+
+const BannerCarousel = dynamic(() => import("@/components/ui/BannerCarousel"));
 
 export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);

@@ -5,7 +5,9 @@ export default function UserMessage({ text, time }: { text: string; time: string
         <div className="whitespace-pre-wrap">{text}</div>
         <div className="text-[11px] text-text-muted text-right mt-1">{time} ✓✓</div>
       </div>
-      <img src="https://i.pravatar.cc/100?img=12" alt="user" className="w-8 h-8 rounded-full shrink-0" />
+      <div className="w-8 h-8 rounded-full bg-raah-green/10 border border-raah-green/20 flex items-center justify-center shrink-0">
+        <span className="text-xs font-bold text-raah-green">U</span>
+      </div>
     </div>
   );
 }
