@@ -50,6 +50,17 @@ export default function AIPage() {
     setTimeout(() => inputRef.current?.focus(), 200);
   }, []);
 
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const q = params.get("q");
+    if (q) {
+      setInput(q);
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 300);
+    }
+  }, []);
+
   async function onSend() {
     if (!input.trim() || loading) return;
     const text = input.trim();
@@ -86,7 +97,7 @@ export default function AIPage() {
     { label: "Token tax", q: "Token tax kaise pay karein?" },
     { label: "پاسپورٹ فیس؟", q: "پاسپورٹ فیس کتنی ہے؟" },
     { label: "Business SECP", q: "How to register business with SECP?" },
-    { label: " challan check", q: "Mera challan ka status check karein" },
+    { label: "Challan check", q: "Mera challan ka status check karein" },
   ];
 
   function toggleVoice() {

@@ -1,9 +1,7 @@
 from fastapi import APIRouter, Depends, Request, HTTPException
 from fastapi.security import HTTPAuthorizationCredentials
 from app.models.schemas import ChatRequest, ChatResponse, Citation
-from app.services.rag import rag_answer
-from app.services.user_context import build_user_context
-from app.services.checklist import infer_situation_from_query
+from app.services.llm_10_pipeline import run_10llm_pipeline
 from app.core.database import get_db
 from app.core.auth import security, get_current_user
 from app.models.db_models import User, ChatSession, ChatMessage
@@ -44,9 +42,6 @@ async def chat(
 ):
     _check_rate(request)
 
-    # Debug: log auth info
-    print(f"[chat] credentials={credentials}, has_token={bool(credentials and credentials.credentials)}")
-
     # Resolve user if token provided
     user_id = None
     if credentials:
@@ -54,7 +49,6 @@ async def chat(
             from app.core.auth import decode_token
             payload = decode_token(credentials.credentials)
             user_id = payload.get("sub")
-            print(f"[chat] user_id={user_id}")
         except Exception as e:
             print(f"[chat] token decode failed: {e}")
 
@@ -62,7 +56,6 @@ async def chat(
     history = []
     if user_id and req.session_id:
         try:
-            # Verify session belongs to this user before fetching messages
             session_owner = db.query(ChatSession).filter(
                 ChatSession.id == req.session_id,
                 ChatSession.user_id == user_id
@@ -75,32 +68,53 @@ async def chat(
         except Exception:
             pass
 
-    # Build personal data context from user's database
-    user_context = ""
-    if user_id:
-        try:
-            user_context = build_user_context(user_id, db)
-            print(f"[chat] user_context length={len(user_context)}")
-        except Exception as e:
-            print(f"[chat] user_context error: {e}")
+    # Determine language
+    lang = req.lang.value if hasattr(req.lang, 'value') else str(req.lang)
 
-    answer, citations, grounded = await rag_answer(req.query, lang=req.lang, history=history, user_context=user_context)
+    # Process through the 10-LLM pipeline (parallel execution for speed)
+    result = await run_10llm_pipeline(
+        query=req.query,
+        user_id=user_id,
+        db=db,
+        lang=lang,
+    )
+
+    answer = result["answer"]
+    sources = result.get("sources", [])
+    grounded = result.get("grounded", False)
+
+    # Build citations from sources
+    citations = []
+    for s in sources:
+        citations.append({
+            "title": s.get("title", "Unknown"),
+            "snippet": s.get("snippet", ""),
+        })
 
     # Persist to DB if user is logged in
     session_id = req.session_id
     if user_id:
         if not session_id:
-            # Create new chat session
-            chat_session = ChatSession(user_id=user_id, title=req.query[:80], lang=req.lang.value if hasattr(req.lang, 'value') else str(req.lang))
+            chat_session = ChatSession(
+                user_id=user_id,
+                title=req.query[:80],
+                lang=lang
+            )
             db.add(chat_session)
             db.commit()
             db.refresh(chat_session)
             session_id = chat_session.id
         else:
-            # Verify session belongs to user
-            existing = db.query(ChatSession).filter(ChatSession.id == session_id, ChatSession.user_id == user_id).first()
+            existing = db.query(ChatSession).filter(
+                ChatSession.id == session_id,
+                ChatSession.user_id == user_id
+            ).first()
             if not existing:
-                chat_session = ChatSession(user_id=user_id, title=req.query[:80], lang=req.lang.value if hasattr(req.lang, 'value') else str(req.lang))
+                chat_session = ChatSession(
+                    user_id=user_id,
+                    title=req.query[:80],
+                    lang=lang
+                )
                 db.add(chat_session)
                 db.commit()
                 db.refresh(chat_session)
@@ -110,10 +124,13 @@ async def chat(
         user_msg = ChatMessage(session_id=session_id, role="user", content=req.query)
         db.add(user_msg)
 
-        # Save assistant message
+        # Save assistant message with source metadata
         citation_data = [{"title": c["title"], "snippet": c.get("snippet")} for c in citations]
         assistant_msg = ChatMessage(
-            session_id=session_id, role="assistant", content=answer, citations=citation_data
+            session_id=session_id,
+            role="assistant",
+            content=answer,
+            citations=citation_data
         )
         db.add(assistant_msg)
         db.commit()
@@ -130,10 +147,14 @@ async def chat(
 
 @router.get("/sessions")
 def list_sessions(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
-    sessions = db.query(ChatSession).filter(ChatSession.user_id == current_user.id).order_by(ChatSession.updated_at.desc()).limit(50).all()
+    sessions = db.query(ChatSession).filter(
+        ChatSession.user_id == current_user.id
+    ).order_by(ChatSession.updated_at.desc()).limit(50).all()
     return {
         "sessions": [{
-            "id": s.id, "title": s.title or "New Chat", "lang": s.lang,
+            "id": s.id,
+            "title": s.title or "New Chat",
+            "lang": s.lang,
             "created_at": s.created_at.isoformat() if s.created_at else "",
             "updated_at": s.updated_at.isoformat() if s.updated_at else "",
         } for s in sessions]
@@ -141,15 +162,26 @@ def list_sessions(current_user: User = Depends(get_current_user), db: Session = 
 
 
 @router.get("/sessions/{session_id}/messages")
-def get_session_messages(session_id: str, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
-    session = db.query(ChatSession).filter(ChatSession.id == session_id, ChatSession.user_id == current_user.id).first()
+def get_session_messages(
+    session_id: str,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    session = db.query(ChatSession).filter(
+        ChatSession.id == session_id,
+        ChatSession.user_id == current_user.id
+    ).first()
     if not session:
         raise HTTPException(status_code=404, detail="Session not found")
-    messages = db.query(ChatMessage).filter(ChatMessage.session_id == session_id).order_by(ChatMessage.created_at).all()
+    messages = db.query(ChatMessage).filter(
+        ChatMessage.session_id == session_id
+    ).order_by(ChatMessage.created_at).all()
     return {
         "session_id": session.id,
         "messages": [{
-            "id": m.id, "role": m.role, "content": m.content,
+            "id": m.id,
+            "role": m.role,
+            "content": m.content,
             "citations": m.citations or [],
             "created_at": m.created_at.isoformat() if m.created_at else "",
         } for m in messages],
@@ -157,8 +189,15 @@ def get_session_messages(session_id: str, current_user: User = Depends(get_curre
 
 
 @router.delete("/sessions/{session_id}")
-def delete_session(session_id: str, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
-    session = db.query(ChatSession).filter(ChatSession.id == session_id, ChatSession.user_id == current_user.id).first()
+def delete_session(
+    session_id: str,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    session = db.query(ChatSession).filter(
+        ChatSession.id == session_id,
+        ChatSession.user_id == current_user.id
+    ).first()
     if not session:
         raise HTTPException(status_code=404, detail="Session not found")
     db.query(ChatMessage).filter(ChatMessage.session_id == session_id).delete()

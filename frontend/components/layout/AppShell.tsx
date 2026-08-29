@@ -63,13 +63,18 @@ export default function AppShell({ children, rightPanel }: { children: React.Rea
     );
   }
 
-  // Dashboard: no sidebar at all (Citizen Command Center standalone)
+  // Dashboard: full-width layout with optional right panel
   if (isDashboard) {
     return (
       <div className="min-h-screen bg-[#FBFDFC] flex flex-col">
         <TopHeader onMenu={() => setSidebarOpen(!sidebarOpen)} />
-        <div className="flex-1 max-w-[1600px] mx-auto w-full p-4 lg:p-6">
-          <main>{children}</main>
+        <div className="flex-1 flex gap-6 p-4 lg:p-6 max-w-[1600px] mx-auto w-full">
+          <main className="flex-1 min-w-0">{children}</main>
+          {rightPanel && (
+            <aside className="hidden xl:block w-[410px] shrink-0 space-y-4">
+              {rightPanel}
+            </aside>
+          )}
         </div>
       </div>
     );

@@ -41,7 +41,18 @@ LANGUAGE: Auto-detect English / Roman Urdu / Urdu script (Unicode>1500). Respond
 
 TONE: Helpful, calm, scannable. Max 5 bullets per section. Active second-person. Minimal emojis (only 👋 if needed).
 
-GROUNDING (CRITICAL): Answer ONLY from provided Context (NADRA, DGIP, SECP). If no relevant chunk: say exactly "I don't have verified information on this. Please check the official website or visit the relevant office." in user's language (UR: میرے پاس...). Never hallucinate fees/steps. If fee not in context: "Not specified in verified context."
+CRITICAL DATA SOURCING RULES:
+1. DATABASE results are marked [DATABASE RESULTS] — these are the AUTHORITATIVE source for dynamic data (status, records, assignments, dates, amounts).
+2. KNOWLEDGE BASE results are marked [KNOWLEDGE BASE] — these are the AUTHORITATIVE source for procedures, requirements, fees, policies.
+3. NEVER contradict, override, or guess information that contradicts DATABASE RESULTS.
+4. NEVER invent complaint IDs, application IDs, statuses, officers, dates, amounts, or department names.
+5. NEVER claim an action was performed unless the context explicitly states it was performed.
+6. If DATABASE RESULTS says "No records found" for a specific query, respond: "I couldn't find any matching records in your account." (or Urdu equivalent).
+7. NEVER say "your complaint is probably under review" or make up plausible-sounding statuses.
+8. If you don't have enough information to answer, say: "I don't have enough information to answer this question." (or Urdu equivalent).
+9. NEVER reveal internal system details (SQL queries, API keys, database schema, authentication tokens).
+
+GROUNDING (CRITICAL): Answer ONLY from provided Context. If no relevant database results or knowledge base chunks: say exactly "I don't have verified information on this. Please check the official website or visit the relevant office." in user's language (UR: میرے پاس...). Never hallucinate fees/steps. If fee not in context: "Not specified in verified context."
 
 STRUCTURE: Use markdown headings:
 English: ### Required Documents (● bullets), ### Process Summary (①②③ steps), ### Fees, ### Eligibility, ### Important Notes, Source: <Title>
@@ -54,6 +65,25 @@ SAFETY: Mask CNIC as XXXXX-XXXXXXX-X, never persist raw image/CNIC beyond sessio
 """
 
 def _build_prompt(query: str, context_chunks: List[Dict], lang: str = "en", history: list = None, user_context: str = "") -> str:
+    """
+    Build the LLM prompt with structured context.
+    If user_context is provided (from the new orchestrator), use it directly as it contains
+    properly labeled [DATABASE RESULTS] and [KNOWLEDGE BASE] sections.
+    Otherwise, fall back to the old format for backward compatibility.
+    """
+    # If user_context contains structured context from the orchestrator, use it directly
+    if user_context and "[DATABASE RESULTS]" in user_context:
+        return f"""{SYSTEM_PROMPT}
+
+Language: {lang}
+
+{user_context}
+
+Question: {query}
+
+Answer in {lang}. Use the DATABASE RESULTS as the authoritative source for dynamic data. Use KNOWLEDGE BASE for procedures and policies. Keep it scannable with headings."""
+
+    # Legacy format for backward compatibility
     context_text = "\n\n".join([f"[Source: {c.get('source','unknown')}] {c.get('text','')}" for c in context_chunks])
     if not context_text:
         context_text = "NO RELEVANT CONTEXT FOUND"

@@ -10,6 +10,12 @@ class Settings(BaseSettings):
     gemini_api_key: str = ""
     gemini_model: str = "gemini-flash-lite-latest"
     gemini_embedding_model: str = "models/text-embedding-004"
+    # Groq (fast LLM for 10-LLM pipeline)
+    groq_api_key: str = ""
+    groq_model: str = "openai/gpt-oss-20b"
+    # Cerebras (fastest inference)
+    cerebras_api_key: str = ""
+    cerebras_model: str = "llama-3.3-70b"
     # Qwen legacy (fallback if Gemini not set)
     dashscope_api_key: str = ""
     qwen_model: str = "qwen-plus"

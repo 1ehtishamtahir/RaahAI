@@ -96,6 +96,11 @@ def roman_to_urdu_script(query: str) -> str:
     return result
 
 async def rag_answer(query: str, lang: str = "en", history: list = None, user_context: str = "") -> Tuple[str, List[Dict], bool]:
+    """
+    RAG answer function — now supports both legacy and new orchestrator flow.
+    If user_context contains structured context from the orchestrator, pass it directly to LLM.
+    Otherwise, fall back to the legacy vector search flow.
+    """
     import re
     q_low = query.lower().strip()
     q_tokens = re.findall(r"\b\w+\b", q_low, flags=re.UNICODE)
@@ -117,6 +122,12 @@ async def rag_answer(query: str, lang: str = "en", history: list = None, user_co
             return "وعلیکم السلام! میں راہ AI ہوں — پاسپورٹ، شناختی کارڈ یا کاروبار رجسٹریشن میں کیسے مدد کر سکتا ہوں؟", [], False
         return "Walaikum Assalam! I'm RaahAI — your guide to Passport, CNIC and Business Registration. Ask me in Urdu or English.", [], False
 
+    # New orchestrator flow: if user_context contains structured context, use it directly
+    if user_context and "[DATABASE RESULTS]" in user_context:
+        answer = call_llm(query, [], lang=lang, history=history, user_context=user_context)
+        return answer, [], True
+
+    # Legacy flow: vector search + user context text
     chunks = await search(query, top_k=4)
     if len(chunks) < MIN_CHUNKS:
         # If user has personal data, always try to answer from it

@@ -10,6 +10,10 @@
   --border: #E3E9E5;
 }
 
+* {
+  scroll-behavior: smooth;
+}
+
 html {
   font-family: Inter, "Noto Sans", "Noto Sans Arabic", sans-serif;
 }
@@ -17,6 +21,7 @@ html {
 body {
   background: #FBFDFC;
   color: #17201B;
+  overflow-x: hidden;
 }
 
 /* ── Urdu / Nastaleeq Font ──────────────────────────────────── */
@@ -80,6 +85,9 @@ html.urdu-mode body *:not(.font-urdu):not(.urdu-text):not(code):not(pre) {
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-thumb { background: #E3E9E5; border-radius: 9999px; }
 ::-webkit-scrollbar-track { background: transparent; }
+
+.scrollbar-thin::-webkit-scrollbar { height: 4px; }
+.scrollbar-thin::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 9999px; }
 
 /* Splash screen animations */
 @keyframes splash-spin {

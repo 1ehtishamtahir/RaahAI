@@ -1,7 +1,8 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
-import { MessageCircle, X, Send, Minus, Maximize2 } from "lucide-react";
+import { MessageCircle, X, Send, Minimize2, Maximize2 } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useLang } from "@/lib/LangContext";
 import { useAuth } from "@/lib/AuthContext";
 import { chatApi } from "@/lib/api";
@@ -12,6 +13,7 @@ type Msg = { id: string; role: "user" | "assistant"; text: string; citations?: {
 export default function FloatingChat() {
   const { lang } = useLang();
   const { user } = useAuth();
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [minimized, setMinimized] = useState(false);
   const [messages, setMessages] = useState<Msg[]>([]);
@@ -87,6 +89,9 @@ export default function FloatingChat() {
     { label: "پاسپورٹ فیس؟", q: "پاسپورٹ فیس کتنی ہے؟" },
   ];
 
+  const publicPages = ["/", "/login", "/register"];
+  if (publicPages.includes(pathname)) return null;
+
   return (
     <>
       {/* Floating Button */}
@@ -129,7 +134,7 @@ export default function FloatingChat() {
               </div>
               <div className="flex items-center gap-1">
                 <button onClick={() => setMinimized(!minimized)} className="w-7 h-7 rounded-full hover:bg-white/20 flex items-center justify-center transition">
-                  <Minus size={14} />
+                  <Minimize2 size={14} />
                 </button>
                 <Link href="/ai" onClick={() => setOpen(false)} className="w-7 h-7 rounded-full hover:bg-white/20 flex items-center justify-center transition" title="Open full chat">
                   <Maximize2 size={14} />

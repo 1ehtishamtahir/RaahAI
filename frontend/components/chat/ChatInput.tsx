@@ -1,6 +1,6 @@
 "use client";
-import { useState, useRef } from "react";
-import { Paperclip, Mic, Send } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { Paperclip, Mic, MicOff, Send } from "lucide-react";
 import { useLang } from "@/lib/LangContext";
 
 export default function ChatInput({ onSend, disabled }: { onSend: (t: string) => void; disabled?: boolean }) {
@@ -8,6 +8,36 @@ export default function ChatInput({ onSend, disabled }: { onSend: (t: string) =>
   const [text, setText] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
   const [recording, setRecording] = useState(false);
+  const recognitionRef = useRef<any>(null);
+
+  useEffect(() => {
+    const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
+    if (SpeechRecognition) {
+      const recognition = new SpeechRecognition();
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      recognition.lang = "en-US";
+      recognition.onresult = (event: any) => {
+        const transcript = event.results[0][0].transcript;
+        setText((prev) => prev ? prev + " " + transcript : transcript);
+        setRecording(false);
+      };
+      recognition.onerror = () => setRecording(false);
+      recognition.onend = () => setRecording(false);
+      recognitionRef.current = recognition;
+    }
+  }, []);
+
+  function toggleVoice() {
+    if (!recognitionRef.current) return;
+    if (recording) {
+      recognitionRef.current.stop();
+      setRecording(false);
+    } else {
+      recognitionRef.current.start();
+      setRecording(true);
+    }
+  }
 
   function submit() {
     if (!text.trim() || disabled) return;
@@ -33,11 +63,11 @@ export default function ChatInput({ onSend, disabled }: { onSend: (t: string) =>
         disabled={disabled}
       />
       <button
-        onClick={() => setRecording(!recording)}
-        className={`w-8 h-8 rounded-full flex items-center justify-center border ${recording ? "bg-red-50 border-red-200 text-red-600" : "hover:bg-raah-soft text-text-muted border-transparent"}`}
-        title="Voice"
+        onClick={toggleVoice}
+        className={`w-8 h-8 rounded-full flex items-center justify-center border ${recording ? "bg-red-50 border-red-200 text-red-600 animate-pulse" : "hover:bg-raah-soft text-text-muted border-transparent"}`}
+        title={recording ? "Stop recording" : "Voice input"}
       >
-        <Mic size={16} />
+        {recording ? <MicOff size={16} /> : <Mic size={16} />}
       </button>
       <button
         onClick={submit}
