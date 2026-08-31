@@ -298,16 +298,19 @@ export default function Home() {
             </div>
             <div className="lg:pt-10 max-w-md">
               <p className="text-[#5A6B60] text-[16px] leading-[1.8]">
-                <span className="font-semibold text-[#0F1A14]">10-LLM pipeline, real DB queries, grounded answers.</span> Login with demo@raahai.com / demo1234.
+                <span className="font-semibold text-[#0F1A14]">61 API endpoints, 16 AI services, 11 database models.</span> Try it yourself — demo@raahai.com / demo1234.
               </p>
             </div>
           </div>
 
           <div className="grid md:grid-cols-3 gap-6">
             {[
-              { title: "Passport", desc: "Apply for a new passport or renew an existing one, step by step.", points: ["Fresh application", "Renewal & modification", "Fee & appointment guide"], color: "#087F3E", gradient: "from-[#EAF7EE] to-[#D4F1E0]", icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#087F3E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="12" cy="10" r="3"/><path d="M7 21v-2a5 5 0 0 1 5-5h0a5 5 0 0 1 5 5v2"/></svg> },
-              { title: "CNIC", desc: "Apply for a new CNIC or update your existing information.", points: ["New CNIC / Juvenile card", "Modification & renewal", "Family registration"], color: "#3478E5", gradient: "from-[#EFF4FF] to-[#D6E8FF]", icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3478E5" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg> },
-              { title: "Business Registration", desc: "Register a new business with SECP without decoding the process alone.", points: ["Company incorporation", "Name reservation", "Document checklist"], color: "#6844C7", gradient: "from-[#F3EEFF] to-[#E4DAFF]", icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6844C7" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-4"/><path d="M9 9h.01M9 13h.01M9 17h.01"/></svg> },
+              { title: "AI Chat", desc: "10-LLM parallel pipeline with grounded, cited answers in Urdu and English.", points: ["Intent classification", "RAG + DB grounding", "Safety & quality checks"], color: "#087F3E", gradient: "from-[#EAF7EE] to-[#D4F1E0]", icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#087F3E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> },
+              { title: "Document Wallet", desc: "Upload documents, scan with OCR, track expiry dates, and get alerts.", points: ["Gemini Vision OCR", "Expiry tracking", "Auto field extraction"], color: "#3478E5", gradient: "from-[#EFF4FF] to-[#D6E8FF]", icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3478E5" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> },
+              { title: "Fee Calculator", desc: "Instant fee breakdowns for passport, CNIC, and business registration.", points: ["3 urgency levels", "Bank charges included", "Processing time estimates"], color: "#E57D20", gradient: "from-[#FFF4E5] to-[#FFE8CC]", icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#E57D20" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> },
+              { title: "Office Locator", desc: "Find NADRA, DGIP, and SECP offices with addresses and working hours.", points: ["6 NADRA centers", "3 passport offices", "3 SECP offices"], color: "#6844C7", gradient: "from-[#F3EEFF] to-[#E4DAFF]", icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6844C7" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> },
+              { title: "Vehicle Management", desc: "Register vehicles, track token tax, and manage ownership transfers.", points: ["Registration flows", "Token tax tracking", "Challan management"], color: "#C74444", gradient: "from-[#FFECEC] to-[#FFD6D6]", icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C74444" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 17h14M5 17a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1l2-3h8l2 3h1a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2M5 17v2m14-2v2"/><circle cx="7.5" cy="17" r="1.5"/><circle cx="16.5" cy="17" r="1.5"/></svg> },
+              { title: "Schemes Discovery", desc: "AI-matched government programs based on your profile and eligibility.", points: ["7+ schemes loaded", "AI recommendations", "Deadline tracking"], color: "#1A8A8A", gradient: "from-[#E5F6F6] to-[#CCF0F0]", icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1A8A8A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg> },
             ].map((s) => (
               <div key={s.title} className="group relative bg-white rounded-[24px] border border-[#E3E9E5]/60 overflow-hidden shadow-[0_2px_8px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_60px_rgba(0,0,0,0.1)] hover:-translate-y-1 transition-all duration-500">
                 <div className="h-[3px] w-full" style={{ background: `linear-gradient(90deg, ${s.color}, ${s.color}80)` }} />
@@ -332,13 +335,6 @@ export default function Home() {
                 </div>
               </div>
             ))}
-          </div>
-
-          <div className="mt-8 bg-[#F3FAF5] border border-[#E3E9E5]/60 rounded-2xl p-5 flex flex-wrap items-center justify-center gap-4 text-[14px] text-[#5A6B60]">
-            <span className="font-semibold text-[#0F1A14]">Coming next:</span>
-            <span className="bg-white border border-[#E3E9E5]/60 px-4 py-2 rounded-full font-medium text-[#0F1A14]">Driving License</span>
-            <span className="bg-white border border-[#E3E9E5]/60 px-4 py-2 rounded-full font-medium text-[#0F1A14]">Tax Filing</span>
-            <span className="bg-white border border-[#E3E9E5]/60 px-4 py-2 rounded-full font-medium text-[#0F1A14]">Office Locator</span>
           </div>
         </div>
       </section>
