@@ -29,27 +29,25 @@ export default function BannerCarousel() {
 
   return (
     <section
-      className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-6"
+      className="mx-auto px-4 sm:px-8 lg:px-12 py-6"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
       <div className="relative rounded-[20px] overflow-hidden shadow-card group bg-[#EAF7EE]">
-        {/* Banner images - natural size, centered */}
-        <div className="relative w-full min-h-[200px] sm:min-h-[300px] lg:min-h-[400px]">
+        {/* Banner images - full aspect ratio */}
+        <div className="relative w-full aspect-[16/7]">
           {banners.map((b, i) => (
             <div
               key={b.src}
-              className={`w-full transition-opacity duration-500 ${i === current ? "opacity-100 relative" : "opacity-0 absolute inset-0"}`}
+              className={`w-full h-full transition-opacity duration-500 ${i === current ? "opacity-100 relative" : "opacity-0 absolute inset-0"}`}
             >
-              <div className="relative w-full min-h-[200px] sm:min-h-[300px] lg:min-h-[400px]">
-                <Image
-                  src={b.src}
-                  alt={b.alt}
-                  fill
-                  className="object-cover"
-                  priority={i === 0}
-                />
-              </div>
+              <Image
+                src={b.src}
+                alt={b.alt}
+                fill
+                className="object-contain"
+                priority={i === 0}
+              />
             </div>
           ))}
         </div>
