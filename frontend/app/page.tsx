@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 
 const BannerCarousel = dynamic(() => import("@/components/ui/BannerCarousel"));
 
@@ -118,67 +119,8 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Right Visual - Chat Preview */}
-            <div className="relative hidden lg:block">
-              <div className="relative bg-white/80 backdrop-blur-xl rounded-[32px] border border-[#087F3E]/10 shadow-[0_24px_80px_rgba(8,127,62,0.12)] overflow-hidden">
-                <div className="flex items-center justify-between px-6 py-4 border-b border-[#E3E9E5]/60">
-                  <div className="flex items-center gap-2">
-                    <span className="w-3 h-3 rounded-full bg-[#FF5F56]" />
-                    <span className="w-3 h-3 rounded-full bg-[#FFBD2E]" />
-                    <span className="w-3 h-3 rounded-full bg-[#27C93F]" />
-                  </div>
-                  <div className="flex items-center gap-2 text-xs font-semibold text-[#5A6B60] bg-[#F3FAF5] border border-[#087F3E]/10 rounded-full px-3.5 py-1.5">
-                    <span className="w-2 h-2 bg-[#087F3E] rounded-full animate-pulse" />
-                    RaahAI
-                  </div>
-                  <div className="w-8 h-8" />
-                </div>
-
-                <div className="p-6 space-y-5 bg-gradient-to-b from-[#FBFDFC] to-white">
-                  <div className="flex justify-end">
-                    <div className="bg-[#087F3E] text-white rounded-2xl rounded-br-md px-5 py-3 max-w-[80%]">
-                      <p className="text-sm leading-relaxed font-medium">Passport banwane ke liye kya documents chahiye?</p>
-                    </div>
-                  </div>
-
-                  <div className="bg-white rounded-2xl rounded-tl-md border border-[#E3E9E5]/60 p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)]">
-                    <div className="flex items-center gap-2.5 mb-3">
-                      <div className="w-7 h-7 rounded-full bg-[#087F3E] flex items-center justify-center">
-                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1L7.5 4L10.5 4.5L8 7L8.5 10.5L6 9L3.5 10.5L4 7L1.5 4.5L4.5 4L6 1Z" fill="white"/></svg>
-                      </div>
-                      <span className="text-sm font-bold text-[#075C2D]">RaahAI</span>
-                    </div>
-                    <p className="text-sm text-[#0F1A14] leading-relaxed">Passport banwane ke liye yeh documents chahiye:</p>
-                    <ul className="mt-3 space-y-2 text-sm text-[#0F1A14]">
-                      <li className="flex gap-2.5 items-start"><span className="w-1.5 h-1.5 rounded-full bg-[#087F3E] mt-1.5 shrink-0" />Original CNIC / Smart CNIC</li>
-                      <li className="flex gap-2.5 items-start"><span className="w-1.5 h-1.5 rounded-full bg-[#087F3E] mt-1.5 shrink-0" />Passport photographs</li>
-                      <li className="flex gap-2.5 items-start"><span className="w-1.5 h-1.5 rounded-full bg-[#087F3E] mt-1.5 shrink-0" />Fee payment receipt</li>
-                    </ul>
-                    <div className="mt-4 pt-3 border-t border-[#E3E9E5]/60 flex items-center gap-2">
-                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1L8 4H10.5L8.5 6L9 9.5L6 7.5L3 9.5L3.5 6L1.5 4H4L6 1Z" fill="#087F3E" opacity="0.4"/></svg>
-                      <span className="text-[11px] font-semibold text-[#5A6B60]">Source:</span>
-                      <span className="text-[11px] font-bold text-[#087F3E]">DGIP Official</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Floating badges */}
-              <div className="absolute -bottom-5 left-8 bg-white rounded-2xl border border-[#E3E9E5]/60 px-4 py-3 shadow-[0_8px_32px_rgba(0,0,0,0.08)] flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-[#087F3E]/10 flex items-center justify-center text-sm">🛡️</div>
-                <div>
-                  <div className="text-xs font-bold text-[#0F1A14]">Verified Data</div>
-                  <div className="text-[11px] text-[#5A6B60]">From official sources</div>
-                </div>
-              </div>
-
-              <div className="absolute -top-4 right-8 bg-white rounded-2xl border border-[#E3E9E5]/60 px-4 py-3 shadow-[0_8px_32px_rgba(0,0,0,0.08)] flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-[#087F3E]/10 flex items-center justify-center text-sm">🇵🇰</div>
-                <div>
-                  <div className="text-xs font-bold text-[#0F1A14]">Urdu + English</div>
-                  <div className="text-[11px] text-[#5A6B60]">Bilingual support</div>
-                </div>
-              </div>
+            <div className="hidden lg:flex items-center justify-center">
+              <img src="/hero/hero.png" alt="RaahAI — AI-powered government services assistant" className="w-full max-w-[520px] h-auto object-contain drop-shadow-[0_24px_48px_rgba(8,127,62,0.15)]" />
             </div>
           </div>
         </div>
@@ -218,6 +160,7 @@ export default function Home() {
       {/* THE PROBLEM */}
       <section id="problem" className="bg-white border-y border-[#E3E9E5]/60">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
+          <ScrollReveal>
           <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-8 mb-14">
             <div className="max-w-xl">
               <div className="inline-flex items-center gap-2 bg-[#087F3E] rounded-full px-4 py-1.5 text-[11px] font-bold tracking-widest uppercase text-white mb-5">The Problem</div>
@@ -232,14 +175,16 @@ export default function Home() {
               </p>
             </div>
           </div>
+          </ScrollReveal>
 
           <div className="grid md:grid-cols-3 gap-6">
             {[
               { num: "01", title: "English-only instructions", desc: "Official portals rarely explain procedures in Urdu, leaving many citizens guessing.", gradient: "from-[#EAF7EE] to-[#D4F1E0]", ring: "ring-[#087F3E]/20", numBg: "bg-[#087F3E]", icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#087F3E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg> },
               { num: "02", title: "Forms nobody explains", desc: "Dense government forms use terms that are hard to decode without help.", gradient: "from-[#EFF4FF] to-[#D6E8FF]", ring: "ring-[#3478E5]/20", numBg: "bg-[#3478E5]", icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#3478E5" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg> },
               { num: "03", title: "Repeated office visits", desc: "One missing document usually means a wasted trip — and starting over.", gradient: "from-[#F3EEFF] to-[#E4DAFF]", ring: "ring-[#6844C7]/20", numBg: "bg-[#6844C7]", icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6844C7" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-4"/><path d="M9 9v.01"/><path d="M9 12v.01"/><path d="M9 15v.01"/><path d="M9 18v.01"/></svg> },
-            ].map((c) => (
-              <div key={c.num} className="group relative bg-white rounded-[24px] border border-[#E3E9E5]/40 p-7 shadow-[0_2px_8px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_60px_rgba(0,0,0,0.1)] transition-all duration-500 overflow-hidden">
+            ].map((c, i) => (
+              <ScrollReveal key={c.num} delay={i * 120}>
+              <div className="group relative bg-white rounded-[24px] border border-[#E3E9E5]/40 p-7 shadow-[0_2px_8px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_60px_rgba(0,0,0,0.1)] transition-all duration-500 overflow-hidden h-full">
                 <div className={`absolute inset-0 bg-gradient-to-br ${c.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
                 
                 <div className="relative">
@@ -253,6 +198,7 @@ export default function Home() {
                   <div className="mt-5 h-[2px] w-12 bg-gradient-to-r from-[#087F3E] to-transparent rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 </div>
               </div>
+              </ScrollReveal>
             ))}
           </div>
         </div>
@@ -261,6 +207,7 @@ export default function Home() {
       {/* THE RAAH */}
       <section id="raah" className="bg-white border-y border-[#E3E9E5]/60">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
+          <ScrollReveal>
           <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-8 mb-14">
             <div className="max-w-xl">
               <div className="inline-flex items-center gap-2 bg-[#087F3E] rounded-full px-4 py-1.5 text-[11px] font-bold tracking-widest uppercase text-white mb-5">The Raah — Your Path</div>
@@ -275,6 +222,7 @@ export default function Home() {
               </p>
             </div>
           </div>
+          </ScrollReveal>
 
           <div className="grid md:grid-cols-4 gap-5 relative">
             <div className="hidden md:block absolute top-[36px] left-[12%] right-[12%] h-[2px] bg-gradient-to-r from-[#087F3E]/10 via-[#087F3E]/25 to-[#087F3E]/10" />
@@ -283,17 +231,19 @@ export default function Home() {
               { step: "02", title: "Understand", desc: "AI classifies intent, searches your data and the knowledge base.", icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> },
               { step: "03", title: "Guide", desc: "A personal checklist tracks exactly what's left for your situation.", icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> },
               { step: "04", title: "Trust", desc: "Every answer names its source — or says plainly when it doesn't know.", icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> },
-            ].map((s) => (
-              <div key={s.step} className="group relative bg-white rounded-[20px] border border-[#E3E9E5]/60 p-6 shadow-[0_2px_8px_rgba(0,0,0,0.03)] hover:shadow-[0_16px_48px_rgba(8,127,62,0.12)] hover:-translate-y-1 transition-all duration-400 text-center">
+            ].map((s, i) => (
+              <ScrollReveal key={s.step} delay={i * 100}>
+              <div className="group relative bg-white rounded-[20px] border border-[#E3E9E5]/60 p-6 shadow-[0_2px_8px_rgba(0,0,0,0.03)] hover:shadow-[0_16px_48px_rgba(8,127,62,0.12)] hover:-translate-y-1 transition-all duration-400 text-center h-full">
                 <div className="w-14 h-14 rounded-2xl bg-[#087F3E] flex items-center justify-center mx-auto shadow-[0_6px_20px_rgba(8,127,62,0.3)] relative z-10">{s.icon}</div>
                 <div className="inline-flex mt-4 bg-[#EAF7EE] text-[#087F3E] text-[10px] font-bold tracking-widest px-3 py-1 rounded-full">STEP {s.step}</div>
                 <h3 className="font-bold text-[#0F1A14] text-[17px] mt-3">{s.title}</h3>
                 <p className="text-[14px] text-[#5A6B60] leading-[1.7] mt-2">{s.desc}</p>
               </div>
+              </ScrollReveal>
             ))}
           </div>
 
-          {/* How it works */}
+          <ScrollReveal delay={400}>
           <div id="how" className="mt-12 bg-[#075C2D] rounded-[24px] p-7 lg:p-9 flex flex-col lg:flex-row items-center justify-between gap-6 text-white">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-xl bg-white/15 flex items-center justify-center">
@@ -310,12 +260,14 @@ export default function Home() {
               <span className="bg-white/15 border border-white/20 text-white text-[13px] font-medium px-5 py-2.5 rounded-full">SECP business registration</span>
             </div>
           </div>
+          </ScrollReveal>
         </div>
       </section>
 
       {/* MVP SCOPE */}
       <section id="mvp" className="bg-white border-y border-[#E3E9E5]/60">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
+          <ScrollReveal>
           <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-8 mb-14">
             <div className="max-w-xl">
               <div className="inline-flex items-center gap-2 bg-[#087F3E] rounded-full px-4 py-1.5 text-[11px] font-bold tracking-widest uppercase text-white mb-5">What&apos;s Built</div>
@@ -330,6 +282,7 @@ export default function Home() {
               </p>
             </div>
           </div>
+          </ScrollReveal>
 
           <div className="grid md:grid-cols-3 gap-5">
             {[
@@ -339,8 +292,9 @@ export default function Home() {
               { title: "Office Locator", desc: "Find NADRA, DGIP, and SECP offices with addresses and working hours.", points: ["6 NADRA centers", "3 passport offices", "3 SECP offices"], color: "#6844C7", gradient: "from-[#F3EEFF] to-[#E4DAFF]", icon: <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="#6844C7" strokeWidth="1.5"><path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg> },
               { title: "Vehicle Management", desc: "Register vehicles, track token tax, and manage ownership transfers.", points: ["Registration flows", "Token tax tracking", "Challan management"], color: "#C74444", gradient: "from-[#FFECEC] to-[#FFD6D6]", icon: <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="#C74444" strokeWidth="1.5"><path strokeLinecap="round" strokeLinejoin="round" d="M8 17h.01M16 17h.01M3 11l1.5-5h15l1.5 5M3 11v6a1 1 0 001 1h1a1 1 0 001-1v-1h12v1a1 1 0 001 1h1a1 1 0 001-1v-6M3 11h18" /></svg> },
               { title: "Schemes Discovery", desc: "AI-matched government programs based on your profile and eligibility.", points: ["7+ schemes loaded", "AI recommendations", "Deadline tracking"], color: "#1A8A8A", gradient: "from-[#E5F6F6] to-[#CCF0F0]", icon: <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="#1A8A8A" strokeWidth="1.5"><path strokeLinecap="round" strokeLinejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" /></svg> },
-            ].map((s) => (
-              <div key={s.title} className="group relative bg-gradient-to-br from-white to-[#FAFBFA] rounded-[24px] border border-[#E3E9E5]/50 p-7 shadow-[0_1px_3px_rgba(0,0,0,0.02)] hover:shadow-[0_20px_60px_rgba(0,0,0,0.09)] hover:-translate-y-1.5 transition-all duration-500 overflow-hidden">
+            ].map((s, i) => (
+              <ScrollReveal key={s.title} delay={i * 80}>
+              <div className="group relative bg-gradient-to-br from-white to-[#FAFBFA] rounded-[24px] border border-[#E3E9E5]/50 p-7 shadow-[0_1px_3px_rgba(0,0,0,0.02)] hover:shadow-[0_20px_60px_rgba(0,0,0,0.09)] hover:-translate-y-1.5 transition-all duration-500 overflow-hidden h-full">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl opacity-[0.03] pointer-events-none rounded-bl-[100px]" style={{ background: `linear-gradient(to bottom left, ${s.color}, transparent)` }} />
                 <div className="relative">
                   <div className="flex items-center justify-between mb-5">
@@ -367,6 +321,7 @@ export default function Home() {
                   </Link>
                 </div>
               </div>
+              </ScrollReveal>
             ))}
           </div>
         </div>
@@ -376,6 +331,7 @@ export default function Home() {
       <section id="trust" className="bg-white border-y border-[#E3E9E5]/60">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
           <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-10 items-center">
+            <ScrollReveal direction="left">
             <div>
               <div className="inline-flex items-center gap-2 bg-[#087F3E] rounded-full px-4 py-1.5 text-[11px] font-bold tracking-widest uppercase text-white mb-5">How It Works</div>
               <h2 className="text-[32px] lg:text-[40px] font-[800] tracking-[-0.02em] leading-[1.05] text-[#0F1A14]">
@@ -400,7 +356,9 @@ export default function Home() {
                 ))}
               </div>
             </div>
+            </ScrollReveal>
 
+            <ScrollReveal direction="right" delay={150}>
             <div className="relative">
               <div className="bg-[#075C2D] rounded-[24px] p-7 lg:p-8 text-white relative overflow-hidden">
                 <div className="absolute -top-16 -right-16 w-56 h-56 bg-white/10 rounded-full blur-2xl" />
@@ -435,6 +393,7 @@ export default function Home() {
                 </div>
               </div>
             </div>
+            </ScrollReveal>
           </div>
         </div>
       </section>
@@ -442,6 +401,7 @@ export default function Home() {
       {/* TEAM */}
       <section id="team" className="bg-white border-y border-[#E3E9E5]/60">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
+          <ScrollReveal>
           <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-8 mb-14">
             <div className="max-w-xl">
               <div className="inline-flex items-center gap-2 bg-[#087F3E] rounded-full px-4 py-1.5 text-[11px] font-bold tracking-widest uppercase text-white mb-5">The Team</div>
@@ -455,6 +415,7 @@ export default function Home() {
               </p>
             </div>
           </div>
+          </ScrollReveal>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {[
@@ -462,8 +423,9 @@ export default function Home() {
               { name: "Meer Ahmed", role: "Backend Engineer", initials: "MA", color: "#3478E5" },
               { name: "Abdullah Tufail", role: "AI/ML Engineer", initials: "AT", color: "#6844C7" },
               { name: "Ahmed Malik", role: "Frontend Engineer", initials: "AM", color: "#E57D20" },
-            ].map((m) => (
-              <div key={m.name} className="group relative bg-gradient-to-br from-white to-[#FAFBFA] rounded-[20px] border border-[#E3E9E5]/60 p-6 text-center shadow-[0_1px_3px_rgba(0,0,0,0.02)] hover:shadow-[0_16px_48px_rgba(0,0,0,0.08)] hover:-translate-y-1 transition-all duration-400">
+            ].map((m, i) => (
+              <ScrollReveal key={m.name} delay={i * 100}>
+              <div className="group relative bg-gradient-to-br from-white to-[#FAFBFA] rounded-[20px] border border-[#E3E9E5]/60 p-6 text-center shadow-[0_1px_3px_rgba(0,0,0,0.02)] hover:shadow-[0_16px_48px_rgba(0,0,0,0.08)] hover:-translate-y-1 transition-all duration-400 h-full">
                 <div className="relative mx-auto w-[88px] h-[88px]">
                   <div className="w-full h-full rounded-full flex items-center justify-center" style={{ background: `${m.color}10`, border: `2px solid ${m.color}20` }}>
                     <span className="text-[22px] font-[800]" style={{ color: m.color }}>{m.initials}</span>
@@ -472,6 +434,7 @@ export default function Home() {
                 <div className="font-bold text-[15px] text-[#0F1A14] mt-5 leading-tight">{m.name}</div>
                 <div className="inline-flex mt-2.5 text-[12px] font-semibold px-3 py-1 rounded-full" style={{ color: m.color, background: `${m.color}10` }}>{m.role}</div>
               </div>
+              </ScrollReveal>
             ))}
           </div>
         </div>
@@ -479,6 +442,7 @@ export default function Home() {
 
       {/* CTA */}
       <section id="launch" className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
+        <ScrollReveal>
         <div className="bg-gradient-to-br from-[#087F3E] via-[#087F3E] to-[#075C2D] rounded-[28px] p-8 lg:p-12 relative overflow-hidden">
           <div className="absolute inset-0 opacity-10">
             <div className="absolute -top-24 -right-24 w-[500px] h-[500px] bg-white rounded-full blur-3xl" />
@@ -524,6 +488,7 @@ export default function Home() {
             </div>
           </div>
         </div>
+        </ScrollReveal>
       </section>
 
       {/* FOOTER */}
