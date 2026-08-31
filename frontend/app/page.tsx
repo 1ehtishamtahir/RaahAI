@@ -412,28 +412,41 @@ export default function Home() {
       </section>
 
       {/* TEAM */}
-      <section id="team" className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
-        <div className="text-center max-w-2xl mx-auto mb-10">
-          <div className="inline-flex bg-[#F3FAF5] border border-[#E3E9E5] rounded-full px-3 py-1 text-xs font-bold tracking-widest uppercase text-[#087F3E] mb-3">The Team</div>
-          <h2 className="text-[28px] lg:text-[36px] font-[800] tracking-tight text-[#17201B]">Built for Bano Qabil AI Hackathon 2026</h2>
-          <p className="text-[#66716B] mt-2">Four people, one weekend, one raah.</p>
-        </div>
-
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
-          {[
-            { name: "Muhammad Ehtisham Tahir", role: "Team Leader", initials: "ET" },
-            { name: "Meer Ahmed", role: "Backend Engineer", initials: "MA" },
-            { name: "Abdullah Tufail", role: "AI/ML Engineer", initials: "AT" },
-            { name: "Ahmed Malik", role: "Frontend Engineer", initials: "AM" },
-          ].map((m) => (
-            <div key={m.name} className="bg-white rounded-[20px] border border-[#E3E9E5] p-6 text-center shadow-soft hover:shadow-card transition">
-              <div className="w-20 h-20 rounded-full bg-[#EAF7EE] border-4 border-[#F3FAF5] flex items-center justify-center mx-auto">
-                <span className="text-lg font-bold text-[#087F3E]">{m.initials}</span>
-              </div>
-              <div className="font-bold text-[#17201B] mt-4 leading-tight">{m.name}</div>
-              <div className="inline-flex mt-2 bg-[#EAF7EE] border border-[#087F3E]/10 text-[#087F3E] text-xs font-bold px-3 py-1 rounded-full">{m.role}</div>
+      <section id="team" className="bg-white border-y border-[#E3E9E5]/60">
+        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
+          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-8 mb-14">
+            <div className="max-w-xl">
+              <div className="inline-flex items-center gap-2 bg-[#087F3E] rounded-full px-4 py-1.5 text-[11px] font-bold tracking-widest uppercase text-white mb-5">The Team</div>
+              <h2 className="text-[32px] lg:text-[40px] font-[800] tracking-[-0.02em] leading-[1.05] text-[#0F1A14]">
+                Built for<br />
+                <span className="text-[#087F3E]">Bano Qabil AI Hackathon 2026</span>
+              </h2>
             </div>
-          ))}
+            <div className="lg:pt-10 max-w-md">
+              <p className="text-[#5A6B60] text-[16px] leading-[1.8]">
+                <span className="font-semibold text-[#0F1A14]">Four people, one weekend, one raah.</span>
+              </p>
+            </div>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {[
+              { name: "Muhammad Ehtisham Tahir", role: "Team Leader", initials: "ET", color: "#087F3E" },
+              { name: "Meer Ahmed", role: "Backend Engineer", initials: "MA", color: "#3478E5" },
+              { name: "Abdullah Tufail", role: "AI/ML Engineer", initials: "AT", color: "#6844C7" },
+              { name: "Ahmed Malik", role: "Frontend Engineer", initials: "AM", color: "#E57D20" },
+            ].map((m) => (
+              <div key={m.name} className="group relative bg-gradient-to-br from-white to-[#FAFBFA] rounded-[20px] border border-[#E3E9E5]/60 p-6 text-center shadow-[0_1px_3px_rgba(0,0,0,0.02)] hover:shadow-[0_16px_48px_rgba(0,0,0,0.08)] hover:-translate-y-1 transition-all duration-400">
+                <div className="relative mx-auto w-[88px] h-[88px]">
+                  <div className="w-full h-full rounded-full flex items-center justify-center" style={{ background: `${m.color}10`, border: `2px solid ${m.color}20` }}>
+                    <span className="text-[22px] font-[800]" style={{ color: m.color }}>{m.initials}</span>
+                  </div>
+                </div>
+                <div className="font-bold text-[15px] text-[#0F1A14] mt-5 leading-tight">{m.name}</div>
+                <div className="inline-flex mt-2.5 text-[12px] font-semibold px-3 py-1 rounded-full" style={{ color: m.color, background: `${m.color}10` }}>{m.role}</div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
