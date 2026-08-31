@@ -3,10 +3,10 @@ import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 
 const banners = [
-  { src: "/banners/ChatGPT Image Aug 27, 2026, 11_05_17 PM.png", alt: "RaahAI Banner 1" },
-  { src: "/banners/ChatGPT Image Aug 27, 2026, 11_05_20 PM.png", alt: "RaahAI Banner 2" },
-  { src: "/banners/ChatGPT Image Aug 27, 2026, 11_05_22 PM.png", alt: "RaahAI Banner 3" },
-  { src: "/banners/ChatGPT Image Aug 27, 2026, 11_05_37 PM.png", alt: "RaahAI Banner 4" },
+  { src: "/banners/1.png", alt: "RaahAI Banner 1" },
+  { src: "/banners/2.png", alt: "RaahAI Banner 2" },
+  { src: "/banners/3.png", alt: "RaahAI Banner 3" },
+  { src: "/banners/4.png", alt: "RaahAI Banner 4" },
 ];
 
 export default function BannerCarousel() {
