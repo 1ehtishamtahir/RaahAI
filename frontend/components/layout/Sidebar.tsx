@@ -96,13 +96,13 @@ export default function Sidebar() {
   const { user, logout } = useAuth();
   const pathname = usePathname();
   return (
-    <div className="h-screen sticky top-0 flex flex-col bg-white border-r border-border p-4">
+    <div className="h-screen sticky top-0 flex flex-col bg-white dark:bg-[#111d15] border-r border-border p-4">
       {/* Logo */}
       <div className="flex items-center gap-3 px-2 py-3">
         <img src="/logo.png" alt="RaahAI" className="w-9 h-9 rounded-xl bg-raah-green object-cover" onError={(e) => (e.currentTarget.style.display="none")} />
         <div>
-          <div className="font-bold text-raah-deep leading-none">RaahAI</div>
-          <div className="text-[10px] text-text-secondary leading-none">{lang === "ur" ? "آپ کا AI کاپائلٹ" : "Your AI Copilot"}</div>
+          <div className="font-bold text-raah-deep leading-none dark:text-raah-green">RaahAI</div>
+          <div className="text-[10px] text-text-secondary leading-none dark:text-text-muted">{lang === "ur" ? "آپ کا AI کاپائلٹ" : "Your AI Copilot"}</div>
         </div>
       </div>
 
@@ -115,20 +115,20 @@ export default function Sidebar() {
       </nav>
 
       {/* Language */}
-      <div className="mt-3 p-3 rounded-xl border border-border bg-raah-soft">
-        <div className="flex items-center gap-2 text-xs text-text-secondary mb-2">
+      <div className="mt-3 p-3 rounded-xl border border-border bg-raah-soft dark:bg-[#162a1e]">
+        <div className="flex items-center gap-2 text-xs text-text-secondary mb-2 dark:text-text-muted">
           <Globe size={14} /> Language
         </div>
-        <div className="flex rounded-full bg-white border border-border p-1">
+        <div className="flex rounded-full bg-white dark:bg-[#1a2e20] border border-border p-1">
           <button
             onClick={() => setLang("ur")}
-            className={cn("flex-1 py-1.5 rounded-full text-sm font-medium", lang === "ur" ? "bg-raah-mint text-raah-deep border border-raah-green/20" : "text-text-secondary")}
+            className={cn("flex-1 py-1.5 rounded-full text-sm font-medium", lang === "ur" ? "bg-raah-mint text-raah-deep border border-raah-green/20 dark:bg-[#1a3326] dark:text-raah-green" : "text-text-secondary dark:text-text-muted")}
           >
             اردو
           </button>
           <button
             onClick={() => setLang("en")}
-            className={cn("flex-1 py-1.5 rounded-full text-sm font-medium", lang === "en" ? "bg-raah-mint text-raah-deep border border-raah-green/20" : "text-text-secondary")}
+            className={cn("flex-1 py-1.5 rounded-full text-sm font-medium", lang === "en" ? "bg-raah-mint text-raah-deep border border-raah-green/20 dark:bg-[#1a3326] dark:text-raah-green" : "text-text-secondary dark:text-text-muted")}
           >
             English
           </button>
@@ -136,13 +136,13 @@ export default function Sidebar() {
       </div>
 
       {/* Profile */}
-      <div className="mt-3 flex items-center gap-3 p-3 rounded-xl border border-border">
-        <div className="w-8 h-8 rounded-full bg-raah-mint text-raah-green flex items-center justify-center text-sm font-bold">{user?.name?.charAt(0) || "C"}</div>
+      <div className="mt-3 flex items-center gap-3 p-3 rounded-xl border border-border dark:border-[#2a4a35]">
+        <div className="w-8 h-8 rounded-full bg-raah-mint dark:bg-[#1a3326] text-raah-green flex items-center justify-center text-sm font-bold">{user?.name?.charAt(0) || "C"}</div>
         <div className="flex-1 min-w-0">
-          <div className="text-sm font-semibold truncate">{user?.name || "Citizen"}</div>
-          <div className="text-xs text-text-muted">{user?.email || "citizen@raahai.pk"}</div>
+          <div className="text-sm font-semibold truncate dark:text-text-primary">{user?.name || "Citizen"}</div>
+          <div className="text-xs text-text-muted dark:text-text-muted">{user?.email || "citizen@raahai.pk"}</div>
         </div>
-        <button onClick={logout} className="p-1.5 rounded-lg hover:bg-red-50 text-text-muted hover:text-red-500 transition" title="Logout">
+        <button onClick={logout} className="p-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/30 text-text-muted hover:text-red-500 transition" title="Logout">
           <LogOut size={14}/>
         </button>
       </div>

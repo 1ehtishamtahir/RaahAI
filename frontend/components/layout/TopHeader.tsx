@@ -61,14 +61,14 @@ export default function TopHeader({ onMenu }: { onMenu?: () => void }) {
   }
 
   return (
-    <header className="h-[72px] bg-white border-b border-border flex items-center justify-between px-4 lg:px-6 sticky top-0 z-50">
+    <header className="h-[72px] bg-white dark:bg-[#111d15] border-b border-border dark:border-[#2a4a35] flex items-center justify-between px-4 lg:px-6 sticky top-0 z-50">
       <div className="flex items-center gap-3">
-        <button onClick={onMenu} className="lg:hidden p-2 rounded-lg border border-border">
-          <Menu size={18} />
+        <button onClick={onMenu} className="lg:hidden p-2 rounded-lg border border-border dark:border-[#2a4a35]">
+          <Menu size={18} className="dark:text-text-primary" />
         </button>
         <Link href="/dashboard" className="flex items-center gap-2.5">
           <Image src="/logo.png" alt="RaahAI" width={36} height={36} className="rounded-xl" priority />
-          <span className="text-lg font-bold text-raah-deep tracking-tight">RaahAI</span>
+          <span className="text-lg font-bold text-raah-deep dark:text-raah-green tracking-tight">RaahAI</span>
         </Link>
       </div>
       <div className="flex items-center gap-2">
@@ -78,16 +78,16 @@ export default function TopHeader({ onMenu }: { onMenu?: () => void }) {
             localStorage.setItem("raahai-theme", isDark ? "dark" : "light");
             document.documentElement.style.colorScheme = isDark ? "dark" : "light";
           }}
-          className="w-9 h-9 rounded-full border border-border flex items-center justify-center hover:bg-raah-soft transition"
+          className="w-9 h-9 rounded-full border border-border dark:border-[#2a4a35] flex items-center justify-center hover:bg-raah-soft dark:hover:bg-[#1a2e20] transition"
           title="Toggle theme"
         >
-          <Sun size={16} />
+          <Sun size={16} className="dark:text-yellow-400" />
         </button>
 
         {/* Language Toggle */}
         <button
           onClick={() => setLang(lang === "en" ? "ur" : "en")}
-          className="h-9 px-3 rounded-full border border-border flex items-center gap-1.5 hover:bg-raah-soft transition text-xs font-medium"
+          className="h-9 px-3 rounded-full border border-border dark:border-[#2a4a35] flex items-center gap-1.5 hover:bg-raah-soft dark:hover:bg-[#1a2e20] transition text-xs font-medium dark:text-text-primary"
           title={lang === "en" ? "اردو میں تبدیل کریں" : "Switch to English"}
         >
           <Globe size={14} />
@@ -98,7 +98,7 @@ export default function TopHeader({ onMenu }: { onMenu?: () => void }) {
         <div className="relative" ref={panelRef}>
           <button
             onClick={() => setShowNotifs(!showNotifs)}
-            className="w-9 h-9 rounded-full border border-border flex items-center justify-center relative hover:bg-raah-soft transition"
+            className="w-9 h-9 rounded-full border border-border dark:border-[#2a4a35] flex items-center justify-center relative hover:bg-raah-soft dark:hover:bg-[#1a2e20] transition"
           >
             <Bell size={16} />
             {notifCount > 0 && (
@@ -109,21 +109,21 @@ export default function TopHeader({ onMenu }: { onMenu?: () => void }) {
           </button>
 
           {showNotifs && (
-            <div className="absolute right-0 top-full mt-2 w-[380px] max-h-[480px] bg-white rounded-2xl border border-border shadow-xl overflow-hidden z-50">
+            <div className="absolute right-0 top-full mt-2 w-[380px] max-h-[480px] bg-white dark:bg-[#142218] rounded-2xl border border-border dark:border-[#2a4a35] shadow-xl overflow-hidden z-50">
               {/* Header */}
-              <div className="flex items-center justify-between px-4 py-3 border-b border-border">
+              <div className="flex items-center justify-between px-4 py-3 border-b border-border dark:border-[#2a4a35]">
                 <div className="flex items-center gap-2">
-                  <Bell size={16} className="text-raah-deep" />
-                  <span className="font-semibold text-sm text-raah-deep">
+                  <Bell size={16} className="text-raah-deep dark:text-raah-green" />
+                  <span className="font-semibold text-sm text-raah-deep dark:text-raah-green">
                     {lang === "ur" ? "اطلاعات" : "Notifications"}
                   </span>
                   {notifCount > 0 && (
-                    <span className="px-1.5 py-0.5 rounded-full bg-raah-mint text-raah-green text-[10px] font-bold">
+                    <span className="px-1.5 py-0.5 rounded-full bg-raah-mint dark:bg-[#1a3326] text-raah-green text-[10px] font-bold">
                       {notifCount}
                     </span>
                   )}
                 </div>
-                <button onClick={() => setShowNotifs(false)} className="p-1 rounded-lg hover:bg-raah-soft transition">
+                <button onClick={() => setShowNotifs(false)} className="p-1 rounded-lg hover:bg-raah-soft dark:hover:bg-[#1a2e20] transition">
                   <X size={14} className="text-text-muted" />
                 </button>
               </div>
@@ -134,10 +134,10 @@ export default function TopHeader({ onMenu }: { onMenu?: () => void }) {
                   <div className="p-4 space-y-3">
                     {[1, 2, 3].map((i) => (
                       <div key={i} className="flex gap-3 animate-pulse">
-                        <div className="w-8 h-8 rounded-full bg-gray-100" />
+                        <div className="w-8 h-8 rounded-full bg-gray-100 dark:bg-[#1a2e20]" />
                         <div className="flex-1 space-y-2">
-                          <div className="h-3 bg-gray-100 rounded w-3/4" />
-                          <div className="h-2 bg-gray-50 rounded w-1/2" />
+                          <div className="h-3 bg-gray-100 dark:bg-[#1a2e20] rounded w-3/4" />
+                          <div className="h-2 bg-gray-50 dark:bg-[#162a1e] rounded w-1/2" />
                         </div>
                       </div>
                     ))}
@@ -150,17 +150,17 @@ export default function TopHeader({ onMenu }: { onMenu?: () => void }) {
                     </p>
                   </div>
                 ) : (
-                  <div className="divide-y divide-border">
+                  <div className="divide-y divide-border dark:divide-[#2a4a35]">
                     {notifications.map((n) => {
                       const Icon = TYPE_ICONS[n.type] || Bell;
                       return (
                         <button
                           key={n.id}
                           onClick={() => handleNotifClick(n.href)}
-                          className="w-full px-4 py-3 flex gap-3 text-left hover:bg-raah-soft/50 transition"
+                          className="w-full px-4 py-3 flex gap-3 text-left hover:bg-raah-soft/50 dark:hover:bg-[#1a2e20] transition"
                         >
-                          <div className="w-8 h-8 rounded-full bg-white border border-border flex items-center justify-center shrink-0">
-                            <Icon size={14} className="text-raah-deep" />
+                          <div className="w-8 h-8 rounded-full bg-white dark:bg-[#1a2e20] border border-border dark:border-[#2a4a35] flex items-center justify-center shrink-0">
+                            <Icon size={14} className="text-raah-deep dark:text-raah-green" />
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-1.5">
@@ -189,7 +189,7 @@ export default function TopHeader({ onMenu }: { onMenu?: () => void }) {
 
               {/* Footer */}
               {notifications.length > 0 && (
-                <div className="border-t border-border px-4 py-2.5">
+                <div className="border-t border-border dark:border-[#2a4a35] px-4 py-2.5">
                   <button
                     onClick={() => handleNotifClick("/notifications")}
                     className="w-full text-center text-xs font-medium text-raah-green hover:underline"
@@ -202,10 +202,10 @@ export default function TopHeader({ onMenu }: { onMenu?: () => void }) {
           )}
         </div>
 
-        <div className="w-9 h-9 rounded-full bg-raah-mint text-raah-green flex items-center justify-center text-sm font-bold">
+        <div className="w-9 h-9 rounded-full bg-raah-mint dark:bg-[#1a3326] text-raah-green flex items-center justify-center text-sm font-bold">
           {user?.name?.charAt(0) || "U"}
         </div>
-        <button onClick={logout} className="w-9 h-9 rounded-full border border-border flex items-center justify-center hover:bg-red-50 text-text-muted hover:text-red-500 transition" title="Logout">
+        <button onClick={logout} className="w-9 h-9 rounded-full border border-border dark:border-[#2a4a35] flex items-center justify-center hover:bg-red-50 dark:hover:bg-red-900/30 text-text-muted hover:text-red-500 transition" title="Logout">
           <LogOut size={14} />
         </button>
       </div>

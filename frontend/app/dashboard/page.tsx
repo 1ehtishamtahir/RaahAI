@@ -3,7 +3,7 @@ import AppShell from "@/components/layout/AppShell";
 import Link from "next/link";
 import { useLang } from "@/lib/LangContext";
 import { useAuth } from "@/lib/AuthContext";
-import { Shield, Car, AlertTriangle, CreditCard, FileText, GraduationCap, Users, Radar, ScanLine, Mic, Calculator, ClipboardCheck, Building2, Bell, ChevronRight, Clock, MessageCircle } from "lucide-react";
+import { Shield, Car, AlertTriangle, CreditCard, FileText, GraduationCap, Users, Radar, ScanLine, Mic, Calculator, ClipboardCheck, Building2, Bell, Clock } from "lucide-react";
 
 const services = [
   { href: "/identity", label: "Identity", labelUr: "شناخت", icon: Shield, color: "#087F3E", desc: "CNIC, Passport, Registration" },
@@ -26,20 +26,16 @@ const tools = [
   { href: "/alerts", label: "Expiry Alerts", labelUr: "ختم الرٹ", icon: Bell, color: "#D94F30" },
 ];
 
-const quickQuestions = [
-  { en: "Passport banwane ke liye kya documents chahiye?", ur: "پاسپورٹ بنوانے کے لیے کیا دستاویزات چاہیے؟" },
-  { en: "CNIC renewal ka kya process hai?", ur: "CNIC رینیول کا کیا پروسیس ہے؟" },
-  { en: "Business SECP mein register kaise karein?", ur: "بزنس SECP میں رجسٹر کیسے کریں؟" },
-];
-
 export default function Page() {
   const { lang } = useLang();
   const { user } = useAuth();
 
-  const greeting = lang === "ur" ? "السلام علیکم" : "Assalam-o-Alaikum";
   const subtitle = lang === "ur"
     ? "آپ کے سرکاری خدمات کا ذاتی گائیڈ"
     : "Your personal guide to government services";
+
+  const cnic = user?.cnic || "";
+  const city = user?.city || "";
 
   return (
     <AppShell
@@ -50,8 +46,15 @@ export default function Page() {
         <div className="bg-gradient-to-br from-raah-green to-raah-deep rounded-2xl p-6 text-white">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-xl font-bold">{greeting}, {user?.name || "Citizen"} 👋</h1>
-              <p className="text-sm text-white/80 mt-1">{subtitle}</p>
+              <h1 className="text-xl font-bold">{lang === "ur" ? "خوش آمدید" : "Welcome"}, {user?.name || "Citizen"}</h1>
+              {(cnic || city) && (
+                <p className="text-sm text-white/70 mt-1 font-medium">
+                  {cnic && <span>CNIC: {cnic}</span>}
+                  {cnic && city && <span className="mx-2">|</span>}
+                  {city && <span>{lang === "ur" ? "شہر" : "City"}: {city}</span>}
+                </p>
+              )}
+              <p className="text-sm text-white/60 mt-0.5">{subtitle}</p>
             </div>
             <div className="hidden sm:flex items-center gap-2 bg-white/15 rounded-xl px-3 py-2">
               <Clock size={14} />
@@ -101,30 +104,6 @@ export default function Page() {
               >
                 <t.icon size={14} style={{ color: t.color }} />
                 <span className="font-medium text-text-primary">{lang === "ur" ? t.labelUr : t.label}</span>
-              </Link>
-            ))}
-          </div>
-        </div>
-
-        {/* Quick Questions */}
-        <div>
-          <h2 className="font-bold text-raah-deep mb-3">
-            {lang === "ur" ? "جلد سوالات" : "Try Asking"}
-          </h2>
-          <div className="space-y-2">
-            {quickQuestions.map((q, i) => (
-              <Link
-                key={i}
-                href={`/?q=${encodeURIComponent(lang === "ur" ? q.ur : q.en)}`}
-                className="flex items-center gap-3 bg-white rounded-xl border border-border p-3 hover:bg-raah-soft transition group"
-              >
-                <div className="w-8 h-8 rounded-lg bg-raah-mint flex items-center justify-center shrink-0">
-                  <MessageCircle size={14} className="text-raah-green" />
-                </div>
-                <span className="text-sm text-text-primary flex-1">
-                  {lang === "ur" ? q.ur : q.en}
-                </span>
-                <ChevronRight size={14} className="text-text-muted group-hover:text-raah-green transition shrink-0" />
               </Link>
             ))}
           </div>

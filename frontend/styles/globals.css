@@ -8,19 +8,42 @@
   --raah-mint: #EAF7EE;
   --raah-soft: #F3FAF5;
   --border: #E3E9E5;
+  --bg: #FBFDFC;
+  --text-primary: #17201B;
+  --text-secondary: #66716B;
+  --text-muted: #98A29C;
+  --card-bg: #ffffff;
+  --sidebar-bg: #ffffff;
+  --input-bg: #ffffff;
+  --scrollbar: #E3E9E5;
 }
 
-* {
-  scroll-behavior: smooth;
+.dark {
+  --raah-green: #159447;
+  --raah-deep: #0d8a3a;
+  --raah-mint: #1a3326;
+  --raah-soft: #162a1e;
+  --border: #2a4a35;
+  --bg: #0c1510;
+  --text-primary: #e8f0e8;
+  --text-secondary: #a8b8a8;
+  --text-muted: #6a7a6a;
+  --card-bg: #142218;
+  --sidebar-bg: #111d15;
+  --input-bg: #1a2e20;
+  --scrollbar: #2a4a35;
 }
 
 html {
-  font-family: Inter, "Noto Sans", "Noto Sans Arabic", sans-serif;
+  scroll-behavior: smooth;
+}
+
+html, body {
+  background: var(--bg);
+  color: var(--text-primary);
 }
 
 body {
-  background: #FBFDFC;
-  color: #17201B;
   overflow-x: hidden;
 }
 
@@ -63,17 +86,57 @@ html.urdu-mode body *:not(.font-urdu):not(.urdu-text):not(code):not(pre) {
   font-family: 'Inter', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans Arabic', sans-serif;
 }
 
-.dark body {
-  background: #0f1a14;
-  color: #e8f0e8;
+/* ── Dark Mode via CSS variables ───────────────────────────── */
+.dark .bg-white { background-color: var(--card-bg) !important; }
+.dark .bg-raah-soft { background-color: var(--raah-soft) !important; }
+.dark .bg-raah-mint { background-color: var(--raah-mint) !important; }
+.dark .bg-\[\#FBFDFC\] { background-color: var(--bg) !important; }
+.dark .bg-\[\#F3FAF5\] { background-color: var(--raah-soft) !important; }
+.dark .bg-\[\#EAF7EE\] { background-color: var(--raah-mint) !important; }
+.dark .bg-gray-100 { background-color: #1a2e20 !important; }
+.dark .bg-gray-50 { background-color: #162a1e !important; }
+.dark .bg-red-50 { background-color: #2a1515 !important; }
+
+.dark .border-border { border-color: var(--border) !important; }
+.dark .border-\[\#E3E9E5\] { border-color: var(--border) !important; }
+.dark .border { border-color: var(--border) !important; }
+
+.dark .text-text-primary { color: var(--text-primary) !important; }
+.dark .text-text-secondary { color: var(--text-secondary) !important; }
+.dark .text-text-muted { color: var(--text-muted) !important; }
+.dark .text-raah-deep { color: var(--raah-green) !important; }
+.dark .text-\[\#17201B\] { color: var(--text-primary) !important; }
+.dark .text-\[\#66716B\] { color: var(--text-secondary) !important; }
+.dark .text-\[\#98A29C\] { color: var(--text-muted) !important; }
+.dark .text-\[\#075C2D\] { color: var(--raah-green) !important; }
+.dark .text-red-600 { color: #f87171 !important; }
+.dark .text-red-500 { color: #f87171 !important; }
+.dark .text-red-700 { color: #fca5a5 !important; }
+
+.dark .shadow-soft { box-shadow: 0 2px 16px rgba(0, 0, 0, 0.3) !important; }
+.dark .shadow-card { box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4) !important; }
+.dark .shadow-sm { box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important; }
+.dark .shadow-xl { box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5) !important; }
+.dark .shadow-lg { box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important; }
+
+.dark input, .dark select, .dark textarea {
+  background-color: var(--input-bg) !important;
+  border-color: var(--border) !important;
+  color: var(--text-primary) !important;
 }
-.dark .bg-white { background-color: #1a2b20 !important; }
-.dark .bg-raah-soft { background-color: #1e3326 !important; }
-.dark .bg-raah-mint { background-color: #1e3a28 !important; }
-.dark .border-border { border-color: #2a4a35 !important; }
-.dark .text-text-primary { color: #e8f0e8 !important; }
-.dark .text-text-secondary { color: #a8b8a8 !important; }
-.dark .text-text-muted { color: #7a8a7a !important; }
+
+.dark option {
+  background-color: var(--input-bg) !important;
+  color: var(--text-primary) !important;
+}
+
+.dark .divide-border > * + * {
+  border-color: var(--border) !important;
+}
+
+.dark img[src="/logo.png"] {
+  filter: brightness(1.2);
+}
 
 /* RTL helper */
 .rtl {
@@ -83,8 +146,10 @@ html.urdu-mode body *:not(.font-urdu):not(.urdu-text):not(code):not(pre) {
 
 /* scrollbar */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-thumb { background: #E3E9E5; border-radius: 9999px; }
+::-webkit-scrollbar-thumb { background: var(--scrollbar); border-radius: 9999px; }
 ::-webkit-scrollbar-track { background: transparent; }
+
+.dark ::-webkit-scrollbar-thumb { background: #2a4a35; }
 
 .scrollbar-thin::-webkit-scrollbar { height: 4px; }
 .scrollbar-thin::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 9999px; }
