@@ -286,48 +286,60 @@ export default function Home() {
       </section>
 
       {/* MVP SCOPE */}
-      <section id="mvp" className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
-          <div className="text-center max-w-2xl mx-auto mb-10">
-          <div className="inline-flex bg-[#F3FAF5] border border-[#E3E9E5] rounded-full px-3 py-1 text-xs font-bold tracking-widest uppercase text-[#087F3E] mb-3">What&apos;s Built</div>
-          <h2 className="text-[28px] lg:text-[36px] font-[800] tracking-tight text-[#17201B]">Working MVP — not a prototype</h2>
-          <p className="text-[#66716B] mt-2">10-LLM pipeline, real DB queries, grounded answers. Login with demo@raahai.com / demo1234.</p>
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-6">
-          {[
-            { title: "Passport", desc: "Apply for a new passport or renew an existing one, step by step.", points: ["Fresh application", "Renewal & modification", "Fee & appointment guide"], icon: "🛂", color: "#087F3E", bg: "bg-[#EAF7EE]" },
-            { title: "CNIC", desc: "Apply for a new CNIC or update your existing information.", points: ["New CNIC / Juvenile card", "Modification & renewal", "Family registration"], icon: "🪪", color: "#3478E5", bg: "bg-[#EFF4FF]" },
-            { title: "Business Registration", desc: "Register a new business with SECP without decoding the process alone.", points: ["Company incorporation", "Name reservation", "Document checklist"], icon: "🏢", color: "#6844C7", bg: "bg-[#F3EEFF]" },
-          ].map((s) => (
-            <div key={s.title} className="bg-white rounded-[20px] border border-[#E3E9E5] overflow-hidden shadow-soft hover:shadow-card hover:-translate-y-1 transition">
-              <div className="h-2 w-full" style={{ background: s.color }} />
-              <div className="p-6">
-                <div className={`w-12 h-12 rounded-xl ${s.bg} border border-[#E3E9E5] flex items-center justify-center text-xl`}>{s.icon}</div>
-                <h3 className="font-bold text-lg text-[#17201B] mt-4">{s.title}</h3>
-                <p className="text-sm text-[#66716B] leading-6 mt-1">{s.desc}</p>
-                <ul className="mt-4 space-y-2">
-                  {s.points.map((p) => (
-                    <li key={p} className="flex items-center gap-2 text-sm text-[#17201B]">
-                      <span className="w-5 h-5 rounded-full bg-[#F3FAF5] border border-[#E3E9E5] flex items-center justify-center">
-                        <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2.5 5L4.2 6.7L7.5 3" stroke={s.color} strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" /></svg>
-                      </span>
-                      {p}
-                    </li>
-                  ))}
-                </ul>
-                <Link href="/dashboard" className="mt-6 w-full rounded-full border font-semibold py-2.5 text-sm transition hover:opacity-90 flex items-center justify-center" style={{ borderColor: `${s.color}30`, color: s.color, background: `${s.color}0F` }}>
-                  Explore {s.title} →
-                </Link>
-              </div>
+      <section id="mvp" className="bg-white border-y border-[#E3E9E5]/60">
+        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
+          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-8 mb-14">
+            <div className="max-w-xl">
+              <div className="inline-flex items-center gap-2 bg-[#087F3E] rounded-full px-4 py-1.5 text-[11px] font-bold tracking-widest uppercase text-white mb-5">What&apos;s Built</div>
+              <h2 className="text-[32px] lg:text-[40px] font-[800] tracking-[-0.02em] leading-[1.05] text-[#0F1A14]">
+                Working MVP —<br />
+                <span className="text-[#087F3E]">not a prototype</span>
+              </h2>
             </div>
-          ))}
-        </div>
+            <div className="lg:pt-10 max-w-md">
+              <p className="text-[#5A6B60] text-[16px] leading-[1.8]">
+                <span className="font-semibold text-[#0F1A14]">10-LLM pipeline, real DB queries, grounded answers.</span> Login with demo@raahai.com / demo1234.
+              </p>
+            </div>
+          </div>
 
-        <div className="mt-6 bg-white border border-dashed border-[#E3E9E5] rounded-2xl p-4 flex flex-wrap items-center justify-center gap-3 text-sm text-[#66716B]">
-          <span className="font-semibold text-[#17201B]">Coming next:</span>
-          <span className="bg-[#F3FAF5] border border-[#E3E9E5] px-3 py-1 rounded-full">Driving License</span>
-          <span className="bg-[#F3FAF5] border border-[#E3E9E5] px-3 py-1 rounded-full">Tax Filing</span>
-          <span className="bg-[#F3FAF5] border border-[#E3E9E5] px-3 py-1 rounded-full">Office Locator</span>
+          <div className="grid md:grid-cols-3 gap-6">
+            {[
+              { title: "Passport", desc: "Apply for a new passport or renew an existing one, step by step.", points: ["Fresh application", "Renewal & modification", "Fee & appointment guide"], color: "#087F3E", gradient: "from-[#EAF7EE] to-[#D4F1E0]", icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#087F3E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="12" cy="10" r="3"/><path d="M7 21v-2a5 5 0 0 1 5-5h0a5 5 0 0 1 5 5v2"/></svg> },
+              { title: "CNIC", desc: "Apply for a new CNIC or update your existing information.", points: ["New CNIC / Juvenile card", "Modification & renewal", "Family registration"], color: "#3478E5", gradient: "from-[#EFF4FF] to-[#D6E8FF]", icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3478E5" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg> },
+              { title: "Business Registration", desc: "Register a new business with SECP without decoding the process alone.", points: ["Company incorporation", "Name reservation", "Document checklist"], color: "#6844C7", gradient: "from-[#F3EEFF] to-[#E4DAFF]", icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6844C7" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-4"/><path d="M9 9h.01M9 13h.01M9 17h.01"/></svg> },
+            ].map((s) => (
+              <div key={s.title} className="group relative bg-white rounded-[24px] border border-[#E3E9E5]/60 overflow-hidden shadow-[0_2px_8px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_60px_rgba(0,0,0,0.1)] hover:-translate-y-1 transition-all duration-500">
+                <div className="h-[3px] w-full" style={{ background: `linear-gradient(90deg, ${s.color}, ${s.color}80)` }} />
+                <div className="p-7">
+                  <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${s.gradient} flex items-center justify-center`}>{s.icon}</div>
+                  <h3 className="font-bold text-[18px] text-[#0F1A14] mt-5">{s.title}</h3>
+                  <p className="text-[15px] text-[#5A6B60] leading-[1.7] mt-2">{s.desc}</p>
+                  <ul className="mt-5 space-y-2.5">
+                    {s.points.map((p) => (
+                      <li key={p} className="flex items-center gap-2.5 text-[14px] text-[#0F1A14]">
+                        <span className="w-5 h-5 rounded-full flex items-center justify-center" style={{ background: `${s.color}15` }}>
+                          <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2.5 5L4.2 6.7L7.5 3" stroke={s.color} strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                        </span>
+                        {p}
+                      </li>
+                    ))}
+                  </ul>
+                  <Link href="/dashboard" className="mt-6 w-full rounded-xl font-semibold py-3 text-[14px] transition-all hover:opacity-90 flex items-center justify-center gap-2" style={{ color: s.color, background: `${s.color}10`, border: `1px solid ${s.color}25` }}>
+                    Explore {s.title}
+                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-8 bg-[#F3FAF5] border border-[#E3E9E5]/60 rounded-2xl p-5 flex flex-wrap items-center justify-center gap-4 text-[14px] text-[#5A6B60]">
+            <span className="font-semibold text-[#0F1A14]">Coming next:</span>
+            <span className="bg-white border border-[#E3E9E5]/60 px-4 py-2 rounded-full font-medium text-[#0F1A14]">Driving License</span>
+            <span className="bg-white border border-[#E3E9E5]/60 px-4 py-2 rounded-full font-medium text-[#0F1A14]">Tax Filing</span>
+            <span className="bg-white border border-[#E3E9E5]/60 px-4 py-2 rounded-full font-medium text-[#0F1A14]">Office Locator</span>
+          </div>
         </div>
       </section>
 
