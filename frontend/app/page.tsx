@@ -68,112 +68,115 @@ export default function Home() {
       </header>
 
       {/* HERO */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-[#F3FAF5] via-[#FBFDFC] to-white pointer-events-none" />
-        <div className="absolute -top-32 -right-32 w-[600px] h-[600px] bg-[#EAF7EE] rounded-full blur-3xl opacity-60 pointer-events-none" />
-        <div className="absolute top-20 -left-32 w-[500px] h-[500px] bg-[#EAF7EE] rounded-full blur-3xl opacity-40 pointer-events-none" />
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#F3FAF5] via-white to-[#EAF7EE]/30">
+        <div className="absolute top-0 right-0 w-[700px] h-[700px] bg-[#087F3E] rounded-full blur-[180px] opacity-[0.07] pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[#087F3E] rounded-full blur-[160px] opacity-[0.05] pointer-events-none" />
 
-        <div className="relative max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 pt-10 lg:pt-16 pb-8">
-          <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-10 lg:gap-8 items-center">
-            <div>
-              <div className="inline-flex items-center gap-2 bg-white border border-[#E3E9E5] rounded-full px-3 py-1.5 shadow-soft mb-6">
-                <span className="w-6 h-6 rounded-full bg-[#087F3E] flex items-center justify-center">
-                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2L7.5 4.5L10 5L7.5 6.5L6 9L4.5 6.5L2 5L4.5 4.5L6 2Z" fill="white" /></svg>
-                </span>
-                <span className="text-xs font-semibold tracking-widest text-[#075C2D] uppercase">Bano Qabil AI Hackathon 2026</span>
-                <span className="hidden sm:inline-flex bg-[#EAF7EE] text-[#087F3E] text-[11px] font-bold px-2 py-0.5 rounded-full">● LIVE</span>
+        <div className="relative max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 pt-8 lg:pt-14 pb-12 lg:pb-14">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            <div className="max-w-xl">
+              <div className="inline-flex items-center gap-2 bg-white/70 backdrop-blur-sm border border-[#087F3E]/10 rounded-full px-4 py-2 mb-6">
+                <span className="w-2 h-2 bg-[#087F3E] rounded-full animate-pulse" />
+                <span className="text-[11px] font-bold tracking-widest text-[#075C2D] uppercase">Bano Qabil AI Hackathon 2026</span>
               </div>
 
-              <h1 className="text-[36px] sm:text-[44px] lg:text-[54px] font-[800] leading-[0.95] tracking-tight text-[#17201B]">
-                Government<br />paperwork,<br />
-                <span className="text-[#087F3E]">finally has a</span><br />
-                <span className="text-[#087F3E] italic font-extrabold relative">
-                  raah.
-                  <span className="absolute -bottom-2 left-0 w-full h-2 bg-[#EAF7EE] -z-10 rounded-full" />
-                </span>
+              <h1 className="text-[44px] sm:text-[56px] lg:text-[68px] font-[800] leading-[0.88] tracking-[-0.03em] text-[#0F1A14] capitalize">
+                your <span className="text-[#087F3E] italic">raah</span><br />
+                through government.
               </h1>
 
-              <p className="mt-6 text-[16px] lg:text-[18px] leading-7 text-[#66716B] max-w-[560px]">
-                RaahAI is an AI guide that walks Pakistani citizens through{" "}
-                <span className="font-semibold text-[#17201B]">Passport, CNIC, and Business Registration</span>
-                {" — "}answering in{" "}
-                <span className="font-semibold text-[#17201B]">Urdu or English</span>, pulling your real data, and citing where every answer comes from.
+              <p className="mt-8 text-[16px] lg:text-[18px] leading-[1.75] text-[#5A6B60] max-w-[480px]">
+                Pakistan's AI-powered citizen portal.{" "}
+                <span className="font-semibold text-[#0F1A14]">Ask questions, track documents, manage challans</span> — all in one place.{" "}
+                Speak in <span className="font-semibold text-[#0F1A14]">Urdu or English</span>.
               </p>
 
-              <div className="mt-8 flex flex-wrap items-center gap-3">
-                <Link href="/dashboard" className="inline-flex items-center gap-2 bg-[#087F3E] hover:bg-[#075C2D] text-white font-semibold px-7 py-3.5 rounded-full shadow-[0_8px_24px_rgba(8,127,62,0.28)] transition">
+              <div className="mt-10 flex flex-wrap items-center gap-4">
+                <Link href="/dashboard" className="group inline-flex items-center gap-3 bg-[#087F3E] hover:bg-[#065E30] text-white font-semibold px-9 py-4 rounded-2xl shadow-[0_4px_24px_rgba(8,127,62,0.35)] transition-all hover:shadow-[0_8px_32px_rgba(8,127,62,0.45)] hover:-translate-y-0.5">
                   Launch App
-                  <svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" /></svg>
+                  <svg width="18" height="18" viewBox="0 0 16 16" fill="none" className="transition-transform group-hover:translate-x-0.5"><path d="M3 8H13M10 5L13 8L10 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
                 </Link>
-                <a href="#raah" className="inline-flex items-center gap-2 bg-white border border-[#E3E9E5] hover:border-[#087F3E]/30 hover:bg-[#F3FAF5] text-[#17201B] font-semibold px-7 py-3.5 rounded-full transition">
+                <a href="#raah" className="inline-flex items-center gap-2 text-[#0F1A14] font-semibold px-6 py-4 rounded-2xl hover:bg-[#0F1A14]/5 transition-all">
                   See how it works
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
                 </a>
               </div>
 
-              <div className="mt-6 inline-flex items-center gap-2 bg-white border border-[#E3E9E5] rounded-full px-4 py-2 shadow-soft">
-                <span className="w-7 h-7 rounded-full bg-[#EAF7EE] flex items-center justify-center text-[#087F3E]">
-                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1L8 5L12 5L8.7 7.5L9.5 11.5L7 9.2L4.5 11.5L5.3 7.5L2 5L6 5L7 1Z" fill="#087F3E" /></svg>
+              <div className="mt-8 flex items-center gap-6 text-sm text-[#5A6B60]">
+                <span className="flex items-center gap-2">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5C4.41 1.5 1.5 4.41 1.5 8C1.5 11.59 4.41 14.5 8 14.5C11.59 14.5 14.5 11.59 14.5 8C14.5 4.41 11.59 1.5 8 1.5Z" stroke="#087F3E" strokeWidth="1.2"/><path d="M5 8L7 10L11 6" stroke="#087F3E" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                  AI-powered answers
                 </span>
-                <span className="text-sm font-medium text-[#17201B]">
-                  Every answer is <span className="font-bold">grounded</span> in your data and knowledge base.
+                <span className="flex items-center gap-2">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="#087F3E" strokeWidth="1.2"/><path d="M5 8H11M8 5V11" stroke="#087F3E" strokeWidth="1.2" strokeLinecap="round"/></svg>
+                  Urdu + English
+                </span>
+                <span className="flex items-center gap-2">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5L9.5 5.5L14 5.5L10.5 8.5L11.5 12.5L8 10L4.5 12.5L5.5 8.5L2 5.5L6.5 5.5L8 1.5Z" stroke="#087F3E" strokeWidth="1.2" strokeLinejoin="round"/></svg>
+                  Official sources
                 </span>
               </div>
             </div>
 
             {/* Right Visual - Chat Preview */}
-            <div className="relative lg:pl-4">
-              <div className="relative bg-white rounded-[24px] border border-[#E3E9E5] shadow-card overflow-hidden">
-                <div className="flex items-center justify-between px-5 py-3 border-b border-[#E3E9E5] bg-[#FBFDFC]">
+            <div className="relative hidden lg:block">
+              <div className="relative bg-white/80 backdrop-blur-xl rounded-[32px] border border-[#087F3E]/10 shadow-[0_24px_80px_rgba(8,127,62,0.12)] overflow-hidden">
+                <div className="flex items-center justify-between px-6 py-4 border-b border-[#E3E9E5]/60">
                   <div className="flex items-center gap-2">
                     <span className="w-3 h-3 rounded-full bg-[#FF5F56]" />
                     <span className="w-3 h-3 rounded-full bg-[#FFBD2E]" />
                     <span className="w-3 h-3 rounded-full bg-[#27C93F]" />
                   </div>
-                  <div className="flex items-center gap-2 text-xs font-semibold text-[#66716B] bg-white border border-[#E3E9E5] rounded-full px-3 py-1">
-                    <span className="w-2 h-2 bg-[#159447] rounded-full animate-pulse" />
-                    RaahAI Assistant
+                  <div className="flex items-center gap-2 text-xs font-semibold text-[#5A6B60] bg-[#F3FAF5] border border-[#087F3E]/10 rounded-full px-3.5 py-1.5">
+                    <span className="w-2 h-2 bg-[#087F3E] rounded-full animate-pulse" />
+                    RaahAI
                   </div>
                   <div className="w-8 h-8" />
                 </div>
 
-                <div className="p-5 space-y-4 bg-[#FBFDFC]">
+                <div className="p-6 space-y-5 bg-gradient-to-b from-[#FBFDFC] to-white">
                   <div className="flex justify-end">
-                    <div className="bg-[#EAF7EE] border border-[#E3E9E5]/60 rounded-2xl rounded-br-md px-4 py-3 max-w-[85%]">
-                      <p className="text-sm text-[#17201B] leading-relaxed font-medium">Passport banwane ke liye kya documents chahiye?</p>
+                    <div className="bg-[#087F3E] text-white rounded-2xl rounded-br-md px-5 py-3 max-w-[80%]">
+                      <p className="text-sm leading-relaxed font-medium">Passport banwane ke liye kya documents chahiye?</p>
                     </div>
                   </div>
 
-                  <div className="bg-white rounded-2xl rounded-tl-md border border-[#E3E9E5] p-4 shadow-soft">
-                    <div className="flex items-center gap-2 mb-3">
-                      <img src="/logo.png" alt="RaahAI" className="w-7 h-7 rounded-full object-cover border border-[#E3E9E5]" />
+                  <div className="bg-white rounded-2xl rounded-tl-md border border-[#E3E9E5]/60 p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)]">
+                    <div className="flex items-center gap-2.5 mb-3">
+                      <div className="w-7 h-7 rounded-full bg-[#087F3E] flex items-center justify-center">
+                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1L7.5 4L10.5 4.5L8 7L8.5 10.5L6 9L3.5 10.5L4 7L1.5 4.5L4.5 4L6 1Z" fill="white"/></svg>
+                      </div>
                       <span className="text-sm font-bold text-[#075C2D]">RaahAI</span>
-                      <span className="w-4 h-4 rounded-full bg-[#EAF7EE] flex items-center justify-center">
-                        <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M3 5L4.5 6.5L7 3.5" stroke="#087F3E" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" /></svg>
-                      </span>
                     </div>
-                    <p className="text-sm text-[#17201B] leading-relaxed">Passport banwane ke liye yeh documents chahiye:</p>
-                    <ul className="mt-3 space-y-1.5 text-sm text-[#17201B]">
-                      <li className="flex gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[#087F3E] mt-1.5 shrink-0" />Original CNIC / Smart CNIC</li>
-                      <li className="flex gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[#087F3E] mt-1.5 shrink-0" />Passport photographs</li>
-                      <li className="flex gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[#087F3E] mt-1.5 shrink-0" />Fee payment receipt</li>
+                    <p className="text-sm text-[#0F1A14] leading-relaxed">Passport banwane ke liye yeh documents chahiye:</p>
+                    <ul className="mt-3 space-y-2 text-sm text-[#0F1A14]">
+                      <li className="flex gap-2.5 items-start"><span className="w-1.5 h-1.5 rounded-full bg-[#087F3E] mt-1.5 shrink-0" />Original CNIC / Smart CNIC</li>
+                      <li className="flex gap-2.5 items-start"><span className="w-1.5 h-1.5 rounded-full bg-[#087F3E] mt-1.5 shrink-0" />Passport photographs</li>
+                      <li className="flex gap-2.5 items-start"><span className="w-1.5 h-1.5 rounded-full bg-[#087F3E] mt-1.5 shrink-0" />Fee payment receipt</li>
                     </ul>
-                    <div className="mt-3 flex items-center gap-2">
-                      <span className="text-[11px] font-semibold text-[#66716B]">Source:</span>
-                      <span className="inline-flex items-center gap-1 bg-[#EAF7EE] border border-[#087F3E]/15 text-[#087F3E] text-xs font-semibold px-2.5 py-1 rounded-full">DGIP Official</span>
+                    <div className="mt-4 pt-3 border-t border-[#E3E9E5]/60 flex items-center gap-2">
+                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1L8 4H10.5L8.5 6L9 9.5L6 7.5L3 9.5L3.5 6L1.5 4H4L6 1Z" fill="#087F3E" opacity="0.4"/></svg>
+                      <span className="text-[11px] font-semibold text-[#5A6B60]">Source:</span>
+                      <span className="text-[11px] font-bold text-[#087F3E]">DGIP Official</span>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Badges below the card, not overlapping */}
-              <div className="flex items-center justify-between mt-4 px-2">
-                <div className="flex items-center gap-2 bg-[#075C2D] text-white rounded-full px-3 py-2 shadow-card">
-                  <span className="w-6 h-6 rounded-full bg-white/15 flex items-center justify-center text-xs">🇵🇰</span>
-                  <span className="text-xs font-bold">Urdu + English</span>
+              {/* Floating badges */}
+              <div className="absolute -bottom-5 left-8 bg-white rounded-2xl border border-[#E3E9E5]/60 px-4 py-3 shadow-[0_8px_32px_rgba(0,0,0,0.08)] flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-[#087F3E]/10 flex items-center justify-center text-sm">🛡️</div>
+                <div>
+                  <div className="text-xs font-bold text-[#0F1A14]">Verified Data</div>
+                  <div className="text-[11px] text-[#5A6B60]">From official sources</div>
                 </div>
-                <div className="flex items-center gap-2 bg-white border border-[#E3E9E5] rounded-full px-3 py-2 shadow-card">
-                  <span className="w-6 h-6 rounded-xl bg-[#EAF7EE] flex items-center justify-center text-xs">🛡️</span>
-                  <span className="text-xs font-bold text-[#17201B]">Official Sources</span>
+              </div>
+
+              <div className="absolute -top-4 right-8 bg-white rounded-2xl border border-[#E3E9E5]/60 px-4 py-3 shadow-[0_8px_32px_rgba(0,0,0,0.08)] flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-[#087F3E]/10 flex items-center justify-center text-sm">🇵🇰</div>
+                <div>
+                  <div className="text-xs font-bold text-[#0F1A14]">Urdu + English</div>
+                  <div className="text-[11px] text-[#5A6B60]">Bilingual support</div>
                 </div>
               </div>
             </div>
