@@ -345,41 +345,41 @@ export default function Home() {
       </section>
 
       {/* TRUST */}
-      <section id="trust" className="bg-[#F3FAF5] border-y border-[#E3E9E5]">
+      <section id="trust" className="bg-white border-y border-[#E3E9E5]/60">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
           <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-10 items-center">
             <div>
-              <div className="inline-flex bg-white border border-[#E3E9E5] rounded-full px-3 py-1 text-xs font-bold tracking-widest uppercase text-[#087F3E] mb-3">How It Works</div>
-              <h2 className="text-[28px] lg:text-[36px] font-[800] tracking-tight text-[#17201B] leading-none">
+              <div className="inline-flex items-center gap-2 bg-[#087F3E] rounded-full px-4 py-1.5 text-[11px] font-bold tracking-widest uppercase text-white mb-5">How It Works</div>
+              <h2 className="text-[32px] lg:text-[40px] font-[800] tracking-[-0.02em] leading-[1.05] text-[#0F1A14]">
                 10 AI agents,<br /><span className="text-[#087F3E]">one grounded answer</span>
               </h2>
-              <p className="text-[#66716B] mt-4 text-[15px] leading-6">
+              <p className="text-[#5A6B60] mt-4 text-[16px] leading-[1.7]">
                 Each query goes through intent classification, DB lookup, RAG retrieval, response generation, and quality verification.
               </p>
 
               <div className="mt-8 grid sm:grid-cols-2 gap-4">
                 {[
-                  { title: "10-LLM AI Pipeline", desc: "10 specialized AI agents run in parallel — intent detection, DB lookup, RAG retrieval, response generation, and quality checks.", icon: "🤖" },
-                  { title: "Your real data", desc: "Pulls your actual vehicles, challans, payments, and documents from the database — not generic answers.", icon: "📊" },
-                  { title: "Knowledge-grounded", desc: "Answers come from a government services knowledge base. If nothing matches, RaahAI says so instead of guessing.", icon: "📚" },
-                  { title: 'Says "I don\'t know"', desc: "If nothing relevant is found, RaahAI tells you plainly instead of hallucinating an answer.", icon: "💬" },
+                  { title: "10-LLM AI Pipeline", desc: "10 specialized AI agents run in parallel — intent detection, DB lookup, RAG retrieval, response generation, and quality checks.", icon: <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#087F3E" strokeWidth="1.5"><path strokeLinecap="round" strokeLinejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg> },
+                  { title: "Your real data", desc: "Pulls your actual vehicles, challans, payments, and documents from the database — not generic answers.", icon: <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#087F3E" strokeWidth="1.5"><path strokeLinecap="round" strokeLinejoin="round" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" /></svg> },
+                  { title: "Knowledge-grounded", desc: "Answers come from a government services knowledge base. If nothing matches, RaahAI says so instead of guessing.", icon: <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#087F3E" strokeWidth="1.5"><path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg> },
+                  { title: 'Says "I don\'t know"', desc: "If nothing relevant is found, RaahAI tells you plainly instead of hallucinating an answer.", icon: <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#087F3E" strokeWidth="1.5"><path strokeLinecap="round" strokeLinejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> },
                 ].map((it) => (
-                  <div key={it.title} className="bg-white rounded-2xl border border-[#E3E9E5] p-5 shadow-soft">
-                    <div className="w-10 h-10 rounded-xl bg-[#F3FAF5] border border-[#E3E9E5] flex items-center justify-center text-lg">{it.icon}</div>
-                    <h3 className="font-bold text-sm text-[#17201B] mt-3">{it.title}</h3>
-                    <p className="text-sm text-[#66716B] leading-6 mt-1">{it.desc}</p>
+                  <div key={it.title} className="bg-[#FAFBFA] rounded-[16px] border border-[#E3E9E5]/60 p-5 hover:shadow-[0_8px_24px_rgba(0,0,0,0.04)] transition-all duration-300">
+                    <div className="w-10 h-10 rounded-xl bg-[#EAF7EE] flex items-center justify-center">{it.icon}</div>
+                    <h3 className="font-bold text-[14px] text-[#0F1A14] mt-3">{it.title}</h3>
+                    <p className="text-[13px] text-[#5A6B60] leading-[1.65] mt-1.5">{it.desc}</p>
                   </div>
                 ))}
               </div>
             </div>
 
             <div className="relative">
-              <div className="bg-[#075C2D] rounded-[24px] p-6 lg:p-8 text-white relative overflow-hidden">
+              <div className="bg-[#075C2D] rounded-[24px] p-7 lg:p-8 text-white relative overflow-hidden">
                 <div className="absolute -top-16 -right-16 w-56 h-56 bg-white/10 rounded-full blur-2xl" />
                 <div className="absolute -bottom-16 -left-16 w-56 h-56 bg-[#159447]/30 rounded-full blur-2xl" />
                 <div className="relative">
-                  <div className="inline-flex bg-white/15 border border-white/15 rounded-full px-3 py-1 text-xs font-bold tracking-widest uppercase">How grounding works</div>
-                  <h3 className="text-xl font-bold mt-4 leading-tight">
+                  <div className="inline-flex items-center gap-2 bg-white/15 rounded-full px-4 py-1.5 text-[10px] font-bold tracking-widest uppercase">How grounding works</div>
+                  <h3 className="text-[22px] font-[800] mt-5 leading-tight tracking-[-0.01em]">
                     Every answer is<br />retrieved first, then explained.
                   </h3>
                   <div className="mt-6 space-y-3">
@@ -389,17 +389,19 @@ export default function Home() {
                       { k: "03", t: "RAG searches government knowledge base for relevant info" },
                       { k: "04", t: "10 AI agents merge context, generate answer, verify quality" },
                     ].map((r) => (
-                      <div key={r.k} className="flex gap-3 bg-white/10 border border-white/10 rounded-xl px-4 py-3">
-                        <span className="w-7 h-7 rounded-full bg-white text-[#075C2D] flex items-center justify-center text-xs font-bold shrink-0">{r.k}</span>
-                        <span className="text-sm leading-5 opacity-90">{r.t}</span>
+                      <div key={r.k} className="flex gap-3 bg-white/10 rounded-xl px-4 py-3">
+                        <span className="w-7 h-7 rounded-full bg-white text-[#075C2D] flex items-center justify-center text-[11px] font-bold shrink-0">{r.k}</span>
+                        <span className="text-[14px] leading-[1.5] opacity-90">{r.t}</span>
                       </div>
                     ))}
                   </div>
-                  <div className="mt-6 bg-white rounded-xl p-4 text-[#17201B] flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-[#EAF7EE] flex items-center justify-center text-[#087F3E] font-bold">✓</div>
+                  <div className="mt-6 bg-white rounded-xl p-4 text-[#0F1A14] flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-[#EAF7EE] flex items-center justify-center shrink-0">
+                      <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#087F3E" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                    </div>
                     <div>
-                      <div className="text-sm font-bold">&quot;I don&apos;t have verified information on this.&quot;</div>
-                      <div className="text-xs text-[#66716B]">Grounding guardrail — no hallucinations.</div>
+                      <div className="text-[14px] font-bold">&quot;I don&apos;t have verified information on this.&quot;</div>
+                      <div className="text-[12px] text-[#5A6B60]">Grounding guardrail — no hallucinations.</div>
                     </div>
                   </div>
                 </div>
