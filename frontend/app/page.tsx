@@ -188,34 +188,45 @@ export default function Home() {
       <BannerCarousel />
 
       {/* THE PROBLEM */}
-      <section id="problem" className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-10">
-          <div>
-            <div className="inline-flex items-center gap-2 bg-[#F3FAF5] border border-[#E3E9E5] rounded-full px-3 py-1 text-xs font-bold tracking-widest uppercase text-[#087F3E] mb-3">The Problem</div>
-            <h2 className="text-[28px] lg:text-[36px] font-[800] tracking-tight leading-none text-[#17201B]">
-              Simple errands turn into<br /><span className="text-[#66716B]">three office visits</span>
-            </h2>
-          </div>
-          <p className="text-[#66716B] text-[15px] leading-6 max-w-[520px]">
-            Confusing websites and missing documents cost citizens time they don&apos;t have to spare. RaahAI was built to end that cycle.
-          </p>
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-6">
-          {[
-            { num: "01", title: "English-only instructions", desc: "Official portals rarely explain procedures in Urdu, leaving many citizens guessing.", icon: "🌐", accent: "bg-[#EAF7EE]" },
-            { num: "02", title: "Forms nobody explains", desc: "Dense government forms use terms that are hard to decode without help.", icon: "📄", accent: "bg-[#EFF4FF]" },
-            { num: "03", title: "Repeated office visits", desc: "One missing document usually means a wasted trip — and starting over.", icon: "🏢", accent: "bg-[#F3EEFF]" },
-          ].map((c) => (
-            <div key={c.num} className="bg-white rounded-[20px] border border-[#E3E9E5] p-6 shadow-soft hover:shadow-card hover:-translate-y-1 transition">
-              <div className="flex items-center justify-between mb-5">
-                <div className={`w-11 h-11 rounded-xl ${c.accent} border border-[#E3E9E5] flex items-center justify-center text-lg`}>{c.icon}</div>
-                <span className="text-sm font-bold tracking-widest text-[#98A29C]">{c.num}</span>
-              </div>
-              <h3 className="font-bold text-[#17201B] text-[16px] leading-tight mb-2">{c.title}</h3>
-              <p className="text-sm leading-6 text-[#66716B]">{c.desc}</p>
+      <section id="problem" className="bg-white border-y border-[#E3E9E5]/60">
+        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
+          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-8 mb-14">
+            <div className="max-w-xl">
+              <div className="inline-flex items-center gap-2 bg-[#087F3E] rounded-full px-4 py-1.5 text-[11px] font-bold tracking-widest uppercase text-white mb-5">The Problem</div>
+              <h2 className="text-[32px] lg:text-[40px] font-[800] tracking-[-0.02em] leading-[1.05] text-[#0F1A14]">
+                Simple errands turn into<br />
+                <span className="text-[#087F3E]">three office visits</span>
+              </h2>
             </div>
-          ))}
+            <div className="lg:pt-10 max-w-md">
+              <p className="text-[#5A6B60] text-[16px] leading-[1.8]">
+                Confusing websites and missing documents cost citizens time they don&apos;t have to spare. <span className="font-semibold text-[#0F1A14]">RaahAI was built to end that cycle.</span>
+              </p>
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            {[
+              { num: "01", title: "English-only instructions", desc: "Official portals rarely explain procedures in Urdu, leaving many citizens guessing.", gradient: "from-[#EAF7EE] to-[#D4F1E0]", ring: "ring-[#087F3E]/20", numBg: "bg-[#087F3E]", icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#087F3E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg> },
+              { num: "02", title: "Forms nobody explains", desc: "Dense government forms use terms that are hard to decode without help.", gradient: "from-[#EFF4FF] to-[#D6E8FF]", ring: "ring-[#3478E5]/20", numBg: "bg-[#3478E5]", icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#3478E5" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg> },
+              { num: "03", title: "Repeated office visits", desc: "One missing document usually means a wasted trip — and starting over.", gradient: "from-[#F3EEFF] to-[#E4DAFF]", ring: "ring-[#6844C7]/20", numBg: "bg-[#6844C7]", icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6844C7" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-4"/><path d="M9 9v.01"/><path d="M9 12v.01"/><path d="M9 15v.01"/><path d="M9 18v.01"/></svg> },
+            ].map((c) => (
+              <div key={c.num} className="group relative bg-white rounded-[24px] border border-[#E3E9E5]/40 p-7 shadow-[0_2px_8px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_60px_rgba(0,0,0,0.1)] transition-all duration-500 overflow-hidden">
+                <div className={`absolute inset-0 bg-gradient-to-br ${c.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+                
+                <div className="relative">
+                  <div className="flex items-start justify-between mb-6">
+                    <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${c.gradient} ring-4 ${c.ring} flex items-center justify-center shadow-sm`}>{c.icon}</div>
+                    <span className={`text-[11px] font-bold tracking-wider text-white ${c.numBg} rounded-full px-3 py-1.5 shadow-md`}>{c.num}</span>
+                  </div>
+                  <h3 className="font-bold text-[#0F1A14] text-[17px] leading-snug mb-2.5">{c.title}</h3>
+                  <p className="text-[15px] leading-[1.7] text-[#5A6B60]">{c.desc}</p>
+                  
+                  <div className="mt-5 h-[2px] w-12 bg-gradient-to-r from-[#087F3E] to-transparent rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
