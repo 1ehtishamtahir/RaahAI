@@ -298,7 +298,7 @@ export default function Home() {
             </div>
             <div className="lg:pt-10 max-w-md">
               <p className="text-[#5A6B60] text-[16px] leading-[1.8]">
-                <span className="font-semibold text-[#0F1A14]">Everything a citizen needs — in one place.</span> Try it yourself — demo@raahai.com / demo1234.
+                <span className="font-semibold text-[#0F1A14]">Everything a citizen needs — in one place.</span>
               </p>
             </div>
           </div>
