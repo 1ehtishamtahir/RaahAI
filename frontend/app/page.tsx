@@ -303,34 +303,39 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-3 gap-5">
             {[
-              { title: "AI Chat", desc: "10-LLM parallel pipeline with grounded, cited answers in Urdu and English.", points: ["Intent classification", "RAG + DB grounding", "Safety & quality checks"], color: "#087F3E", gradient: "from-[#EAF7EE] to-[#D4F1E0]", icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#087F3E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> },
-              { title: "Document Wallet", desc: "Upload documents, scan with OCR, track expiry dates, and get alerts.", points: ["Gemini Vision OCR", "Expiry tracking", "Auto field extraction"], color: "#3478E5", gradient: "from-[#EFF4FF] to-[#D6E8FF]", icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3478E5" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> },
-              { title: "Fee Calculator", desc: "Instant fee breakdowns for passport, CNIC, and business registration.", points: ["3 urgency levels", "Bank charges included", "Processing time estimates"], color: "#E57D20", gradient: "from-[#FFF4E5] to-[#FFE8CC]", icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#E57D20" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> },
-              { title: "Office Locator", desc: "Find NADRA, DGIP, and SECP offices with addresses and working hours.", points: ["6 NADRA centers", "3 passport offices", "3 SECP offices"], color: "#6844C7", gradient: "from-[#F3EEFF] to-[#E4DAFF]", icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6844C7" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> },
-              { title: "Vehicle Management", desc: "Register vehicles, track token tax, and manage ownership transfers.", points: ["Registration flows", "Token tax tracking", "Challan management"], color: "#C74444", gradient: "from-[#FFECEC] to-[#FFD6D6]", icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C74444" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 17h14M5 17a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1l2-3h8l2 3h1a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2M5 17v2m14-2v2"/><circle cx="7.5" cy="17" r="1.5"/><circle cx="16.5" cy="17" r="1.5"/></svg> },
-              { title: "Schemes Discovery", desc: "AI-matched government programs based on your profile and eligibility.", points: ["7+ schemes loaded", "AI recommendations", "Deadline tracking"], color: "#1A8A8A", gradient: "from-[#E5F6F6] to-[#CCF0F0]", icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1A8A8A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg> },
+              { title: "AI Chat", desc: "10-LLM parallel pipeline with grounded, cited answers in Urdu and English.", points: ["Intent classification", "RAG + DB grounding", "Safety & quality checks"], color: "#087F3E", gradient: "from-[#EAF7EE] to-[#D4F1E0]", icon: <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="#087F3E" strokeWidth="1.5"><path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg> },
+              { title: "Document Wallet", desc: "Upload documents, scan with OCR, track expiry dates, and get alerts.", points: ["Gemini Vision OCR", "Expiry tracking", "Auto field extraction"], color: "#3478E5", gradient: "from-[#EFF4FF] to-[#D6E8FF]", icon: <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="#3478E5" strokeWidth="1.5"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg> },
+              { title: "Fee Calculator", desc: "Instant fee breakdowns for passport, CNIC, and business registration.", points: ["3 urgency levels", "Bank charges included", "Processing time estimates"], color: "#E57D20", gradient: "from-[#FFF4E5] to-[#FFE8CC]", icon: <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="#E57D20" strokeWidth="1.5"><path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> },
+              { title: "Office Locator", desc: "Find NADRA, DGIP, and SECP offices with addresses and working hours.", points: ["6 NADRA centers", "3 passport offices", "3 SECP offices"], color: "#6844C7", gradient: "from-[#F3EEFF] to-[#E4DAFF]", icon: <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="#6844C7" strokeWidth="1.5"><path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg> },
+              { title: "Vehicle Management", desc: "Register vehicles, track token tax, and manage ownership transfers.", points: ["Registration flows", "Token tax tracking", "Challan management"], color: "#C74444", gradient: "from-[#FFECEC] to-[#FFD6D6]", icon: <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="#C74444" strokeWidth="1.5"><path strokeLinecap="round" strokeLinejoin="round" d="M8 17h.01M16 17h.01M3 11l1.5-5h15l1.5 5M3 11v6a1 1 0 001 1h1a1 1 0 001-1v-1h12v1a1 1 0 001 1h1a1 1 0 001-1v-6M3 11h18" /></svg> },
+              { title: "Schemes Discovery", desc: "AI-matched government programs based on your profile and eligibility.", points: ["7+ schemes loaded", "AI recommendations", "Deadline tracking"], color: "#1A8A8A", gradient: "from-[#E5F6F6] to-[#CCF0F0]", icon: <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="#1A8A8A" strokeWidth="1.5"><path strokeLinecap="round" strokeLinejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" /></svg> },
             ].map((s) => (
-              <div key={s.title} className="group relative bg-white rounded-[24px] border border-[#E3E9E5]/60 overflow-hidden shadow-[0_2px_8px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_60px_rgba(0,0,0,0.1)] hover:-translate-y-1 transition-all duration-500">
-                <div className="h-[3px] w-full" style={{ background: `linear-gradient(90deg, ${s.color}, ${s.color}80)` }} />
-                <div className="p-7">
-                  <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${s.gradient} flex items-center justify-center`}>{s.icon}</div>
-                  <h3 className="font-bold text-[18px] text-[#0F1A14] mt-5">{s.title}</h3>
-                  <p className="text-[15px] text-[#5A6B60] leading-[1.7] mt-2">{s.desc}</p>
-                  <ul className="mt-5 space-y-2.5">
-                    {s.points.map((p) => (
-                      <li key={p} className="flex items-center gap-2.5 text-[14px] text-[#0F1A14]">
-                        <span className="w-5 h-5 rounded-full flex items-center justify-center" style={{ background: `${s.color}15` }}>
-                          <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2.5 5L4.2 6.7L7.5 3" stroke={s.color} strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" /></svg>
-                        </span>
-                        {p}
-                      </li>
-                    ))}
-                  </ul>
-                  <Link href="/dashboard" className="mt-6 w-full rounded-xl font-semibold py-3 text-[14px] transition-all hover:opacity-90 flex items-center justify-center gap-2" style={{ color: s.color, background: `${s.color}10`, border: `1px solid ${s.color}25` }}>
+              <div key={s.title} className="group relative bg-gradient-to-br from-white to-[#FAFBFA] rounded-[24px] border border-[#E3E9E5]/50 p-7 shadow-[0_1px_3px_rgba(0,0,0,0.02)] hover:shadow-[0_20px_60px_rgba(0,0,0,0.09)] hover:-translate-y-1.5 transition-all duration-500 overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl opacity-[0.03] pointer-events-none rounded-bl-[100px]" style={{ background: `linear-gradient(to bottom left, ${s.color}, transparent)` }} />
+                <div className="relative">
+                  <div className="flex items-center justify-between mb-5">
+                    <div className={`w-13 h-13 rounded-2xl bg-gradient-to-br ${s.gradient} flex items-center justify-center shadow-sm`}>{s.icon}</div>
+                    <span className="text-[10px] font-bold tracking-widest uppercase px-2.5 py-1 rounded-full" style={{ color: s.color, background: `${s.color}10` }}>{s.title.split(' ')[0]}</span>
+                  </div>
+                  <h3 className="font-bold text-[17px] text-[#0F1A14]">{s.title}</h3>
+                  <p className="text-[14px] text-[#5A6B60] leading-[1.65] mt-2">{s.desc}</p>
+                  <div className="mt-4 pt-4 border-t border-[#E3E9E5]/40">
+                    <ul className="space-y-2">
+                      {s.points.map((p) => (
+                        <li key={p} className="flex items-center gap-2 text-[13px] text-[#0F1A14]">
+                          <span className="w-4 h-4 rounded-full flex items-center justify-center shrink-0" style={{ background: `${s.color}10` }}>
+                            <svg width="8" height="8" viewBox="0 0 10 10" fill="none"><path d="M2.5 5L4.2 6.7L7.5 3" stroke={s.color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                          </span>
+                          {p}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <Link href="/dashboard" className="mt-5 w-full rounded-xl font-semibold py-2.5 text-[13px] transition-all hover:opacity-80 flex items-center justify-center gap-1.5 border" style={{ color: s.color, borderColor: `${s.color}25` }}>
                     Explore {s.title}
-                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
+                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
                   </Link>
                 </div>
               </div>
