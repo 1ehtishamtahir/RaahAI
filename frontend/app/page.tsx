@@ -492,49 +492,82 @@ export default function Home() {
       </section>
 
       {/* FOOTER */}
-      <footer className="border-t border-[#E3E9E5] bg-white">
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
-          <div className="flex flex-col lg:flex-row justify-between gap-8">
+      <footer className="relative bg-[#080C09]">
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#087F3E]/40 to-transparent" />
+        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 pt-14 lg:pt-16 pb-10">
+          <div className="grid lg:grid-cols-[1.3fr_2fr] gap-12 lg:gap-20">
             <div>
               <div className="flex items-center gap-3">
-                <img src="/logo.png" alt="RaahAI Logo" className="w-9 h-9 rounded-xl object-cover border border-[#E3E9E5]" />
-                <div className="font-bold text-[#075C2D]">RaahAI</div>
-                <span className="text-xs bg-[#F3FAF5] border border-[#E3E9E5] px-2 py-1 rounded-full font-bold tracking-widest uppercase text-[#66716B]">Demo • 2026</span>
+                <div className="w-10 h-10 rounded-xl overflow-hidden border-2 border-[#087F3E]/40 shadow-[0_0_12px_rgba(8,127,62,0.3)]">
+                  <img src="/logo.png" alt="RaahAI Logo" className="w-full h-full object-cover" />
+                </div>
+                <div>
+                  <span className="font-bold text-white text-[16px] tracking-[-0.01em]">RaahAI</span>
+                  <span className="ml-2 text-[8px] bg-[#087F3E]/10 text-[#3DDC84] border border-[#087F3E]/15 px-2 py-0.5 rounded font-bold tracking-[0.15em] uppercase align-middle">Demo 2026</span>
+                </div>
               </div>
-              <p className="text-sm text-[#66716B] mt-3 max-w-sm leading-6">
-                AI-powered government services assistant. 10-LLM pipeline with grounded answers. Built for Bano Qabil AI Hackathon 2026.
+              <p className="text-[13px] text-[#6B7A70] mt-4 max-w-[300px] leading-[1.75]">
+                AI-powered government services assistant. 10-LLM pipeline with grounded, cited answers in Urdu and English.
               </p>
+              <div className="mt-5 text-[14px] text-white font-bold" style={{ fontFamily: "'Noto Nastaliq Urdu', serif" }}>
+                راہ — آپ کا راستہ
+              </div>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-8 text-sm">
-              <div>
-                <div className="font-bold text-[#17201B] mb-3">Product</div>
-                <ul className="space-y-2 text-[#66716B]">
-                  <li><a href="#raah" className="hover:text-[#087F3E]">The Raah</a></li>
-                  <li><a href="#mvp" className="hover:text-[#087F3E]">Services</a></li>
-                  <li><a href="#trust" className="hover:text-[#087F3E]">Trust</a></li>
-                </ul>
-              </div>
-              <div>
-                <div className="font-bold text-[#17201B] mb-3">Services</div>
-                <ul className="space-y-2 text-[#66716B]">
-                  <li>Passport</li>
-                  <li>CNIC</li>
-                  <li>Business Registration</li>
-                </ul>
-              </div>
-              <div>
-                <div className="font-bold text-[#17201B] mb-3">Trust</div>
-                <ul className="space-y-2 text-[#66716B]">
-                  <li>Privacy by design</li>
-                  <li>Official sources</li>
-                  <li>Says &ldquo;I don&apos;t know&rdquo;</li>
-                </ul>
-              </div>
+
+            <div className="grid grid-cols-3 gap-8">
+              {[
+                { title: "Product", links: [
+                  { label: "The Raah", href: "#raah" },
+                  { label: "Services", href: "#mvp" },
+                  { label: "How It Works", href: "#trust" },
+                  { label: "Team", href: "#team" },
+                ]},
+                { title: "Services", links: [
+                  { label: "Passport", href: null },
+                  { label: "CNIC", href: null },
+                  { label: "Business Reg.", href: null },
+                  { label: "Vehicle Mgmt", href: null },
+                ]},
+                { title: "Trust & Safety", links: [
+                  { label: "Privacy by design", href: null },
+                  { label: "Official sources", href: null },
+                  { label: "No hallucinations", href: null },
+                ]},
+              ].map((col) => (
+                <div key={col.title}>
+                  <div className="text-[10px] font-bold tracking-[0.15em] uppercase text-[#3DDC84]/70 mb-5">{col.title}</div>
+                  <ul className="space-y-3">
+                    {col.links.map((l) => (
+                      <li key={l.label}>
+                        {l.href ? (
+                          <a href={l.href} className="text-[13px] text-[#6B7A70] hover:text-white transition-colors duration-200">{l.label}</a>
+                        ) : (
+                          <span className="text-[13px] text-[#6B7A70]">{l.label}</span>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
             </div>
           </div>
-          <div className="mt-8 pt-6 border-t border-[#E3E9E5] flex flex-col sm:flex-row justify-between gap-3 text-sm text-[#98A29C]">
-            <div>© 2026 RaahAI. Built for demo purposes.</div>
-            <div>Muhammad Ehtisham Tahir · Meer Ahmed · Abdullah Tufail · Ahmed Malik</div>
+
+          <div className="mt-14 pt-6 border-t border-white/[0.04] flex flex-col sm:flex-row justify-between gap-4">
+            <div className="flex items-center gap-3 text-[11px] text-[#2D3B32]">
+              <span>&copy; 2026 RaahAI</span>
+              <span className="text-white/10">|</span>
+              <span>Built with <span className="text-[#087F3E]">10 AI agents</span></span>
+              <span className="text-white/10">|</span>
+              <span>Bano Qabil Hackathon</span>
+            </div>
+            <div className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-[11px]">
+              {["M. Ehtisham Tahir", "Meer Ahmed", "Abdullah Tufail", "Ahmed Malik"].map((name, i) => (
+                <span key={name} className="flex items-center gap-1.5">
+                  <span className="text-[#4A5A4F] font-medium">{name}</span>
+                  {i < 3 && <span className="text-[#1A241E]">·</span>}
+                </span>
+              ))}
+            </div>
           </div>
         </div>
       </footer>
