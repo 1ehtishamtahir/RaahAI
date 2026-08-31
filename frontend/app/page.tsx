@@ -231,44 +231,55 @@ export default function Home() {
       </section>
 
       {/* THE RAAH */}
-      <section id="raah" className="bg-[#F3FAF5] border-y border-[#E3E9E5]">
+      <section id="raah" className="bg-white border-y border-[#E3E9E5]/60">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
-          <div className="text-center max-w-2xl mx-auto mb-10">
-            <div className="inline-flex bg-white border border-[#E3E9E5] rounded-full px-3 py-1 text-xs font-bold tracking-widest uppercase text-[#087F3E] mb-3">The Raah — Your Path</div>
-            <h2 className="text-[28px] lg:text-[36px] font-[800] tracking-tight text-[#17201B]">One path, from question to done</h2>
-            <p className="text-[#66716B] mt-3 text-[15px] leading-6">RaahAI turns a scattered process into a single, guided route.</p>
+          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-8 mb-14">
+            <div className="max-w-xl">
+              <div className="inline-flex items-center gap-2 bg-[#087F3E] rounded-full px-4 py-1.5 text-[11px] font-bold tracking-widest uppercase text-white mb-5">The Raah — Your Path</div>
+              <h2 className="text-[32px] lg:text-[40px] font-[800] tracking-[-0.02em] leading-[1.05] text-[#0F1A14]">
+                One path, from<br />
+                <span className="text-[#087F3E]">question to done</span>
+              </h2>
+            </div>
+            <div className="lg:pt-10 max-w-md">
+              <p className="text-[#5A6B60] text-[16px] leading-[1.8]">
+                RaahAI turns a scattered process into a single, <span className="font-semibold text-[#0F1A14]">guided route.</span>
+              </p>
+            </div>
           </div>
 
-          <div className="grid md:grid-cols-4 gap-6 relative">
-            <div className="hidden md:block absolute top-[34px] left-[14%] right-[14%] h-[2px] bg-gradient-to-r from-[#087F3E]/15 via-[#087F3E]/30 to-[#087F3E]/15" />
+          <div className="grid md:grid-cols-4 gap-5 relative">
+            <div className="hidden md:block absolute top-[36px] left-[12%] right-[12%] h-[2px] bg-gradient-to-r from-[#087F3E]/10 via-[#087F3E]/25 to-[#087F3E]/10" />
             {[
-              { step: "01", title: "Ask", desc: "Type or speak your question in Urdu or English.", icon: "💬" },
-              { step: "02", title: "Understand", desc: "AI classifies intent, searches your data and the knowledge base.", icon: "🔍" },
-              { step: "03", title: "Guide", desc: "A personal checklist tracks exactly what's left for your situation.", icon: "🧭" },
-              { step: "04", title: "Trust", desc: "Every answer names its source — or says plainly when it doesn't know.", icon: "🛡️" },
+              { step: "01", title: "Ask", desc: "Type or speak your question in Urdu or English.", icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> },
+              { step: "02", title: "Understand", desc: "AI classifies intent, searches your data and the knowledge base.", icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> },
+              { step: "03", title: "Guide", desc: "A personal checklist tracks exactly what's left for your situation.", icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> },
+              { step: "04", title: "Trust", desc: "Every answer names its source — or says plainly when it doesn't know.", icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> },
             ].map((s) => (
-              <div key={s.step} className="relative bg-white rounded-[20px] border border-[#E3E9E5] p-6 shadow-soft text-center">
-                <div className="w-14 h-14 rounded-2xl bg-[#087F3E] text-white flex items-center justify-center text-xl mx-auto shadow-[0_6px_16px_rgba(8,127,62,0.3)] relative z-10">{s.icon}</div>
-                <div className="inline-flex mt-3 bg-[#EAF7EE] border border-[#087F3E]/10 text-[#087F3E] text-xs font-bold tracking-widest px-2.5 py-1 rounded-full">STEP {s.step}</div>
-                <h3 className="font-bold text-[#17201B] mt-3">{s.title}</h3>
-                <p className="text-sm text-[#66716B] leading-6 mt-2">{s.desc}</p>
+              <div key={s.step} className="group relative bg-white rounded-[20px] border border-[#E3E9E5]/60 p-6 shadow-[0_2px_8px_rgba(0,0,0,0.03)] hover:shadow-[0_16px_48px_rgba(8,127,62,0.12)] hover:-translate-y-1 transition-all duration-400 text-center">
+                <div className="w-14 h-14 rounded-2xl bg-[#087F3E] flex items-center justify-center mx-auto shadow-[0_6px_20px_rgba(8,127,62,0.3)] relative z-10">{s.icon}</div>
+                <div className="inline-flex mt-4 bg-[#EAF7EE] text-[#087F3E] text-[10px] font-bold tracking-widest px-3 py-1 rounded-full">STEP {s.step}</div>
+                <h3 className="font-bold text-[#0F1A14] text-[17px] mt-3">{s.title}</h3>
+                <p className="text-[14px] text-[#5A6B60] leading-[1.7] mt-2">{s.desc}</p>
               </div>
             ))}
           </div>
 
           {/* How it works */}
-          <div id="how" className="mt-10 bg-[#075C2D] rounded-[20px] p-6 lg:p-8 flex flex-col lg:flex-row items-center justify-between gap-6 text-white">
+          <div id="how" className="mt-12 bg-[#075C2D] rounded-[24px] p-7 lg:p-9 flex flex-col lg:flex-row items-center justify-between gap-6 text-white">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-white/15 flex items-center justify-center text-xl">⚡</div>
+              <div className="w-12 h-12 rounded-xl bg-white/15 flex items-center justify-center">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              </div>
               <div>
-                <div className="font-bold">10-LLM pipeline — ~3 second responses</div>
-                <div className="text-sm opacity-80">Intent → DB lookup → RAG → Generation → Quality check, all in parallel.</div>
+                <div className="font-bold text-[16px]">10-LLM pipeline — ~3 second responses</div>
+                <div className="text-[14px] opacity-80">Intent → DB lookup → RAG → Generation → Quality check, all in parallel.</div>
               </div>
             </div>
             <div className="flex flex-wrap gap-2">
-              <span className="bg-white text-[#075C2D] text-sm font-semibold px-4 py-2 rounded-full">Passport renewal?</span>
-              <span className="bg-white/15 border border-white/20 text-white text-sm font-medium px-4 py-2 rounded-full">Mera challan check karo</span>
-              <span className="bg-white/15 border border-white/20 text-white text-sm font-medium px-4 py-2 rounded-full">SECP business registration</span>
+              <span className="bg-white text-[#075C2D] text-[13px] font-semibold px-5 py-2.5 rounded-full">Passport renewal?</span>
+              <span className="bg-white/15 border border-white/20 text-white text-[13px] font-medium px-5 py-2.5 rounded-full">Mera challan check karo</span>
+              <span className="bg-white/15 border border-white/20 text-white text-[13px] font-medium px-5 py-2.5 rounded-full">SECP business registration</span>
             </div>
           </div>
         </div>
