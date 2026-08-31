@@ -170,3 +170,13 @@ html.urdu-mode body *:not(.font-urdu):not(.urdu-text):not(code):not(pre) {
 .splash-spin { animation: splash-spin 1.2s linear infinite; }
 .splash-bounce { animation: splash-bounce 1.2s ease-in-out infinite; }
 .splash-ripple { animation: splash-ripple 2s ease-out infinite; }
+
+/* Horizontal ticker animation */
+@keyframes ticker {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+@keyframes ticker-reverse {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}

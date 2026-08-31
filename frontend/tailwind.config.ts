@@ -38,6 +38,10 @@ const config: Config = {
         soft: "0 2px 16px rgba(16, 32, 27, 0.06)",
         card: "0 4px 24px rgba(16, 32, 27, 0.08)",
       },
+      animation: {
+        ticker: "ticker 35s linear infinite",
+        "ticker-reverse": "ticker-reverse 40s linear infinite",
+      },
     },
   },
   plugins: [],

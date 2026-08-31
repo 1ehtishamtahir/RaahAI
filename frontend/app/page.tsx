@@ -184,6 +184,34 @@ export default function Home() {
         </div>
       </section>
 
+      {/* HORIZONTAL TICKER - SKEWED */}
+      <div className="relative mt-10 -my-8 z-10 mb-14">
+        <div className="relative bg-[#075C2D] py-6" style={{ transform: 'skewY(-5deg)' }}>
+          <div className="flex animate-[ticker_35s_linear_infinite] whitespace-nowrap" style={{ transform: 'skewY(5deg)' }}>
+            {[...Array(2)].map((_, setIdx) => (
+              <div key={setIdx} className="flex items-center gap-10 px-6">
+                {[
+                  "Passport",
+                  "CNIC",
+                  "Business Registration",
+                  "Vehicle Management",
+                  "Fee Calculator",
+                  "Office Locator",
+                  "AI Chat",
+                  "Document Wallet",
+                  "Schemes Discovery",
+                  "Checklists",
+                ].map((item, i) => (
+                  <span key={`${setIdx}-${i}`} className="text-white text-[15px] font-semibold tracking-wide uppercase cursor-default hover:text-[#EAF7EE] transition-colors duration-300">
+                    {item}
+                  </span>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
       {/* BANNER CAROUSEL */}
       <BannerCarousel />
 
