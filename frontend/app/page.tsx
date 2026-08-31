@@ -417,7 +417,7 @@ export default function Home() {
           <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-8 mb-14">
             <div className="max-w-xl">
               <div className="inline-flex items-center gap-2 bg-[#087F3E] rounded-full px-4 py-1.5 text-[11px] font-bold tracking-widest uppercase text-white mb-5">The Team</div>
-              <h2 className="text-[32px] lg:text-[40px] font-[800] tracking-[-0.02em] leading-[1.05] text-[#0F1A14]">
+              <h2 className="text-[32px] lg:text-[40px] font-[800] tracking-[-0.02em] leading-[1.05] text-[#0F1A14] whitespace-nowrap">
                 Built for <span className="text-[#087F3E]">Bano Qabil AI Hackathon 2026</span>
               </h2>
             </div>
