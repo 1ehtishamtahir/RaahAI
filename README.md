@@ -22,6 +22,17 @@ RaahAI simplifies Pakistani government services (Passport, CNIC, Business Regist
 - **Urdu & English** — including RTL Urdu support
 - **Personalized Checklist** — adapts to service type + user situation
 - **Citations** — every answer shows its official source
+- **Challan Management** — view, filter, pay traffic challans with friendly IDs (CHL-XXX)
+- **Payment Tracking** — fees, taxes, penalties with status tracking
+- **Vehicle Management** — registration, token tax status
+- **Identity Services** — CNIC, passport, driving license info
+- **Family Benefits** — family members, government programs (BISP Ehsaas, etc.)
+- **Eligibility Checker** — match users to government programs
+- **Fee Calculator** — compute government fees
+- **Office Finder** — locate nearby government offices
+- **Expiry Alerts** — notifications for expiring documents
+- **Gov Updates** — latest government announcements
+- **Opportunities** — scholarships & programs finder
 
 ## 3. Tech Stack
 
@@ -31,9 +42,10 @@ RaahAI simplifies Pakistani government services (Passport, CNIC, Business Regist
 | Backend | FastAPI |
 | DB | PostgreSQL (Supabase, falls back to SQLite for demo) |
 | Vector DB | ChromaDB (falls back to in-memory keyword search if not installed) |
-| AI | **Google Gemini 1.5 Flash** (`gemini-1.5-flash`, `text-embedding-004`) — primary; Qwen fallback |
+| AI | **Google Gemini Flash Lite** (`gemini-flash-lite-latest`, `text-embedding-004`) — primary; Qwen fallback |
 | OCR | PaddleOCR / Tesseract (mock fallback) |
 | Speech | Whisper (STT) + TTS (gTTS/edge-tts) |
+| Auth | JWT (python-jose) + bcrypt password hashing |
 | Deploy | Vercel (frontend), Render (backend), Supabase (DB) |
 
 See `Temporary Files/Architecture.md` for system diagrams.
@@ -42,38 +54,56 @@ See `Temporary Files/Architecture.md` for system diagrams.
 
 ```
 RaahAI/
-├── frontend/               # Next.js App Router
+├── frontend/                   # Next.js App Router
 │   ├── app/
-│   │   ├── dashboard/
-│   │   ├── chat/
-│   │   ├── documents/
-│   │   ├── ocr/
-│   │   ├── voice/
-│   │   ├── checklist/
-│   │   └── ...
+│   │   ├── dashboard/          # Main dashboard with service hub
+│   │   ├── ai/                 # AI chat interface
+│   │   ├── chat/               # Chat sessions
+│   │   ├── challans/           # Traffic challan management
+│   │   ├── payments/           # Payment tracking
+│   │   ├── vehicle/            # Vehicle registration & tax
+│   │   ├── identity/           # CNIC, passport, license
+│   │   ├── documents/          # Document upload & management
+│   │   ├── family/             # Family members & benefits
+│   │   ├── eligibility/        # Program eligibility checker
+│   │   ├── fees/               # Fee calculator
+│   │   ├── offices/            # Government office finder
+│   │   ├── alerts/             # Expiry & renewal alerts
+│   │   ├── opportunities/      # Scholarships & programs
+│   │   ├── updates/            # Government announcements
+│   │   ├── ocr/                # OCR form scanner
+│   │   ├── voice/              # Voice assistant
+│   │   ├── checklist/          # Personalized checklists
+│   │   ├── notifications/      # Notification center
+│   │   ├── settings/           # User settings
+│   │   ├── history/            # Activity history
+│   │   ├── saved/              # Saved items
+│   │   ├── help/               # Help & support
+│   │   ├── login/              # Authentication
+│   │   └── register/           # Registration
 │   ├── components/
-│   │   ├── layout/         # AppShell, Sidebar, TopHeader
-│   │   ├── chat/           # ChatWindow, UserMessage, AIMessage, ChatInput
-│   │   ├── checklist/      # ChecklistCard, ProgressBar
-│   │   ├── services/       # ServiceCard
-│   │   └── documents/      # UploadCard, DocumentPreview, OCRField
+│   │   ├── layout/             # AppShell, Sidebar, TopHeader
+│   │   ├── chat/               # ChatWindow, UserMessage, AIMessage, ChatInput
+│   │   ├── checklist/          # ChecklistCard, ProgressBar
+│   │   ├── services/           # ServiceCard
+│   │   └── documents/          # UploadCard, DocumentPreview, OCRField
 │   └── styles/globals.css
-├── backend/                # FastAPI
+├── backend/                    # FastAPI
 │   ├── app/
 │   │   ├── main.py
-│   │   ├── routers/        # chat, ocr, voice, checklist
-│   │   ├── services/       # rag, gemini (primary), qwen (fallback), embeddings, ocr, stt, tts
-│   │   ├── models/         # schemas, db models
-│   │   └── core/           # config, database
-│   ├── scripts/            # seed_chroma.py, ingest.py for ChromaDB
-│   ├── data/seed_chunks.json  # 9 curated chunks
-│   └── requirements.txt  # includes google-genai + google-generativeai
-├── Data for RAG/           # RaahAI_Knowledge_Base.pdf + chunks
+│   │   ├── routers/            # 15+ API routers (see API Endpoints below)
+│   │   ├── services/           # rag, gemini (primary), qwen (fallback), embeddings, ocr, stt, tts
+│   │   ├── models/             # schemas, db models (User, Vehicle, Challan, Payment, etc.)
+│   │   └── core/               # config, database, auth
+│   ├── scripts/                # seed_chroma.py, ingest.py for ChromaDB
+│   ├── data/seed_chunks.json   # 9 curated chunks
+│   └── requirements.txt        # includes google-genai + google-generativeai
+├── Data for RAG/               # RaahAI_Knowledge_Base.pdf + chunks
 ├── Logo/
-├── Temporary Files/        # PRD, Architecture, Design, Phases (source specs)
-├── docs/                   # Consolidated docs (copied from Temporary Files)
-├── memory.md               # Project memory & context
-└── docker-compose.yml
+├── Temporary Files/            # PRD, Architecture, Design, Phases (source specs)
+├── docs/                       # Consolidated docs (copied from Temporary Files)
+├── memory.md                   # Project memory & context
+└── docker-compose.yml          # PostgreSQL + ChromaDB + backend + frontend
 ```
 
 ## 5. Quick Start
@@ -119,7 +149,13 @@ npm run dev  # http://localhost:3000
 ### Docker (optional)
 
 ```bash
+# Full stack (all services):
 docker-compose up --build
+
+# Just database services (PostgreSQL + ChromaDB):
+docker-compose up -d postgres chroma
+
+# Then run backend & frontend locally
 ```
 
 ## 6. API Endpoints
@@ -127,19 +163,44 @@ docker-compose up --build
 | Method | Path | Description |
 |--------|------|-------------|
 | `GET` | `/health` | Health check |
+| `POST` | `/api/citizen/register` | Register new user |
+| `POST` | `/api/citizen/login` | Login & get JWT token |
+| `GET` | `/api/citizen/profile` | Get user profile |
+| `GET` | `/api/citizen/dashboard` | Dashboard summary |
 | `POST` | `/chat` | Chat with RAG (`{query, lang, session_id}`) |
-| `POST` | `/ocr` | Upload form image/PDF → extracted fields + explanations |
+| `GET` | `/api/challans` | List challans (filter by `status`) |
+| `GET` | `/api/challans/{id}` | Get challan by CHL-XXX ID |
+| `GET` | `/api/payments/timeline` | Payment history & timeline |
+| `GET` | `/api/vehicles` | List user vehicles |
+| `GET` | `/api/identity` | Identity documents (CNIC, passport) |
+| `POST` | `/ocr` | Upload form image/PDF → OCR + explanations |
 | `POST` | `/voice` | Audio → STT → RAG → TTS |
 | `GET` | `/checklist` | Get checklist for `service`, `situation` |
 | `POST` | `/checklist/update` | Update checklist progress |
+| `GET` | `/api/ai/challan-explain/{id}` | AI explains a challan in plain language |
+| `GET` | `/api/ai/suggestions` | AI-powered action suggestions |
+| `GET` | `/api/family/members` | Family members list |
+| `GET` | `/api/family/programs` | Government programs for family |
+| `GET` | `/api/eligibility/match` | Match user to government programs |
+| `GET` | `/api/fees/calculate` | Calculate government fees |
+| `GET` | `/api/offices/search` | Find nearby government offices |
+| `GET` | `/api/alerts` | Expiry & renewal alerts |
+| `GET` | `/api/opportunities` | Scholarships & programs |
+| `GET` | `/api/updates` | Government announcements |
+| `GET` | `/api/notifications` | User notifications |
 
 ## 7. Demo Flow (60s)
 
-1. Ask: `Passport banwane ke liye kya documents chahiye?` (Urdu)
-2. RaahAI replies with Required Documents + Process + `Source: DGIP Official Website`
-3. Upload passport form image → OCR extracts `Name, CNIC, DOB, Address`
-4. RaahAI explains each field in plain language (masked CNIC: `XXXXX-1234567-X`)
-5. Right panel checklist auto-updates: `3/5 Completed` → `In Progress`
+1. Register at `/register` or login with demo account:
+   - **Email:** `demo2@raahai.com`
+   - **Password:** `Demo@1234`
+2. Dashboard shows: 2 vehicles, 2 challans, 2 payments, 3 documents, 2 family members
+3. Go to **Challans** → see `CHL-006` (Pending, PKR 5,000) and `CHL-007` (Paid)
+4. Click **Explain** on a challan → AI explains violation in plain language
+5. Go to **AI Chat** → ask: `Passport banwane ke liye kya documents chahiye?`
+6. RaahAI replies with Required Documents + Process + `Source: DGIP Official Website`
+7. Go to **OCR** → upload passport form image → AI extracts & explains fields
+8. Go to **Checklist** → personalized steps auto-update as you complete them
 
 See `Temporary Files/RaahAI_Phases.md` for full phase plan.
 
