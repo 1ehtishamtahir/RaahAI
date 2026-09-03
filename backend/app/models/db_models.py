@@ -180,6 +180,7 @@ class ChallanRecord(Base):
     violation = Column(String, nullable=True)
     explanation_en = Column(Text, nullable=True)
     explanation_ur = Column(Text, nullable=True)
+    challan_no = Column(String, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
 
     user = relationship("User", back_populates="challan_records")

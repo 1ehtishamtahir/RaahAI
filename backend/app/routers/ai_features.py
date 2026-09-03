@@ -80,6 +80,10 @@ def explain_challan(
         ChallanRecord.id == challan_id, ChallanRecord.user_id == current_user.id
     ).first()
     if not c:
+        c = db.query(ChallanRecord).filter(
+            ChallanRecord.challan_no == challan_id, ChallanRecord.user_id == current_user.id
+        ).first()
+    if not c:
         return {"error": "Challan not found"}
 
     prompt = f"""You are RaahAI, explaining a traffic/excise challan to a Pakistani citizen.

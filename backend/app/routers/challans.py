@@ -26,8 +26,24 @@ def list_challans(
     pending = sum(1 for c in all_challans if c.status == "Pending")
     paid = sum(1 for c in all_challans if c.status == "Paid")
 
+    def _challan_no(c, idx):
+        if c.challan_no:
+            return c.challan_no
+        c.challan_no = f"CHL-{idx:03d}"
+        return c.challan_no
+
+    sorted_all = db.query(ChallanRecord).filter(
+        ChallanRecord.user_id == current_user.id
+    ).order_by(ChallanRecord.created_at.asc()).all()
+    challan_num_map = {c.id: i + 1 for i, c in enumerate(sorted_all)}
+    for c in sorted_all:
+        if not c.challan_no:
+            c.challan_no = f"CHL-{challan_num_map[c.id]:03d}"
+    db.commit()
+
     result = [{
-        "id": c.id, "category": c.category or "Traffic", "amount": c.amount or 0,
+        "id": c.challan_no or f"CHL-{challan_num_map.get(c.id, 0):03d}",
+        "category": c.category or "Traffic", "amount": c.amount or 0,
         "status": c.status or "Pending", "issue_date": c.issue_date or "",
         "due_date": c.due_date or "", "source": c.source or "",
         "vehicle": c.vehicle_plate or "", "violation": c.violation or "",
@@ -49,9 +65,13 @@ def get_challan(challan_id: str, current_user: User = Depends(get_current_user),
         ChallanRecord.id == challan_id, ChallanRecord.user_id == current_user.id
     ).first()
     if not c:
+        c = db.query(ChallanRecord).filter(
+            ChallanRecord.challan_no == challan_id, ChallanRecord.user_id == current_user.id
+        ).first()
+    if not c:
         raise HTTPException(status_code=404, detail="Challan not found")
     return {
-        "id": c.id, "category": c.category or "Traffic", "amount": c.amount or 0,
+        "id": c.challan_no or c.id, "category": c.category or "Traffic", "amount": c.amount or 0,
         "status": c.status or "Pending", "issue_date": c.issue_date or "",
         "due_date": c.due_date or "", "source": c.source or "",
         "vehicle": c.vehicle_plate or "", "violation": c.violation or "",
